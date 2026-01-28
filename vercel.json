@@ -4,7 +4,6 @@
     {
       "src": "index.html",
       "use": "@vercel/static"
-      "cleanUrls": true
     }
   ],
   "routes": [
