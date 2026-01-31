@@ -1,16 +1,9 @@
-"""
-ML Workover Optimization - Flask API Server
-Run locally: python main.py
-Then open index.html in browser
-"""
-
 import os
 import sys
 import warnings
 import json
 import logging
-
-# Suppress all warnings
+#Suppress all warnings
 os.environ['LIGHTGBM_SUPPRESS_WARNINGS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 warnings.filterwarnings('ignore')
@@ -25,9 +18,8 @@ import joblib
 app = Flask(__name__, static_folder='.')
 CORS(app)  # Enable CORS for all routes
 
-# ========================================
-# LOAD MODEL & PREPROCESSOR
-# ========================================
+#LOAD MODEL & PREPROCESSOR
+
 MODEL_PATH = 'workover_model_pipeline.joblib'
 PREPROCESSOR_PATH = 'preprocessor.joblib'
 DASHBOARD_DATA_PATH = 'dashboard_data.json'
@@ -37,7 +29,7 @@ preprocessor = None
 dashboard_data = None
 
 def load_model():
-    """Load the trained model pipeline"""
+    #Load the trained model pipeline#
     global model, preprocessor, dashboard_data
     
     if os.path.exists(MODEL_PATH):
@@ -56,9 +48,8 @@ def load_model():
             dashboard_data = json.load(f)
         print(f"✅ Dashboard data loaded: {DASHBOARD_DATA_PATH}")
 
-# ========================================
-# INTERVENTION COST MAPPING
-# ========================================
+#INTERVENTION COST MAPPING
+
 INTERVENTION_COSTS = {
     "REPERFORASI": 100000,
     "WATER_SHUTOFF": 140000,
@@ -69,23 +60,22 @@ INTERVENTION_COSTS = {
     "NONE": 0,
 }
 
-# ========================================
-# API ROUTES
-# ========================================
+#API ROUTES
+
 
 @app.route('/')
 def serve_index():
-    """Serve the main dashboard HTML"""
+    #Serve the main dashboard HTML#
     return send_from_directory('.', 'index.html')
 
 @app.route('/<path:filename>')
 def serve_static(filename):
-    """Serve static files"""
+    #Serve static files#
     return send_from_directory('.', filename)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
+    #Health check endpoint#
     return jsonify({
         "status": "ok",
         "model_loaded": model is not None,
@@ -94,7 +84,7 @@ def health_check():
 
 @app.route('/api/dashboard-data', methods=['GET'])
 def get_dashboard_data():
-    """Return pre-computed dashboard data from JSON"""
+    #Return pre-computed dashboard data from JSON#
     if dashboard_data:
         return jsonify(dashboard_data)
     else:
@@ -102,18 +92,6 @@ def get_dashboard_data():
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
-    """
-    Predict intervention success from uploaded CSV
-    
-    Expected CSV columns (same as training data):
-    - CUM_OIL, CUM_WATER, CUM_GAS, CUM_LIQUID
-    - PERM_LOG_MEAN, INTERVENTION_COST_MEAN
-    - WATER_CUT_MEAN, POROSITY_MEAN, PAYFLAG_RATIO, RESFLAG_RATIO
-    - FBHP_MEAN, FTHP_MEAN, FBHT_MEAN, FTHT_MEAN, NET_PAY_FROM_LOG
-    - OIL_PROD_MA7_MEAN, OIL_PROD_MA90_MEAN, etc.
-    - WELL_TYPE, RESERVOIR_QUALITY
-    - HETERO_INDEX (optional, will be calculated)
-    """
     if model is None:
         return jsonify({"error": "Model not loaded. Run notebook first to generate model!"}), 500
     
@@ -255,7 +233,7 @@ def predict():
 
 @app.route('/api/predict-single', methods=['POST'])
 def predict_single():
-    """Predict for a single well from JSON data"""
+    #Predict for a single well from JSON data#
     if model is None:
         return jsonify({"error": "Model not loaded"}), 500
     
@@ -267,9 +245,6 @@ def predict_single():
         # Convert to DataFrame
         df = pd.DataFrame([data])
         
-        # Same preprocessing as /api/predict
-        # ... (abbreviated for single well)
-        
         return jsonify({
             "success": True,
             "message": "Use /api/predict with CSV for full predictions"
@@ -278,9 +253,8 @@ def predict_single():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ========================================
-# MAIN ENTRY POINT
-# ========================================
+#MAIN ENTRY POINT
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🛢️  ML WORKOVER OPTIMIZATION API SERVER")
