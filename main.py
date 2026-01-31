@@ -14,6 +14,25 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import joblib
+from sklearn.base import BaseEstimator, TransformerMixin
+
+class LogTransformer(BaseEstimator, TransformerMixin):
+    def __init__(self, columns):
+        self.columns = columns
+    
+    def fit(self, X, y=None):
+        return self
+    
+    def transform(self, X):
+        X = X.copy()
+        X[self.columns] = np.log1p(X[self.columns].clip(lower=0))
+        return X
+    
+    def set_output(self, transform=None):
+        return self
+    
+    def get_feature_names_out(self, input_features=None):
+        return input_features if input_features is not None else self.columns
 
 app = Flask(__name__, static_folder='.')
 CORS(app)  # Enable CORS for all routes
@@ -82,7 +101,7 @@ def health_check():
         "dashboard_data_loaded": dashboard_data is not None
     })
 
-@app.route('/api/dashboard-data', methods=['GET'])
+@app.route('/api/dashboard_data', methods=['GET'])
 def get_dashboard_data():
     #Return pre-computed dashboard data from JSON#
     if dashboard_data:
