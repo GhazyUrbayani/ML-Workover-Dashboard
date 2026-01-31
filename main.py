@@ -51,17 +51,30 @@ def load_model():
     #Load the trained model pipeline#
     global model, preprocessor, dashboard_data
     
+    # Load model with error handling for version mismatch
     if os.path.exists(MODEL_PATH):
-        model = joblib.load(MODEL_PATH)
-        print(f"✅ Model loaded: {MODEL_PATH}")
+        try:
+            model = joblib.load(MODEL_PATH)
+            print(f"✅ Model loaded: {MODEL_PATH}")
+        except (AttributeError, ModuleNotFoundError) as e:
+            print(f"⚠️ Model version mismatch: {e}")
+            print("   Model was trained with different scikit-learn version.")
+            print("   Dashboard will run in STATIC MODE (no predictions).")
+            model = None
     else:
         print(f"⚠️ Model not found: {MODEL_PATH}")
         print("   Run the notebook first to generate the model!")
     
+    # Load preprocessor with error handling
     if os.path.exists(PREPROCESSOR_PATH):
-        preprocessor = joblib.load(PREPROCESSOR_PATH)
-        print(f"✅ Preprocessor loaded: {PREPROCESSOR_PATH}")
+        try:
+            preprocessor = joblib.load(PREPROCESSOR_PATH)
+            print(f"✅ Preprocessor loaded: {PREPROCESSOR_PATH}")
+        except (AttributeError, ModuleNotFoundError) as e:
+            print(f"⚠️ Preprocessor version mismatch: {e}")
+            preprocessor = None
     
+    # Load dashboard data (JSON - no version issues)
     if os.path.exists(DASHBOARD_DATA_PATH):
         with open(DASHBOARD_DATA_PATH, 'r') as f:
             dashboard_data = json.load(f)
