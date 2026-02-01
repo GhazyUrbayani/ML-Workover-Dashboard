@@ -114,7 +114,7 @@ def health_check():
         "dashboard_data_loaded": dashboard_data is not None
     })
 
-@app.route('/api/dashboard_data', methods=['GET'])
+@app.route('/api/dashboard-data', methods=['GET'])
 def get_dashboard_data():
     #Return pre-computed dashboard data from JSON#
     if dashboard_data:
@@ -287,13 +287,13 @@ def predict_single():
 
 #MAIN ENTRY POINT
 
+# Load model at module level (required for gunicorn)
+load_model()
+
 if __name__ == '__main__':
     print("\n" + "="*60)
     print("🛢️  ML WORKOVER OPTIMIZATION API SERVER")
     print("="*60)
-    
-    # Load model on startup
-    load_model()
     
     print("\n📡 Starting server...")
     print("   Local:   http://127.0.0.1:5000")
