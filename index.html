@@ -794,21 +794,42 @@
                 return;
             }
             
+            setStatus('csvStatus', '⏳ Checking model...', 'loading');
+            
+            // First check if model is loaded
+            try {
+                const healthCheck = await fetch('/api/health');
+                const health = await healthCheck.json();
+                console.log('Health check:', health);
+                
+                if (!health.model_loaded) {
+                    setStatus('csvStatus', '❌ Model not loaded (STATIC MODE)', 'error');
+                    showToast('Server running in STATIC MODE - predictions disabled', 'error');
+                    return;
+                }
+            } catch (e) {
+                console.error('Health check failed:', e);
+            }
+            
             setStatus('csvStatus', '⏳ Predicting...', 'loading');
             
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
             
             try {
+                console.log('Sending prediction request...');
                 const response = await fetch('/api/predict', {
                     method: 'POST',
                     body: formData
                 });
                 
+                console.log('Response status:', response.status);
                 const result = await response.json();
+                console.log('Result:', result);
                 
                 if (result.error) {
                     setStatus('csvStatus', '❌ ' + result.error, 'error');
+                    showToast(result.error, 'error');
                 } else {
                     setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
                     showToast('Prediction complete!', 'success');
@@ -823,7 +844,9 @@
                     }
                 }
             } catch (error) {
-                setStatus('csvStatus', '❌ Failed', 'error');
+                console.error('Prediction error:', error);
+                setStatus('csvStatus', '❌ ' + error.message, 'error');
+                showToast('Prediction failed: ' + error.message, 'error');
             }
         }
         

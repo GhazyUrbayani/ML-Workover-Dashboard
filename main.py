@@ -111,7 +111,9 @@ def health_check():
     return jsonify({
         "status": "ok",
         "model_loaded": model is not None,
-        "dashboard_data_loaded": dashboard_data is not None
+        "preprocessor_loaded": preprocessor is not None,
+        "dashboard_data_loaded": dashboard_data is not None,
+        "mode": "FULL" if model is not None else "STATIC (no predictions)"
     })
 
 @app.route('/api/dashboard-data', methods=['GET'])
@@ -124,17 +126,23 @@ def get_dashboard_data():
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
+    print("📥 Received POST /api/predict request")
+    
     if model is None:
-        return jsonify({"error": "Model not loaded. Run notebook first to generate model!"}), 500
+        print("❌ Model is None - not loaded")
+        return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
     
     try:
         # Check if file uploaded
         if 'file' not in request.files:
+            print("❌ No file in request")
             return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
         
         file = request.files['file']
         if file.filename == '':
             return jsonify({"error": "Empty filename"}), 400
+        
+        print(f"📄 File received: {file.filename}")
         
         # Read CSV
         df = pd.read_csv(file)
