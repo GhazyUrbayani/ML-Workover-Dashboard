@@ -817,13 +817,23 @@
             formData.append('file', fileInput.files[0]);
             
             try {
-                console.log('Sending prediction request...');
+                console.log('=== PREDICTION REQUEST ===');
+                console.log('File:', fileInput.files[0].name, 'Size:', fileInput.files[0].size, 'bytes');
+                console.log('Sending to: /api/predict');
+                
+                // Create AbortController for timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
+                
                 const response = await fetch('/api/predict', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    signal: controller.signal
                 });
                 
-                console.log('Response status:', response.status);
+                clearTimeout(timeoutId);
+                
+                console.log('Response received:', response.status, response.statusText);
                 const result = await response.json();
                 console.log('Result:', result);
                 
@@ -844,9 +854,18 @@
                     }
                 }
             } catch (error) {
-                console.error('Prediction error:', error);
-                setStatus('csvStatus', '❌ ' + error.message, 'error');
-                showToast('Prediction failed: ' + error.message, 'error');
+                console.error('=== PREDICTION ERROR ===');
+                console.error('Error type:', error.name);
+                console.error('Error message:', error.message);
+                console.error('Full error:', error);
+                
+                if (error.name === 'AbortError') {
+                    setStatus('csvStatus', '❌ Request timeout (2min)', 'error');
+                    showToast('Request timed out after 2 minutes', 'error');
+                } else {
+                    setStatus('csvStatus', '❌ ' + error.message, 'error');
+                    showToast('Prediction failed: ' + error.message, 'error');
+                }
             }
         }
         

@@ -35,7 +35,15 @@ class LogTransformer(BaseEstimator, TransformerMixin):
         return input_features if input_features is not None else self.columns
 
 app = Flask(__name__, static_folder='.')
-CORS(app)  # Enable CORS for all routes
+# Configure max content length (50MB)
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
+
+# Log all incoming requests
+@app.before_request
+def log_request():
+    print(f"📥 {request.method} {request.path} - Content-Length: {request.content_length}")
+    sys.stdout.flush()
 
 #LOAD MODEL & PREPROCESSOR
 
@@ -124,18 +132,37 @@ def get_dashboard_data():
     else:
         return jsonify({"error": "Dashboard data not found. Run notebook first!"}), 404
 
-@app.route('/api/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST', 'OPTIONS'])
 def predict():
-    print("📥 Received POST /api/predict request")
+    # Handle CORS preflight
+    if request.method == 'OPTIONS':
+        print("✅ OPTIONS preflight for /api/predict")
+        sys.stdout.flush()
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        return response, 200
+    
+    print("="*50)
+    print("📥 POST /api/predict - START")
+    print(f"   Content-Type: {request.content_type}")
+    print(f"   Content-Length: {request.content_length}")
+    sys.stdout.flush()
     
     if model is None:
         print("❌ Model is None - not loaded")
+        sys.stdout.flush()
         return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
     
     try:
         # Check if file uploaded
+        print("📋 Checking for file in request.files...")
+        sys.stdout.flush()
+        
         if 'file' not in request.files:
-            print("❌ No file in request")
+            print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
+            sys.stdout.flush()
             return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
         
         file = request.files['file']
