@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Workover Optimization Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e0e0;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .dashboard-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-height: 100vh;
+        }
+        
+        /* HEADER */
+        .header {
+            background: rgba(0,0,0,0.4);
+            padding: 6px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        
+        .header h1 {
+            font-size: 1.1rem;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-badges {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+        }
+        
+        .badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            background: rgba(0,212,255,0.2);
+            border: 1px solid rgba(0,212,255,0.4);
+        }
+        
+        /* UPLOAD SECTION */
+        .upload-section {
+            background: linear-gradient(135deg, rgba(0,100,150,0.3), rgba(0,50,100,0.3));
+            padding: 8px 20px;
+            border-bottom: 2px solid rgba(0,212,255,0.3);
+            flex-shrink: 0;
+        }
+        
+        .upload-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .upload-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 8px 15px;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .upload-box h3 {
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        .upload-box h3.json-title { color: #00ff88; }
+        .upload-box h3.csv-title { color: #ffaa00; }
+        
+        .upload-box input[type="file"] {
+            width: 180px;
+            padding: 4px;
+            background: rgba(255,255,255,0.1);
+            border: 1px dashed rgba(255,255,255,0.3);
+            border-radius: 4px;
+            color: #ccc;
+            font-size: 0.7rem;
+        }
+        
+        .btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
+        .btn-secondary { background: linear-gradient(135deg, #00ff88, #00cc66); color: #000; }
+        .btn-warning { background: linear-gradient(135deg, #ffaa00, #ff8800); color: #000; }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,212,255,0.4);
+        }
+        
+        .status-msg {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status-msg.success { display: inline-block; background: rgba(0,255,136,0.2); color: #00ff88; }
+        .status-msg.error { display: inline-block; background: rgba(255,68,68,0.2); color: #ff4444; }
+        .status-msg.loading { display: inline-block; background: rgba(0,212,255,0.2); color: #00d4ff; }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            padding: 10px 15px;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        .panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        .panel-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #00d4ff;
+            flex-shrink: 0;
+        }
+        
+        .panel-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        
+        /* PANEL 1: Workover Activities */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 8px;
+            height: 100%;
+        }
+        
+        .activity-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 0.65rem;
+            color: #999;
+            text-transform: uppercase;
+        }
+        
+        .chart-container {
+            position: relative;
+            min-height: 0;
+            flex: 1;
+        }
+        
+        /* PANEL 2: Success Score */
+        .success-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            height: 100%;
+        }
+        
+        .score-display {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 8px;
+        }
+        
+        .big-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #00ff88;
+        }
+        
+        .score-label {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        
+        .metrics-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        
+        .metric-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+            padding: 6px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        
+        .metric-label {
+            font-size: 0.6rem;
+            color: #888;
+        }
+        
+        /* PANEL 3: Production */
+        .production-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 6px;
+        }
+        
+        .prod-stats {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        
+        .prod-stat {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 6px;
+            text-align: center;
+        }
+        
+        .prod-stat.before { border-left: 3px solid #ff6b6b; }
+        .prod-stat.after { border-left: 3px solid #00ff88; }
+        .prod-stat.uplift { border-left: 3px solid #00d4ff; }
+        
+        .prod-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        
+        .prod-value.before { color: #ff6b6b; }
+        .prod-value.after { color: #00ff88; }
+        .prod-value.uplift { color: #00d4ff; }
+        
+        .prod-label {
+            font-size: 0.6rem;
+            color: #888;
+        }
+        
+        /* PANEL 4: Cost & Heterogeneity */
+        .cost-hetero-content {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 8px;
+            height: 100%;
+        }
+        
+        .cost-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .cost-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .cost-card.saving {
+            background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,100,0.1));
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        
+        .cost-value {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .cost-value.baseline { color: #ff6b6b; }
+        .cost-value.optimized { color: #00d4ff; }
+        .cost-value.saving { color: #00ff88; font-size: 1.2rem; }
+        
+        .cost-label {
+            font-size: 0.6rem;
+            color: #888;
+        }
+        
+        /* Heterogeneity */
+        .hetero-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hetero-title {
+            font-size: 0.65rem;
+            color: #aaa;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        
+        .quadrant-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        
+        .quadrant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 3px;
+            flex: 1;
+        }
+        
+        .quadrant {
+            border-radius: 6px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .quadrant.q4 { background: linear-gradient(135deg, #1a4a4a, #0d3030); border: 1px solid #2a6a6a; }
+        .quadrant.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        .quadrant.q3 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
+        .quadrant.q1 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
+        
+        .q-index {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+        
+        .q4 .q-index { color: #00ffcc; }
+        .q2 .q-index { color: #ffcc00; }
+        .q3 .q-index { color: #00ccaa; }
+        .q1 .q-index { color: #ff6688; }
+        
+        .q-label {
+            font-size: 0.55rem;
+            color: #aaa;
+        }
+        
+        .q-wells {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .q-success {
+            font-size: 0.6rem;
+        }
+        
+        .q4 .q-success { color: #00ffcc; }
+        .q2 .q-success { color: #ffcc00; }
+        .q3 .q-success { color: #00ccaa; }
+        .q1 .q-success { color: #ff6688; }
+        
+        .axis-x {
+            font-size: 0.55rem;
+            color: #666;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: rgba(0,0,0,0.3);
+            padding: 4px 20px;
+            text-align: center;
+            font-size: 0.65rem;
+            color: #666;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .toast.success { background: rgba(0,255,136,0.9); color: #000; display: block; }
+        .toast.error { background: rgba(255,68,68,0.9); color: #fff; display: block; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🛢️ ML Workover Optimization Dashboard</h1>
+            <div class="header-badges">
+                <span class="badge">📊 Model: LightGBM</span>
+                <span class="badge" id="badge-roc">🎯 ROC-AUC: 78.0%</span>
+                <span class="badge" id="badge-wells">🏭 Wells: 999</span>
+            </div>
+        </div>
+        
+        <!-- UPLOAD SECTION -->
+        <div class="upload-section">
+            <div class="upload-container">
+                <div class="upload-box">
+                    <h3 class="json-title">📊 Dashboard JSON</h3>
+                    <input type="file" id="jsonFile" accept=".json">
+                    <button class="btn btn-secondary" onclick="loadJsonFile()">📂 Load</button>
+                    <button class="btn btn-primary" onclick="loadFromAPI()">🔄 API</button>
+                    <span class="status-msg" id="jsonStatus"></span>
+                </div>
+                <div class="upload-box">
+                    <h3 class="csv-title">📤 CSV Prediction</h3>
+                    <input type="file" id="csvFile" accept=".csv">
+                    <button class="btn btn-warning" onclick="runPrediction()">🚀 Predict</button>
+                    <span class="status-msg" id="csvStatus"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAIN 4-PANEL -->
+        <div class="main-content">
+            <!-- Panel 1: Workover Activities -->
+            <div class="panel">
+                <div class="panel-title">🔧 Workover Activities</div>
+                <div class="panel-content">
+                    <div class="activities-grid">
+                        <div class="activity-stats">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalWells">999</div>
+                                <div class="stat-label">Total Wells</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="testWells">200</div>
+                                <div class="stat-label">Test Wells</div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel 2: Success Score -->
+            <div class="panel">
+                <div class="panel-title">✅ Success Score & Model Performance</div>
+                <div class="panel-content">
+                    <div class="success-content">
+                        <div class="score-display">
+                            <div class="big-score" id="rocAuc">78.0%</div>
+                            <div class="score-label">ROC-AUC Score</div>
+                        </div>
+                        <div class="metrics-col">
+                            <div class="metrics-grid">
+                                <div class="metric-box">
+                                    <div class="metric-value" id="accuracy">68.5%</div>
+                                    <div class="metric-label">Accuracy</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-value" id="precision">56.2%</div>
+                                    <div class="metric-label">Precision</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-value" id="recall">39.1%</div>
+                                    <div class="metric-label">Recall</div>
+                                </div>
+                                <div class="metric-box">
+                                    <div class="metric-value" id="f1Score">46.1%</div>
+                                    <div class="metric-label">F1-Score</div>
+                                </div>
+                            </div>
+                            <div class="chart-container" style="flex:1;">
+                                <canvas id="confusionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel 3: Production Lifecycle -->
+            <div class="panel">
+                <div class="panel-title">📈 Production Lifecycle: Before & After Workover</div>
+                <div class="panel-content">
+                    <div class="production-content">
+                        <div class="prod-stats">
+                            <div class="prod-stat before">
+                                <div class="prod-value before" id="prodBefore">420</div>
+                                <div class="prod-label">Avg Before (BOPD)</div>
+                            </div>
+                            <div class="prod-stat after">
+                                <div class="prod-value after" id="prodAfter">882</div>
+                                <div class="prod-label">Avg After (BOPD)</div>
+                            </div>
+                            <div class="prod-stat uplift">
+                                <div class="prod-value uplift" id="prodUplift">+110%</div>
+                                <div class="prod-label">Uplift</div>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="flex:1;">
+                            <canvas id="productionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel 4: Cost & Heterogeneity -->
+            <div class="panel">
+                <div class="panel-title">💰 Cost Optimization & 🔬 Heterogeneity Index</div>
+                <div class="panel-content">
+                    <div class="cost-hetero-content">
+                        <div class="cost-section">
+                            <div class="cost-card">
+                                <div class="cost-value baseline" id="costBaseline">$167.7M</div>
+                                <div class="cost-label">Baseline Cost</div>
+                            </div>
+                            <div class="cost-card">
+                                <div class="cost-value optimized" id="costOptimized">$96.4M</div>
+                                <div class="cost-label">ML-Optimized</div>
+                            </div>
+                            <div class="cost-card saving">
+                                <div class="cost-value saving" id="costSaving">$71.4M</div>
+                                <div class="cost-label" id="savingLabel">💵 Savings (42.6%)</div>
+                            </div>
+                        </div>
+                        <div class="hetero-section">
+                            <div class="hetero-title">4-Quadrant by Oil & Water Production</div>
+                            <div class="quadrant-wrapper">
+                                <div class="quadrant-grid">
+                                    <div class="quadrant q4">
+                                        <div class="q-index">4</div>
+                                        <div class="q-label">Low Oil - High Water</div>
+                                        <div class="q-wells" id="q4Wells">156 wells</div>
+                                        <div class="q-success" id="q4Success">28.0% Success</div>
+                                    </div>
+                                    <div class="quadrant q2">
+                                        <div class="q-index">2</div>
+                                        <div class="q-label">High Oil - High Water</div>
+                                        <div class="q-wells" id="q2Wells">157 wells</div>
+                                        <div class="q-success" id="q2Success">58.0% Success</div>
+                                    </div>
+                                    <div class="quadrant q3">
+                                        <div class="q-index">3</div>
+                                        <div class="q-label">Low Oil - Low Water</div>
+                                        <div class="q-wells" id="q3Wells">156 wells</div>
+                                        <div class="q-success" id="q3Success">42.0% Success</div>
+                                    </div>
+                                    <div class="quadrant q1">
+                                        <div class="q-index">1</div>
+                                        <div class="q-label">High Oil - Low Water</div>
+                                        <div class="q-wells" id="q1Wells">156 wells</div>
+                                        <div class="q-success" id="q1Success">72.0% Success</div>
+                                    </div>
+                                </div>
+                                <div class="axis-x">← Low Oil | High Oil →</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            IPFEST 2026 • ML Workover Optimization Dashboard • Flask + Chart.js + LightGBM
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        let activityChart, confusionChart, productionChart;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            loadFromAPI();
+        });
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            setTimeout(() => { toast.className = 'toast'; }, 3000);
+        }
+        
+        function setStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = 'status-msg ' + type;
+        }
+        
+        function initCharts() {
+            // Activity Donut
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            activityChart = new Chart(activityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Strongly Recommend', 'Review by Engineer', 'Low Priority'],
+                    datasets: [{
+                        data: [34, 10, 156],
+                        backgroundColor: ['#00ff88', '#ffaa00', '#ff6b6b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ccc', font: { size: 9 }, boxWidth: 10, padding: 6 }
+                        }
+                    }
+                }
+            });
+            
+            // Confusion Matrix
+            const confusionCtx = document.getElementById('confusionChart').getContext('2d');
+            confusionChart = new Chart(confusionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['TN', 'FP', 'FN', 'TP'],
+                    datasets: [{
+                        data: [110, 21, 42, 27],
+                        backgroundColor: ['#00cc88', '#ffaa00', '#ff6b6b', '#00ff88'],
+                        borderRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888', font: { size: 9 } } },
+                        y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 9 } } }
+                    }
+                }
+            });
+            
+            // Production Chart
+            const prodCtx = document.getElementById('productionChart').getContext('2d');
+            productionChart = new Chart(prodCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 28}, (_, i) => i < 12 ? `M-${12-i}` : i < 16 ? 'WO' : `M+${i-15}`),
+                    datasets: [{
+                        label: 'Oil Production (BOPD)',
+                        data: [1000,920,850,785,725,670,620,575,532,492,455,420,50,20,10,650,780,820,845,860,870,875,878,880,881,882,883,885],
+                        borderColor: '#00d4ff',
+                        backgroundColor: 'rgba(0,212,255,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 7 }, maxRotation: 45 } },
+                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888', font: { size: 8 } } }
+                    }
+                }
+            });
+        }
+        
+        async function loadFromAPI() {
+            setStatus('jsonStatus', '⏳ Loading...', 'loading');
+            
+            try {
+                const response = await fetch('/api/dashboard-data');
+                if (!response.ok) throw new Error('API unavailable');
+                
+                const data = await response.json();
+                updateDashboard(data);
+                setStatus('jsonStatus', '✅ Loaded', 'success');
+                showToast('Dashboard loaded!', 'success');
+            } catch (error) {
+                setStatus('jsonStatus', '⚠️ Using defaults', 'error');
+                console.error('API Error:', error);
+            }
+        }
+        
+        function loadJsonFile() {
+            const fileInput = document.getElementById('jsonFile');
+            if (!fileInput.files[0]) {
+                setStatus('jsonStatus', '❌ Select file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    updateDashboard(data);
+                    setStatus('jsonStatus', '✅ JSON loaded', 'success');
+                    showToast('Data loaded!', 'success');
+                } catch (err) {
+                    setStatus('jsonStatus', '❌ Invalid JSON', 'error');
+                }
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+        
+        async function runPrediction() {
+            const fileInput = document.getElementById('csvFile');
+            if (!fileInput.files[0]) {
+                setStatus('csvStatus', '❌ Select CSV', 'error');
+                return;
+            }
+            
+            setStatus('csvStatus', '⏳ Predicting...', 'loading');
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    setStatus('csvStatus', '❌ ' + result.error, 'error');
+                } else {
+                    setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
+                    showToast('Prediction complete!', 'success');
+                    if (result.summary) {
+                        document.getElementById('testWells').textContent = result.summary.total_wells;
+                        activityChart.data.datasets[0].data = [
+                            result.summary.strongly_recommend,
+                            result.summary.review_engineer,
+                            result.summary.low_priority
+                        ];
+                        activityChart.update();
+                    }
+                }
+            } catch (error) {
+                setStatus('csvStatus', '❌ Failed', 'error');
+            }
+        }
+        
+        function updateDashboard(data) {
+            const kpis = data.kpis || data;
+            
+            // Wells
+            if (kpis.totalWells) {
+                document.getElementById('totalWells').textContent = kpis.totalWells;
+                document.getElementById('badge-wells').textContent = '🏭 Wells: ' + kpis.totalWells;
+            }
+            if (kpis.testWells) document.getElementById('testWells').textContent = kpis.testWells;
+            
+            // ROC AUC
+            if (kpis.rocAuc) {
+                const rocVal = (kpis.rocAuc * 100).toFixed(1) + '%';
+                document.getElementById('rocAuc').textContent = rocVal;
+                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocVal;
+            }
+            
+            // Metrics
+            if (kpis.accuracy) document.getElementById('accuracy').textContent = (kpis.accuracy * 100).toFixed(1) + '%';
+            if (kpis.precision) document.getElementById('precision').textContent = (kpis.precision * 100).toFixed(1) + '%';
+            if (kpis.recall) document.getElementById('recall').textContent = (kpis.recall * 100).toFixed(1) + '%';
+            
+            if (kpis.precision && kpis.recall) {
+                const f1 = 2 * (kpis.precision * kpis.recall) / (kpis.precision + kpis.recall);
+                document.getElementById('f1Score').textContent = (f1 * 100).toFixed(1) + '%';
+            }
+            
+            // Activity chart
+            if (kpis.stronglyRecommend !== undefined) {
+                activityChart.data.datasets[0].data = [
+                    kpis.stronglyRecommend,
+                    kpis.reviewEngineer,
+                    kpis.lowPriority
+                ];
+                activityChart.update();
+            }
+            
+            // Confusion matrix
+            if (data.confusionMatrix) {
+                const cm = data.confusionMatrix;
+                confusionChart.data.datasets[0].data = [cm.tn, cm.fp, cm.fn, cm.tp];
+                confusionChart.update();
+            }
+            
+            // Cost
+            if (kpis.totalCostBaseline) {
+                document.getElementById('costBaseline').textContent = '$' + (kpis.totalCostBaseline / 1000000).toFixed(1) + 'M';
+            }
+            if (kpis.totalCostOptimized) {
+                document.getElementById('costOptimized').textContent = '$' + (kpis.totalCostOptimized / 1000000).toFixed(1) + 'M';
+            }
+            if (kpis.costSaving && kpis.totalCostBaseline) {
+                const savingPct = ((kpis.costSaving / kpis.totalCostBaseline) * 100).toFixed(1);
+                document.getElementById('costSaving').textContent = '$' + (kpis.costSaving / 1000000).toFixed(1) + 'M';
+                document.getElementById('savingLabel').textContent = '💵 Savings (' + savingPct + '%)';
+            }
+            
+            // Heterogeneity
+            if (data.heteroIndex) {
+                data.heteroIndex.forEach(h => {
+                    const qId = 'q' + h.index;
+                    const wellsEl = document.getElementById(qId + 'Wells');
+                    const successEl = document.getElementById(qId + 'Success');
+                    if (wellsEl) wellsEl.textContent = h.count + ' wells';
+                    if (successEl) successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
+                });
+            }
+            
+            // Production
+            if (data.productionData) {
+                const pd = data.productionData;
+                const before = pd.beforeIntervention || [];
+                const during = pd.duringWorkover || [];
+                const after = pd.afterIntervention || [];
+                
+                const fullData = [...before, ...during, ...after];
+                if (fullData.length > 0) {
+                    productionChart.data.datasets[0].data = fullData;
+                    productionChart.update();
+                    
+                    const avgBefore = before[before.length - 1] || 420;
+                    const avgAfter = after[after.length - 1] || 882;
+                    const uplift = ((avgAfter - avgBefore) / avgBefore * 100).toFixed(0);
+                    
+                    document.getElementById('prodBefore').textContent = avgBefore;
+                    document.getElementById('prodAfter').textContent = avgAfter;
+                    document.getElementById('prodUplift').textContent = '+' + uplift + '%';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
