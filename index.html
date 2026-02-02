@@ -117,6 +117,7 @@
         .btn-primary { background: linear-gradient(135deg, #00d4ff, #0099cc); color: #000; }
         .btn-secondary { background: linear-gradient(135deg, #00ff88, #00cc66); color: #000; }
         .btn-warning { background: linear-gradient(135deg, #ffaa00, #ff8800); color: #000; }
+        .btn-export { background: linear-gradient(135deg, #aa66ff, #8844dd); color: #fff; }
         
         .btn:hover {
             transform: translateY(-1px);
@@ -508,16 +509,17 @@
         <div class="upload-section">
             <div class="upload-container">
                 <div class="upload-box">
-                    <h3 class="json-title">📊 Dashboard JSON</h3>
+                    <h3 class="json-title">📊 Load Dashboard</h3>
                     <input type="file" id="jsonFile" accept=".json">
-                    <button class="btn btn-secondary" onclick="loadJsonFile()">📂 Load</button>
-                    <button class="btn btn-primary" onclick="loadFromAPI()">🔄 API</button>
+                    <button class="btn btn-secondary" onclick="loadJsonFile()">📂 Load File</button>
                     <span class="status-msg" id="jsonStatus"></span>
                 </div>
                 <div class="upload-box">
                     <h3 class="csv-title">📤 CSV Prediction</h3>
                     <input type="file" id="csvFile" accept=".csv">
                     <button class="btn btn-warning" onclick="runPrediction()">🚀 Predict</button>
+                    <button class="btn btn-primary" onclick="loadFromAPI()">🔄 Load API</button>
+                    <button class="btn btn-export" onclick="exportDashboardJSON()">💾 Export</button>
                     <span class="status-msg" id="csvStatus"></span>
                 </div>
             </div>
@@ -698,6 +700,58 @@
             const el = document.getElementById(elementId);
             el.textContent = message;
             el.className = 'status-msg ' + type;
+        }
+        
+        // Export current dashboard data as JSON file
+        function exportDashboardJSON() {
+            // Collect current dashboard state
+            const exportData = {
+                kpis: {
+                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 999,
+                    testWells: parseInt(document.getElementById('testWells').textContent) || 200,
+                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.78,
+                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.685,
+                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.562,
+                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.391,
+                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 167740000,
+                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 96355000,
+                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 71385000,
+                    stronglyRecommend: activityChart.data.datasets[0].data[0],
+                    reviewEngineer: activityChart.data.datasets[0].data[1],
+                    lowPriority: activityChart.data.datasets[0].data[2]
+                },
+                confusionMatrix: {
+                    tn: confusionChart.data.datasets[0].data[0],
+                    fp: confusionChart.data.datasets[0].data[1],
+                    fn: confusionChart.data.datasets[0].data[2],
+                    tp: confusionChart.data.datasets[0].data[3]
+                },
+                heteroIndex: [1, 2, 3, 4].map(idx => ({
+                    index: idx,
+                    count: parseInt(document.getElementById(`q${idx}Wells`).textContent) || 0,
+                    success_rate: parseFloat(document.getElementById(`q${idx}Success`).textContent) / 100 || 0
+                })),
+                productionData: {
+                    beforeIntervention: productionChart.data.datasets[0].data.slice(0, 12),
+                    duringWorkover: productionChart.data.datasets[0].data.slice(12, 16),
+                    afterIntervention: productionChart.data.datasets[0].data.slice(16)
+                },
+                exportedAt: new Date().toISOString()
+            };
+            
+            // Create and download file
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dashboard_export_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Dashboard exported!', 'success');
+            console.log('Exported dashboard data:', exportData);
         }
         
         function initCharts() {
