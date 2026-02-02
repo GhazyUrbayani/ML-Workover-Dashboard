@@ -189,68 +189,6 @@
       "count": 77
     }
   ],
-  "topWells": [
-    {
-      "WELL_NAME": "WELL_72",
-      "SUCCESS_PROB": 0.9998422348688096,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_145",
-      "SUCCESS_PROB": 0.9995448375290741,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_971",
-      "SUCCESS_PROB": 0.9995135693517176,
-      "HETERO_INDEX": 3,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_351",
-      "SUCCESS_PROB": 0.9991626434617593,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_395",
-      "SUCCESS_PROB": 0.9987791841463568,
-      "HETERO_INDEX": 3,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_516",
-      "SUCCESS_PROB": 0.9985227045321454,
-      "HETERO_INDEX": 3,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_623",
-      "SUCCESS_PROB": 0.9982831783210077,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_783",
-      "SUCCESS_PROB": 0.9982040476808223,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_25",
-      "SUCCESS_PROB": 0.9981606654667236,
-      "HETERO_INDEX": 3,
-      "ADVISORY": "Strongly Recommend"
-    },
-    {
-      "WELL_NAME": "WELL_475",
-      "SUCCESS_PROB": 0.9980427232933907,
-      "HETERO_INDEX": 2,
-      "ADVISORY": "Strongly Recommend"
-    }
-  ],
   "wellScatter": [
     {
       "WELL_NAME": "WELL_10",

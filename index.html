@@ -378,8 +378,27 @@
         .quadrant-wrapper {
             flex: 1;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             min-height: 0;
+            align-items: stretch;
+        }
+        
+        .axis-y {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-size: 0.55rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 4px;
+        }
+        
+        .quadrant-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .quadrant-grid {
@@ -400,20 +419,24 @@
             text-align: center;
         }
         
-        .quadrant.q4 { background: linear-gradient(135deg, #1a4a4a, #0d3030); border: 1px solid #2a6a6a; }
-        .quadrant.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        /* Q4: Low Oil, High Water - WORST (red/warning) */
+        .quadrant.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
+        /* Q1: High Oil, High Water - Monitor (yellow) */
+        .quadrant.q1 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        /* Q3: Low Oil, Low Water - Needs stimulation (teal) */
         .quadrant.q3 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
-        .quadrant.q1 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
+        /* Q2: High Oil, Low Water - BEST (green) */
+        .quadrant.q2 { background: linear-gradient(135deg, #1a4a3a, #0d3025); border: 1px solid #2a6a5a; }
         
         .q-index {
             font-size: 1.2rem;
             font-weight: 800;
         }
         
-        .q4 .q-index { color: #00ffcc; }
-        .q2 .q-index { color: #ffcc00; }
-        .q3 .q-index { color: #00ccaa; }
-        .q1 .q-index { color: #ff6688; }
+        .q4 .q-index { color: #ff6688; }  /* WORST - red */
+        .q1 .q-index { color: #ffcc00; }  /* Monitor - yellow */
+        .q3 .q-index { color: #00ccaa; }  /* Stimulate - teal */
+        .q2 .q-index { color: #00ff88; }  /* BEST - green */
         
         .q-label {
             font-size: 0.55rem;
@@ -430,10 +453,10 @@
             font-size: 0.6rem;
         }
         
-        .q4 .q-success { color: #00ffcc; }
-        .q2 .q-success { color: #ffcc00; }
-        .q3 .q-success { color: #00ccaa; }
-        .q1 .q-success { color: #ff6688; }
+        .q4 .q-success { color: #ff6688; }  /* WORST */
+        .q1 .q-success { color: #ffcc00; }  /* Monitor */
+        .q3 .q-success { color: #00ccaa; }  /* Stimulate */
+        .q2 .q-success { color: #00ff88; }  /* BEST */
         
         .axis-x {
             font-size: 0.55rem;
@@ -608,33 +631,38 @@
                         <div class="hetero-section">
                             <div class="hetero-title">4-Quadrant by Oil & Water Production</div>
                             <div class="quadrant-wrapper">
-                                <div class="quadrant-grid">
-                                    <div class="quadrant q4">
-                                        <div class="q-index">4</div>
-                                        <div class="q-label">Low Oil - High Water</div>
-                                        <div class="q-wells" id="q4Wells">156 wells</div>
-                                        <div class="q-success" id="q4Success">28.0% Success</div>
+                                <div class="axis-y">↑ High Water | Low Water ↓</div>
+                                <div class="quadrant-main">
+                                    <div class="quadrant-grid">
+                                        <!-- Row 1: High Water -->
+                                        <div class="quadrant q4">
+                                            <div class="q-index">4</div>
+                                            <div class="q-label">Low Oil - High Water</div>
+                                            <div class="q-wells" id="q4Wells">77 wells</div>
+                                            <div class="q-success" id="q4Success">35.1% Success</div>
+                                        </div>
+                                        <div class="quadrant q1">
+                                            <div class="q-index">1</div>
+                                            <div class="q-label">High Oil - High Water</div>
+                                            <div class="q-wells" id="q1Wells">423 wells</div>
+                                            <div class="q-success" id="q1Success">26.5% Success</div>
+                                        </div>
+                                        <!-- Row 2: Low Water -->
+                                        <div class="quadrant q3">
+                                            <div class="q-index">3</div>
+                                            <div class="q-label">Low Oil - Low Water</div>
+                                            <div class="q-wells" id="q3Wells">422 wells</div>
+                                            <div class="q-success" id="q3Success">36.0% Success</div>
+                                        </div>
+                                        <div class="quadrant q2">
+                                            <div class="q-index">2</div>
+                                            <div class="q-label">High Oil - Low Water</div>
+                                            <div class="q-wells" id="q2Wells">77 wells</div>
+                                            <div class="q-success" id="q2Success">31.2% Success</div>
+                                        </div>
                                     </div>
-                                    <div class="quadrant q2">
-                                        <div class="q-index">2</div>
-                                        <div class="q-label">High Oil - High Water</div>
-                                        <div class="q-wells" id="q2Wells">157 wells</div>
-                                        <div class="q-success" id="q2Success">58.0% Success</div>
-                                    </div>
-                                    <div class="quadrant q3">
-                                        <div class="q-index">3</div>
-                                        <div class="q-label">Low Oil - Low Water</div>
-                                        <div class="q-wells" id="q3Wells">156 wells</div>
-                                        <div class="q-success" id="q3Success">42.0% Success</div>
-                                    </div>
-                                    <div class="quadrant q1">
-                                        <div class="q-index">1</div>
-                                        <div class="q-label">High Oil - Low Water</div>
-                                        <div class="q-wells" id="q1Wells">156 wells</div>
-                                        <div class="q-success" id="q1Success">72.0% Success</div>
-                                    </div>
+                                    <div class="axis-x">← Low Oil | High Oil →</div>
                                 </div>
-                                <div class="axis-x">← Low Oil | High Oil →</div>
                             </div>
                         </div>
                     </div>
@@ -770,20 +798,55 @@
             const fileInput = document.getElementById('jsonFile');
             if (!fileInput.files[0]) {
                 setStatus('jsonStatus', '❌ Select file', 'error');
+                showToast('Please select a JSON file first', 'error');
                 return;
             }
+            
+            setStatus('jsonStatus', '⏳ Loading...', 'loading');
+            console.log('Loading JSON file:', fileInput.files[0].name);
             
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
+                    console.log('Parsed JSON data:', data);
+                    
+                    // Validate structure
+                    if (!data.kpis && !data.totalWells && !data.rocAuc) {
+                        throw new Error('Invalid dashboard JSON structure - missing kpis or metrics');
+                    }
+                    
+                    // Log what we're updating
+                    const kpis = data.kpis || data;
+                    console.log('KPIs found:', {
+                        totalWells: kpis.totalWells,
+                        rocAuc: kpis.rocAuc,
+                        accuracy: kpis.accuracy
+                    });
+                    
+                    if (data.heteroIndex) {
+                        console.log('Hetero Index found:', data.heteroIndex);
+                    }
+                    
+                    if (data.confusionMatrix) {
+                        console.log('Confusion Matrix found:', data.confusionMatrix);
+                    }
+                    
                     updateDashboard(data);
                     setStatus('jsonStatus', '✅ JSON loaded', 'success');
-                    showToast('Data loaded!', 'success');
+                    showToast('Dashboard data loaded from JSON!', 'success');
                 } catch (err) {
-                    setStatus('jsonStatus', '❌ Invalid JSON', 'error');
+                    console.error('JSON Parse Error:', err);
+                    setStatus('jsonStatus', '❌ ' + err.message, 'error');
+                    showToast('Failed to load JSON: ' + err.message, 'error');
                 }
             };
+            
+            reader.onerror = function(e) {
+                console.error('FileReader error:', e);
+                setStatus('jsonStatus', '❌ File read error', 'error');
+            };
+            
             reader.readAsText(fileInput.files[0]);
         }
         
@@ -870,10 +933,15 @@
         }
         
         function updateDashboard(data) {
+            console.log('=== UPDATING DASHBOARD ===');
+            console.log('Input data:', data);
+            
             const kpis = data.kpis || data;
+            console.log('KPIs extracted:', kpis);
             
             // Wells
             if (kpis.totalWells) {
+                console.log('Updating totalWells:', kpis.totalWells);
                 document.getElementById('totalWells').textContent = kpis.totalWells;
                 document.getElementById('badge-wells').textContent = '🏭 Wells: ' + kpis.totalWells;
             }
@@ -882,6 +950,7 @@
             // ROC AUC
             if (kpis.rocAuc) {
                 const rocVal = (kpis.rocAuc * 100).toFixed(1) + '%';
+                console.log('Updating rocAuc:', rocVal);
                 document.getElementById('rocAuc').textContent = rocVal;
                 document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocVal;
             }
@@ -898,6 +967,7 @@
             
             // Activity chart
             if (kpis.stronglyRecommend !== undefined) {
+                console.log('Updating activity chart:', kpis.stronglyRecommend, kpis.reviewEngineer, kpis.lowPriority);
                 activityChart.data.datasets[0].data = [
                     kpis.stronglyRecommend,
                     kpis.reviewEngineer,
@@ -909,6 +979,7 @@
             // Confusion matrix
             if (data.confusionMatrix) {
                 const cm = data.confusionMatrix;
+                console.log('Updating confusion matrix:', cm);
                 confusionChart.data.datasets[0].data = [cm.tn, cm.fp, cm.fn, cm.tp];
                 confusionChart.update();
             }
@@ -928,10 +999,12 @@
             
             // Heterogeneity
             if (data.heteroIndex) {
+                console.log('Updating heteroIndex:', data.heteroIndex);
                 data.heteroIndex.forEach(h => {
                     const qId = 'q' + h.index;
                     const wellsEl = document.getElementById(qId + 'Wells');
                     const successEl = document.getElementById(qId + 'Success');
+                    console.log(`  Q${h.index}: ${h.count} wells, ${(h.success_rate * 100).toFixed(1)}% success`);
                     if (wellsEl) wellsEl.textContent = h.count + ' wells';
                     if (successEl) successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
                 });
@@ -939,6 +1012,7 @@
             
             // Production
             if (data.productionData) {
+                console.log('Updating productionData');
                 const pd = data.productionData;
                 const before = pd.beforeIntervention || [];
                 const during = pd.duringWorkover || [];
@@ -958,6 +1032,8 @@
                     document.getElementById('prodUplift').textContent = '+' + uplift + '%';
                 }
             }
+            
+            console.log('=== DASHBOARD UPDATE COMPLETE ===');
         }
     </script>
 </body>
