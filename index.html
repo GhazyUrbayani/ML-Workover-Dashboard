@@ -491,6 +491,7 @@
         
         .toast.success { background: rgba(0,255,136,0.9); color: #000; display: block; }
         .toast.error { background: rgba(255,68,68,0.9); color: #fff; display: block; }
+        .toast.info { background: rgba(0,168,255,0.9); color: #fff; display: block; }
     </style>
 </head>
 <body>
@@ -904,6 +905,9 @@
             reader.readAsText(fileInput.files[0]);
         }
         
+        // ============== ASYNC POLLING PREDICTION ==============
+        let currentJobId = null;
+        
         async function runPrediction() {
             const fileInput = document.getElementById('csvFile');
             if (!fileInput.files[0]) {
@@ -928,61 +932,123 @@
                 console.error('Health check failed:', e);
             }
             
-            setStatus('csvStatus', '⏳ Predicting...', 'loading');
+            setStatus('csvStatus', '⏳ Submitting job...', 'loading');
             
             const formData = new FormData();
             formData.append('file', fileInput.files[0]);
             
             try {
-                console.log('=== PREDICTION REQUEST ===');
+                console.log('=== PREDICTION REQUEST (ASYNC) ===');
                 console.log('File:', fileInput.files[0].name, 'Size:', fileInput.files[0].size, 'bytes');
                 console.log('Sending to: /api/predict');
                 
-                // Create AbortController for timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
-                
+                // Submit job - this returns immediately with job_id
                 const response = await fetch('/api/predict', {
                     method: 'POST',
-                    body: formData,
-                    signal: controller.signal
+                    body: formData
                 });
-                
-                clearTimeout(timeoutId);
                 
                 console.log('Response received:', response.status, response.statusText);
                 const result = await response.json();
-                console.log('Result:', result);
+                console.log('Submit result:', result);
                 
                 if (result.error) {
                     setStatus('csvStatus', '❌ ' + result.error, 'error');
                     showToast(result.error, 'error');
-                } else {
-                    setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
-                    showToast('Prediction complete!', 'success');
-                    if (result.summary) {
-                        document.getElementById('testWells').textContent = result.summary.total_wells;
-                        activityChart.data.datasets[0].data = [
-                            result.summary.strongly_recommend,
-                            result.summary.review_engineer,
-                            result.summary.low_priority
-                        ];
-                        activityChart.update();
-                    }
+                    return;
                 }
-            } catch (error) {
-                console.error('=== PREDICTION ERROR ===');
-                console.error('Error type:', error.name);
-                console.error('Error message:', error.message);
-                console.error('Full error:', error);
                 
-                if (error.name === 'AbortError') {
-                    setStatus('csvStatus', '❌ Request timeout (2min)', 'error');
-                    showToast('Request timed out after 2 minutes', 'error');
+                if (result.job_id) {
+                    currentJobId = result.job_id;
+                    setStatus('csvStatus', '⏳ Job ' + result.job_id + ' queued...', 'loading');
+                    showToast('Job submitted! Polling for results...', 'info');
+                    
+                    // Start polling
+                    pollPrediction(result.job_id, 0);
                 } else {
-                    setStatus('csvStatus', '❌ ' + error.message, 'error');
-                    showToast('Prediction failed: ' + error.message, 'error');
+                    setStatus('csvStatus', '❌ No job_id returned', 'error');
                 }
+                
+            } catch (error) {
+                console.error('=== PREDICTION SUBMIT ERROR ===');
+                console.error('Error:', error);
+                setStatus('csvStatus', '❌ ' + error.message, 'error');
+                showToast('Submit failed: ' + error.message, 'error');
+            }
+        }
+        
+        async function pollPrediction(jobId, pollCount) {
+            const maxPolls = 90; // 90 polls * 2 sec = 3 minutes max
+            const pollInterval = 2000; // 2 seconds
+            
+            if (pollCount >= maxPolls) {
+                setStatus('csvStatus', '❌ Timeout after 3 min', 'error');
+                showToast('Prediction timed out after 3 minutes', 'error');
+                return;
+            }
+            
+            try {
+                console.log(`📊 Poll #${pollCount + 1} for job ${jobId}`);
+                
+                const response = await fetch(`/api/predict/${jobId}`);
+                const data = await response.json();
+                
+                console.log('Poll result:', data);
+                
+                if (data.error && response.status === 404) {
+                    setStatus('csvStatus', '❌ Job not found', 'error');
+                    showToast('Job expired or not found', 'error');
+                    return;
+                }
+                
+                // Update progress
+                if (data.progress !== undefined) {
+                    setStatus('csvStatus', `⏳ ${data.progress}% processing...`, 'loading');
+                }
+                
+                // Check status
+                if (data.status === 'complete' && data.result) {
+                    // SUCCESS!
+                    console.log('🎉 Prediction complete!', data.result);
+                    handlePredictionResult(data.result);
+                    return;
+                    
+                } else if (data.status === 'error') {
+                    setStatus('csvStatus', '❌ ' + (data.error || 'Unknown error'), 'error');
+                    showToast('Prediction error: ' + (data.error || 'Unknown'), 'error');
+                    return;
+                    
+                } else {
+                    // Still processing - poll again
+                    setTimeout(() => pollPrediction(jobId, pollCount + 1), pollInterval);
+                }
+                
+            } catch (error) {
+                console.error('Poll error:', error);
+                // Retry on network error
+                setTimeout(() => pollPrediction(jobId, pollCount + 1), pollInterval);
+            }
+        }
+        
+        function handlePredictionResult(result) {
+            if (result.error) {
+                setStatus('csvStatus', '❌ ' + result.error, 'error');
+                showToast(result.error, 'error');
+            } else {
+                setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
+                showToast('Prediction complete!', 'success');
+                if (result.summary) {
+                    document.getElementById('testWells').textContent = result.summary.total_wells;
+                    activityChart.data.datasets[0].data = [
+                        result.summary.strongly_recommend,
+                        result.summary.review_engineer,
+                        result.summary.low_priority
+                    ];
+                    activityChart.update();
+                }
+                
+                // Store for export
+                window.lastPredictionResult = result;
             }
         }
         

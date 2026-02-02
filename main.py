@@ -3,6 +3,11 @@ import sys
 import warnings
 import json
 import logging
+import threading
+import uuid
+import time
+import io
+
 #Suppress all warnings
 os.environ['LIGHTGBM_SUPPRESS_WARNINGS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -39,11 +44,24 @@ app = Flask(__name__, static_folder='.')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
+# ============== ASYNC JOB QUEUE ==============
+# Store job results in memory (will reset on server restart)
+JOBS = {}
+
+def cleanup_old_jobs():
+    """Remove jobs older than 10 minutes"""
+    now = time.time()
+    old_jobs = [jid for jid, job in JOBS.items() if now - job.get('created_at', now) > 600]
+    for jid in old_jobs:
+        del JOBS[jid]
+        print(f"🗑️ Cleaned up old job: {jid}")
+
 # Log all incoming requests
 @app.before_request
 def log_request():
     print(f"📥 {request.method} {request.path} - Content-Length: {request.content_length}")
     sys.stdout.flush()
+    cleanup_old_jobs()  # Cleanup on each request
 
 #LOAD MODEL & PREPROCESSOR
 
@@ -132,54 +150,32 @@ def get_dashboard_data():
     else:
         return jsonify({"error": "Dashboard data not found. Run notebook first!"}), 404
 
-@app.route('/api/predict', methods=['POST', 'OPTIONS'])
-def predict():
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        print("✅ OPTIONS preflight for /api/predict")
-        sys.stdout.flush()
-        response = jsonify({'status': 'ok'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        return response, 200
-    
-    print("="*50)
-    print("📥 POST /api/predict - START")
-    print(f"   Content-Type: {request.content_type}")
-    print(f"   Content-Length: {request.content_length}")
-    sys.stdout.flush()
-    
-    if model is None:
-        print("❌ Model is None - not loaded")
-        sys.stdout.flush()
-        return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
+# ============== BACKGROUND PREDICTION WORKER ==============
+def _run_prediction_bg(job_id, csv_content, filename):
+    """Background worker to run prediction without blocking HTTP request"""
+    global JOBS
     
     try:
-        # Check if file uploaded
-        print("📋 Checking for file in request.files...")
+        print(f"🔄 Job {job_id}: Starting prediction...")
+        JOBS[job_id]['status'] = 'processing'
+        JOBS[job_id]['progress'] = 10
         sys.stdout.flush()
         
-        if 'file' not in request.files:
-            print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
-            sys.stdout.flush()
-            return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({"error": "Empty filename"}), 400
-        
-        print(f"📄 File received: {file.filename}")
-        
-        # Read CSV
-        df = pd.read_csv(file)
-        print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
+        # Read CSV from bytes
+        df = pd.read_csv(io.StringIO(csv_content))
+        print(f"📊 Job {job_id}: Received CSV: {len(df)} rows, {len(df.columns)} columns")
+        JOBS[job_id]['progress'] = 20
+        sys.stdout.flush()
         
         # Validate required columns
         required_cols = ['CUM_OIL', 'CUM_WATER', 'WELL_NAME']
         missing = [c for c in required_cols if c not in df.columns]
         if missing:
-            return jsonify({"error": f"Missing columns: {missing}"}), 400
+            JOBS[job_id]['status'] = 'error'
+            JOBS[job_id]['error'] = f"Missing columns: {missing}"
+            return
+        
+        JOBS[job_id]['progress'] = 30
         
         # Calculate Heterogeneity Index if not present
         if 'HETERO_INDEX' not in df.columns:
@@ -200,6 +196,8 @@ def predict():
             
             df['HETERO_INDEX'] = df.apply(calc_hetero, axis=1)
         
+        JOBS[job_id]['progress'] = 40
+        
         # Prepare features for prediction
         well_names = df['WELL_NAME'].values
         
@@ -215,6 +213,8 @@ def predict():
         cat_cols = ['WELL_TYPE', 'RESERVOIR_QUALITY', 'HETERO_INDEX']
         
         all_cols = numeric_log_cols + ratio_cols + phys_cols + ma_diff_cols + cat_cols
+        
+        JOBS[job_id]['progress'] = 50
         
         # Fill missing columns with default values
         for col in all_cols:
@@ -233,9 +233,17 @@ def predict():
         X = X.replace([np.inf, -np.inf], np.nan)
         X = X.fillna(0)
         
-        # Predict
+        JOBS[job_id]['progress'] = 60
+        print(f"🤖 Job {job_id}: Running ML prediction...")
+        sys.stdout.flush()
+        
+        # Predict (this is the slow part)
         y_prob = model.predict_proba(X)[:, 1]
         y_pred = model.predict(X)
+        
+        JOBS[job_id]['progress'] = 80
+        print(f"✅ Job {job_id}: Prediction complete, building results...")
+        sys.stdout.flush()
         
         # Create results
         results = []
@@ -267,6 +275,8 @@ def predict():
                 "estimated_roi": round(float(prob) * 150000 - 50000, 0)
             })
         
+        JOBS[job_id]['progress'] = 90
+        
         # Sort by probability
         results = sorted(results, key=lambda x: x['success_prob'], reverse=True)
         for i, r in enumerate(results):
@@ -278,7 +288,7 @@ def predict():
             "strongly_recommend": sum(1 for r in results if r['advisory'] == "Strongly Recommend"),
             "review_engineer": sum(1 for r in results if r['advisory'] == "Review by Engineer"),
             "low_priority": sum(1 for r in results if r['advisory'] == "Low Priority"),
-            "avg_success_prob": round(np.mean(y_prob), 3),
+            "avg_success_prob": round(float(np.mean(y_prob)), 3),
             "hetero_distribution": {
                 "q1": sum(1 for r in results if r['hetero_index'] == 1),
                 "q2": sum(1 for r in results if r['hetero_index'] == 2),
@@ -287,16 +297,137 @@ def predict():
             }
         }
         
-        return jsonify({
+        # Save result
+        JOBS[job_id]['status'] = 'complete'
+        JOBS[job_id]['progress'] = 100
+        JOBS[job_id]['result'] = {
             "success": True,
             "summary": summary,
             "predictions": results
+        }
+        print(f"🎉 Job {job_id}: COMPLETE - {len(results)} wells processed")
+        sys.stdout.flush()
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        JOBS[job_id]['status'] = 'error'
+        JOBS[job_id]['error'] = str(e)
+        print(f"❌ Job {job_id}: ERROR - {str(e)}")
+        sys.stdout.flush()
+
+
+@app.route('/api/predict', methods=['POST', 'OPTIONS'])
+def predict():
+    """Submit prediction job - returns immediately with job_id"""
+    # Handle CORS preflight
+    if request.method == 'OPTIONS':
+        print("✅ OPTIONS preflight for /api/predict")
+        sys.stdout.flush()
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        return response, 200
+    
+    print("="*50)
+    print("📥 POST /api/predict - ASYNC JOB SUBMISSION")
+    print(f"   Content-Type: {request.content_type}")
+    print(f"   Content-Length: {request.content_length}")
+    sys.stdout.flush()
+    
+    if model is None:
+        print("❌ Model is None - not loaded")
+        sys.stdout.flush()
+        return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
+    
+    try:
+        # Check if file uploaded
+        if 'file' not in request.files:
+            print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
+            sys.stdout.flush()
+            return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "Empty filename"}), 400
+        
+        print(f"📄 File received: {file.filename}")
+        
+        # Read file content into memory (so we can close request quickly)
+        csv_content = file.read().decode('utf-8')
+        
+        # Generate unique job ID
+        job_id = str(uuid.uuid4())[:8]
+        
+        # Create job entry
+        JOBS[job_id] = {
+            'status': 'queued',
+            'progress': 0,
+            'filename': file.filename,
+            'created_at': time.time(),
+            'result': None,
+            'error': None
+        }
+        
+        # Start background thread
+        thread = threading.Thread(
+            target=_run_prediction_bg,
+            args=(job_id, csv_content, file.filename),
+            daemon=True
+        )
+        thread.start()
+        
+        print(f"✅ Job {job_id} submitted - returning immediately")
+        sys.stdout.flush()
+        
+        # Return immediately (within 1 second!) 
+        return jsonify({
+            "success": True,
+            "job_id": job_id,
+            "status": "queued",
+            "message": "Prediction job submitted. Poll /api/predict/{job_id} for status."
         })
         
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/predict/<job_id>', methods=['GET', 'OPTIONS'])
+def get_job_status(job_id):
+    """Poll job status - returns progress or final result"""
+    # Handle CORS preflight
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
+        return response, 200
+    
+    if job_id not in JOBS:
+        return jsonify({
+            "error": f"Job {job_id} not found. It may have expired."
+        }), 404
+    
+    job = JOBS[job_id]
+    
+    response_data = {
+        "job_id": job_id,
+        "status": job['status'],
+        "progress": job['progress'],
+        "filename": job.get('filename', 'unknown')
+    }
+    
+    if job['status'] == 'complete':
+        response_data['result'] = job['result']
+        # Keep job for 5 more minutes then cleanup will remove it
+        
+    elif job['status'] == 'error':
+        response_data['error'] = job['error']
+    
+    return jsonify(response_data)
 
 @app.route('/api/predict-single', methods=['POST'])
 def predict_single():
