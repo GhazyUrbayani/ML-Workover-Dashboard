@@ -4,4 +4,4 @@ services:
     runtime: python
     pythonVersion: "3.11.4"
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn main:app --timeout 120 --workers 1
+    startCommand: gunicorn main:app --timeout 600 --workers 1

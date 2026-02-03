@@ -3,11 +3,7 @@ import sys
 import warnings
 import json
 import logging
-import threading
-import uuid
-import time
 import io
-
 #Suppress all warnings
 os.environ['LIGHTGBM_SUPPRESS_WARNINGS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -44,24 +40,11 @@ app = Flask(__name__, static_folder='.')
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
-# ============== ASYNC JOB QUEUE ==============
-# Store job results in memory (will reset on server restart)
-JOBS = {}
-
-def cleanup_old_jobs():
-    """Remove jobs older than 10 minutes"""
-    now = time.time()
-    old_jobs = [jid for jid, job in JOBS.items() if now - job.get('created_at', now) > 600]
-    for jid in old_jobs:
-        del JOBS[jid]
-        print(f"🗑️ Cleaned up old job: {jid}")
-
 # Log all incoming requests
 @app.before_request
 def log_request():
     print(f"📥 {request.method} {request.path} - Content-Length: {request.content_length}")
     sys.stdout.flush()
-    cleanup_old_jobs()  # Cleanup on each request
 
 #LOAD MODEL & PREPROCESSOR
 
@@ -118,6 +101,147 @@ INTERVENTION_COSTS = {
     "NONE": 0,
 }
 
+def process_timeseries_data(df):
+    """
+    Process time-series production data into well-level features.
+    This handles both old CSV format and new Parquet format.
+    Generates MA/Diff features required by the model.
+    """
+    print("   🔄 Standardizing column names...")
+    
+    # Map alternative column names to standard names
+    col_mapping = {
+        'OILPROD': 'OIL_PROD', 'WATERPROD': 'WATER_PROD', 'GASPROD': 'GAS_PROD',
+        'WATERCUT': 'WATER_CUT', 'DATETIME': 'DATE_TIME',
+        'INTVTYPE': 'INTV_TYPE', 'EVALINTVTYPE': 'EVAL_INTV_TYPE',
+        'INTERVENTIONFLAG': 'INTERVENTION_FLAG', 'INTERVENTIONSUCCESS': 'INTERVENTION_SUCCESS',
+        'INTERVENTIONCOST': 'INTERVENTION_COST', 'SHUTIN': 'SHUT_IN',
+        'WELLNAME': 'WELL_NAME', 'WELLTYPE': 'WELL_TYPE',
+        'RESERVOIRQUALITY': 'RESERVOIR_QUALITY'
+    }
+    
+    for old_name, new_name in col_mapping.items():
+        if old_name in df.columns and new_name not in df.columns:
+            df[new_name] = df[old_name]
+    
+    # Ensure datetime
+    if 'DATE_TIME' in df.columns:
+        df['DATE_TIME'] = pd.to_datetime(df['DATE_TIME'])
+        df = df.sort_values(['WELL_NAME', 'DATE_TIME'])
+    
+    # Calculate GOR if missing
+    if 'GOR' not in df.columns and 'GAS_PROD' in df.columns and 'OIL_PROD' in df.columns:
+        df['GOR'] = df['GAS_PROD'] / (df['OIL_PROD'] + 1e-6)
+    
+    print("   🔄 Generating MA & Diff features...")
+    
+    # Generate MA and Diff features
+    for col in ['OIL_PROD', 'WATER_CUT', 'GOR', 'FBHP']:
+        if col in df.columns:
+            df[f'{col}_MA7'] = df.groupby('WELL_NAME')[col].transform(
+                lambda x: x.rolling(7, min_periods=1).mean()
+            )
+            df[f'{col}_MA90'] = df.groupby('WELL_NAME')[col].transform(
+                lambda x: x.rolling(90, min_periods=1).mean()
+            )
+            df[f'{col}_DIFF7'] = df.groupby('WELL_NAME')[col].transform(
+                lambda x: x.diff(7)
+            )
+    
+    # Calculate cumulative production if missing
+    if 'CUM_OIL' not in df.columns and 'OIL_PROD' in df.columns:
+        df['CUM_OIL'] = df.groupby('WELL_NAME')['OIL_PROD'].cumsum()
+    if 'CUM_WATER' not in df.columns and 'WATER_PROD' in df.columns:
+        df['CUM_WATER'] = df.groupby('WELL_NAME')['WATER_PROD'].cumsum()
+    if 'CUM_GAS' not in df.columns and 'GAS_PROD' in df.columns:
+        df['CUM_GAS'] = df.groupby('WELL_NAME')['GAS_PROD'].cumsum()
+    if 'CUM_LIQUID' not in df.columns:
+        df['CUM_LIQUID'] = df.get('CUM_OIL', 0) + df.get('CUM_WATER', 0)
+    
+    # Oil decline rate
+    df['OIL_DECLINE_RATE'] = df.groupby('WELL_NAME')['OIL_PROD'].transform(
+        lambda x: x.pct_change().rolling(30, min_periods=1).mean()
+    ) if 'OIL_PROD' in df.columns else 0
+    
+    print("   🔄 Aggregating to well-level features...")
+    
+    def mode_non_none(x):
+        x = x[x != "NONE"]
+        return x.mode().iat[0] if len(x.mode()) > 0 else "NONE"
+    
+    def safe_mode(x):
+        return x.mode().iat[0] if len(x.mode()) > 0 else "UNKNOWN"
+    
+    # Build aggregation dict
+    agg_dict = {'CUM_OIL': 'max', 'CUM_WATER': 'max', 'CUM_GAS': 'max', 'CUM_LIQUID': 'max'}
+    
+    # Add optional columns
+    optional_aggs = {
+        'WATER_CUT': ('WATER_CUT_MEAN', 'mean'),
+        'FBHP': ('FBHP_MEAN', 'mean'),
+        'FTHP': ('FTHP_MEAN', 'mean'),
+        'FBHT': ('FBHT_MEAN', 'mean'),
+        'FTHT': ('FTHT_MEAN', 'mean'),
+        'POROSITY': ('POROSITY_MEAN', 'mean'),
+        'SHUT_IN': ('N_SHUT_IN', 'sum'),
+        'INTERVENTION_FLAG': ('N_INTERVENTION', 'sum'),
+        'INTERVENTION_COST': ('INTERVENTION_COST_MEAN', 'mean'),
+        'INTERVENTION_SUCCESS': ('INTERVENTION_SUCCESS', 'max'),
+        'OIL_PROD_MA7': ('OIL_PROD_MA7_MEAN', 'mean'),
+        'OIL_PROD_MA90': ('OIL_PROD_MA90_MEAN', 'mean'),
+        'WATER_CUT_MA7': ('WATER_CUT_MA7_MEAN', 'mean'),
+        'WATER_CUT_MA90': ('WATER_CUT_MA90_MEAN', 'mean'),
+        'OIL_PROD_DIFF7': ('OIL_PROD_DIFF7_MEAN', 'mean'),
+        'WATER_CUT_DIFF7': ('WATER_CUT_DIFF7_MEAN', 'mean'),
+        'GOR_DIFF7': ('GOR_DIFF7_MEAN', 'mean'),
+        'FBHP_DIFF7': ('FBHP_DIFF7_MEAN', 'mean'),
+        'OIL_DECLINE_RATE': ('OIL_DECLINE_RATE_MEAN', 'mean'),
+    }
+    
+    for col, (new_name, func) in optional_aggs.items():
+        if col in df.columns:
+            agg_dict[col] = func
+    
+    well_df = df.groupby('WELL_NAME').agg(agg_dict).reset_index()
+    
+    # Rename aggregated columns
+    rename_map = {col: new_name for col, (new_name, _) in optional_aggs.items() if col in well_df.columns}
+    well_df = well_df.rename(columns=rename_map)
+    
+    # Add categorical columns (mode)
+    for cat_col in ['WELL_TYPE', 'RESERVOIR_QUALITY']:
+        if cat_col in df.columns:
+            cat_mode = df.groupby('WELL_NAME')[cat_col].agg(safe_mode).reset_index()
+            well_df = well_df.merge(cat_mode, on='WELL_NAME', how='left')
+    
+    # Add intervention types
+    for intv_col in ['INTV_TYPE', 'EVAL_INTV_TYPE']:
+        if intv_col in df.columns:
+            intv_mode = df.groupby('WELL_NAME')[intv_col].agg(mode_non_none).reset_index()
+            well_df = well_df.merge(intv_mode, on='WELL_NAME', how='left')
+    
+    # Fill missing numeric columns with defaults
+    default_values = {
+        'WATER_CUT_MEAN': 0.3, 'FBHP_MEAN': 1500, 'FTHP_MEAN': 200, 'FBHT_MEAN': 180, 'FTHT_MEAN': 100,
+        'POROSITY_MEAN': 0.15, 'N_SHUT_IN': 0, 'N_INTERVENTION': 0, 'INTERVENTION_COST_MEAN': 0,
+        'OIL_PROD_MA7_MEAN': 0, 'OIL_PROD_MA90_MEAN': 0, 'WATER_CUT_MA7_MEAN': 0, 'WATER_CUT_MA90_MEAN': 0,
+        'OIL_PROD_DIFF7_MEAN': 0, 'WATER_CUT_DIFF7_MEAN': 0, 'GOR_DIFF7_MEAN': 0, 'FBHP_DIFF7_MEAN': 0,
+        'OIL_DECLINE_RATE_MEAN': 0, 'PERM_LOG_MEAN': 100, 'NET_PAY_FROM_LOG': 10,
+        'PHIE_MEAN': 0.15, 'SW_MEAN': 0.3, 'VCLGR_MEAN': 0.2, 'PAYFLAG_RATIO': 0.5, 'RESFLAG_RATIO': 0.5
+    }
+    
+    for col, default in default_values.items():
+        if col not in well_df.columns:
+            well_df[col] = default
+    
+    # Fill missing categorical
+    if 'WELL_TYPE' not in well_df.columns:
+        well_df['WELL_TYPE'] = 'PRODUCER'
+    if 'RESERVOIR_QUALITY' not in well_df.columns:
+        well_df['RESERVOIR_QUALITY'] = 'MEDIUM'
+    
+    return well_df
+
 #API ROUTES
 
 
@@ -150,32 +274,76 @@ def get_dashboard_data():
     else:
         return jsonify({"error": "Dashboard data not found. Run notebook first!"}), 404
 
-# ============== BACKGROUND PREDICTION WORKER ==============
-def _run_prediction_bg(job_id, csv_content, filename):
-    """Background worker to run prediction without blocking HTTP request"""
-    global JOBS
+@app.route('/api/predict', methods=['POST', 'OPTIONS'])
+def predict():
+    # Handle CORS preflight
+    if request.method == 'OPTIONS':
+        print("✅ OPTIONS preflight for /api/predict")
+        sys.stdout.flush()
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        return response, 200
+    
+    print("="*50)
+    print("📥 POST /api/predict - START")
+    print(f"   Content-Type: {request.content_type}")
+    print(f"   Content-Length: {request.content_length}")
+    sys.stdout.flush()
+    
+    if model is None:
+        print("❌ Model is None - not loaded")
+        sys.stdout.flush()
+        return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
     
     try:
-        print(f"🔄 Job {job_id}: Starting prediction...")
-        JOBS[job_id]['status'] = 'processing'
-        JOBS[job_id]['progress'] = 10
+        # Check if file uploaded
+        print("📋 Checking for file in request.files...")
         sys.stdout.flush()
         
-        # Read CSV from bytes
-        df = pd.read_csv(io.StringIO(csv_content))
-        print(f"📊 Job {job_id}: Received CSV: {len(df)} rows, {len(df.columns)} columns")
-        JOBS[job_id]['progress'] = 20
-        sys.stdout.flush()
+        if 'file' not in request.files:
+            print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
+            sys.stdout.flush()
+            return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"error": "Empty filename"}), 400
+        
+        print(f"📄 File received: {file.filename}")
+        
+        # Read file based on extension (CSV or Parquet)
+        filename = file.filename.lower()
+        if filename.endswith('.parquet'):
+            # Read Parquet file
+            file_bytes = io.BytesIO(file.read())
+            df = pd.read_parquet(file_bytes, engine='pyarrow')
+            print(f"📊 Received Parquet: {len(df)} rows, {len(df.columns)} columns")
+        elif filename.endswith('.csv'):
+            # Read CSV file
+            df = pd.read_csv(file)
+            print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
+        else:
+            return jsonify({"error": "Unsupported file format. Use .csv or .parquet"}), 400
+        
+        # Standardize column names (handle both formats)
+        df.columns = df.columns.str.upper().str.replace(' ', '_')
+        print(f"📋 Columns after standardization: {list(df.columns)[:10]}...")
+        
+        # Check if this is time-series data (needs aggregation) or well-level data
+        is_timeseries = 'DATE_TIME' in df.columns or 'DATETIME' in df.columns
+        
+        if is_timeseries:
+            print("📈 Detected time-series data - performing feature engineering...")
+            df = process_timeseries_data(df)
+            print(f"✅ Aggregated to {len(df)} wells")
         
         # Validate required columns
         required_cols = ['CUM_OIL', 'CUM_WATER', 'WELL_NAME']
         missing = [c for c in required_cols if c not in df.columns]
         if missing:
-            JOBS[job_id]['status'] = 'error'
-            JOBS[job_id]['error'] = f"Missing columns: {missing}"
-            return
-        
-        JOBS[job_id]['progress'] = 30
+            return jsonify({"error": f"Missing columns: {missing}"}), 400
         
         # Calculate Heterogeneity Index if not present
         if 'HETERO_INDEX' not in df.columns:
@@ -196,8 +364,6 @@ def _run_prediction_bg(job_id, csv_content, filename):
             
             df['HETERO_INDEX'] = df.apply(calc_hetero, axis=1)
         
-        JOBS[job_id]['progress'] = 40
-        
         # Prepare features for prediction
         well_names = df['WELL_NAME'].values
         
@@ -213,8 +379,6 @@ def _run_prediction_bg(job_id, csv_content, filename):
         cat_cols = ['WELL_TYPE', 'RESERVOIR_QUALITY', 'HETERO_INDEX']
         
         all_cols = numeric_log_cols + ratio_cols + phys_cols + ma_diff_cols + cat_cols
-        
-        JOBS[job_id]['progress'] = 50
         
         # Fill missing columns with default values
         for col in all_cols:
@@ -233,17 +397,9 @@ def _run_prediction_bg(job_id, csv_content, filename):
         X = X.replace([np.inf, -np.inf], np.nan)
         X = X.fillna(0)
         
-        JOBS[job_id]['progress'] = 60
-        print(f"🤖 Job {job_id}: Running ML prediction...")
-        sys.stdout.flush()
-        
-        # Predict (this is the slow part)
+        # Predict
         y_prob = model.predict_proba(X)[:, 1]
         y_pred = model.predict(X)
-        
-        JOBS[job_id]['progress'] = 80
-        print(f"✅ Job {job_id}: Prediction complete, building results...")
-        sys.stdout.flush()
         
         # Create results
         results = []
@@ -275,8 +431,6 @@ def _run_prediction_bg(job_id, csv_content, filename):
                 "estimated_roi": round(float(prob) * 150000 - 50000, 0)
             })
         
-        JOBS[job_id]['progress'] = 90
-        
         # Sort by probability
         results = sorted(results, key=lambda x: x['success_prob'], reverse=True)
         for i, r in enumerate(results):
@@ -288,7 +442,7 @@ def _run_prediction_bg(job_id, csv_content, filename):
             "strongly_recommend": sum(1 for r in results if r['advisory'] == "Strongly Recommend"),
             "review_engineer": sum(1 for r in results if r['advisory'] == "Review by Engineer"),
             "low_priority": sum(1 for r in results if r['advisory'] == "Low Priority"),
-            "avg_success_prob": round(float(np.mean(y_prob)), 3),
+            "avg_success_prob": round(np.mean(y_prob), 3),
             "hetero_distribution": {
                 "q1": sum(1 for r in results if r['hetero_index'] == 1),
                 "q2": sum(1 for r in results if r['hetero_index'] == 2),
@@ -297,137 +451,16 @@ def _run_prediction_bg(job_id, csv_content, filename):
             }
         }
         
-        # Save result
-        JOBS[job_id]['status'] = 'complete'
-        JOBS[job_id]['progress'] = 100
-        JOBS[job_id]['result'] = {
+        return jsonify({
             "success": True,
             "summary": summary,
             "predictions": results
-        }
-        print(f"🎉 Job {job_id}: COMPLETE - {len(results)} wells processed")
-        sys.stdout.flush()
-        
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        JOBS[job_id]['status'] = 'error'
-        JOBS[job_id]['error'] = str(e)
-        print(f"❌ Job {job_id}: ERROR - {str(e)}")
-        sys.stdout.flush()
-
-
-@app.route('/api/predict', methods=['POST', 'OPTIONS'])
-def predict():
-    """Submit prediction job - returns immediately with job_id"""
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        print("✅ OPTIONS preflight for /api/predict")
-        sys.stdout.flush()
-        response = jsonify({'status': 'ok'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        return response, 200
-    
-    print("="*50)
-    print("📥 POST /api/predict - ASYNC JOB SUBMISSION")
-    print(f"   Content-Type: {request.content_type}")
-    print(f"   Content-Length: {request.content_length}")
-    sys.stdout.flush()
-    
-    if model is None:
-        print("❌ Model is None - not loaded")
-        sys.stdout.flush()
-        return jsonify({"error": "Model not loaded. Server running in STATIC MODE due to scikit-learn version mismatch."}), 503
-    
-    try:
-        # Check if file uploaded
-        if 'file' not in request.files:
-            print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
-            sys.stdout.flush()
-            return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
-        
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({"error": "Empty filename"}), 400
-        
-        print(f"📄 File received: {file.filename}")
-        
-        # Read file content into memory (so we can close request quickly)
-        csv_content = file.read().decode('utf-8')
-        
-        # Generate unique job ID
-        job_id = str(uuid.uuid4())[:8]
-        
-        # Create job entry
-        JOBS[job_id] = {
-            'status': 'queued',
-            'progress': 0,
-            'filename': file.filename,
-            'created_at': time.time(),
-            'result': None,
-            'error': None
-        }
-        
-        # Start background thread
-        thread = threading.Thread(
-            target=_run_prediction_bg,
-            args=(job_id, csv_content, file.filename),
-            daemon=True
-        )
-        thread.start()
-        
-        print(f"✅ Job {job_id} submitted - returning immediately")
-        sys.stdout.flush()
-        
-        # Return immediately (within 1 second!) 
-        return jsonify({
-            "success": True,
-            "job_id": job_id,
-            "status": "queued",
-            "message": "Prediction job submitted. Poll /api/predict/{job_id} for status."
         })
         
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
-
-
-@app.route('/api/predict/<job_id>', methods=['GET', 'OPTIONS'])
-def get_job_status(job_id):
-    """Poll job status - returns progress or final result"""
-    # Handle CORS preflight
-    if request.method == 'OPTIONS':
-        response = jsonify({'status': 'ok'})
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, OPTIONS')
-        return response, 200
-    
-    if job_id not in JOBS:
-        return jsonify({
-            "error": f"Job {job_id} not found. It may have expired."
-        }), 404
-    
-    job = JOBS[job_id]
-    
-    response_data = {
-        "job_id": job_id,
-        "status": job['status'],
-        "progress": job['progress'],
-        "filename": job.get('filename', 'unknown')
-    }
-    
-    if job['status'] == 'complete':
-        response_data['result'] = job['result']
-        # Keep job for 5 more minutes then cleanup will remove it
-        
-    elif job['status'] == 'error':
-        response_data['error'] = job['error']
-    
-    return jsonify(response_data)
 
 @app.route('/api/predict-single', methods=['POST'])
 def predict_single():
