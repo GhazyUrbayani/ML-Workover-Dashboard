@@ -161,7 +161,7 @@
             display: flex;
             flex-direction: column;
             min-height: 200px;
-            overflow: hidden;
+            overflow: visible;
         }
         
         .panel-title {
@@ -176,8 +176,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 180px;
-            overflow: hidden;
+            min-height: 150px;
+            overflow: visible;
         }
         
         /* PANEL 1: Workover Activities */
@@ -187,6 +187,7 @@
             gap: 8px;
             height: 100%;
             min-height: 150px;
+            overflow: visible;
         }
         
         .activity-stats {
@@ -223,16 +224,17 @@
         
         .chart-container {
             position: relative;
-            min-height: 120px;
+            min-height: 80px;
+            height: 100%;
+            width: 100%;
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: visible;
         }
         
         .chart-container canvas {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
         }
         
         /* PANEL 2: Success Score */
@@ -304,6 +306,7 @@
             height: 100%;
             gap: 6px;
             min-height: 150px;
+            overflow: visible;
         }
         
         .prod-stats {
@@ -562,8 +565,8 @@
                                 <div class="stat-label">Test Wells</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 140px;">
-                            <canvas id="activityChart"></canvas>
+                        <div class="chart-container" style="height: 140px; width: 100%;">
+                            <canvas id="activityChart" width="200" height="140"></canvas>
                         </div>
                     </div>
                 </div>
@@ -597,8 +600,8 @@
                                     <div class="metric-label">F1-Score</div>
                                 </div>
                             </div>
-                            <div class="chart-container" style="height: 80px;">
-                                <canvas id="confusionChart"></canvas>
+                            <div class="chart-container" style="height: 80px; width: 100%;">
+                                <canvas id="confusionChart" width="300" height="80"></canvas>
                             </div>
                         </div>
                     </div>
@@ -624,8 +627,8 @@
                                 <div class="prod-label">Uplift</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 100px;">
-                            <canvas id="productionChart"></canvas>
+                        <div class="chart-container" style="height: 100px; width: 100%;">
+                            <canvas id="productionChart" width="600" height="100"></canvas>
                         </div>
                     </div>
                 </div>
@@ -705,8 +708,18 @@
         let activityChart, confusionChart, productionChart;
         
         document.addEventListener('DOMContentLoaded', function() {
-            initCharts();
-            loadFromAPI();
+            console.log('DOM loaded, initializing charts...');
+            
+            // Small delay to ensure DOM is fully rendered
+            setTimeout(() => {
+                initCharts();
+                console.log('Charts initialized:', { activityChart, confusionChart, productionChart });
+                
+                // Force resize after init
+                window.dispatchEvent(new Event('resize'));
+                
+                loadFromAPI();
+            }, 100);
         });
         
         function showToast(message, type = 'success') {
@@ -773,8 +786,16 @@
         }
         
         function initCharts() {
+            // Destroy existing charts if any
+            if (activityChart) activityChart.destroy();
+            if (confusionChart) confusionChart.destroy();
+            if (productionChart) productionChart.destroy();
+            
             // Activity Donut
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            const activityCanvas = document.getElementById('activityChart');
+            console.log('Activity canvas:', activityCanvas, activityCanvas.offsetWidth, activityCanvas.offsetHeight);
+            
+            const activityCtx = activityCanvas.getContext('2d');
             activityChart = new Chart(activityCtx, {
                 type: 'doughnut',
                 data: {
@@ -788,6 +809,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 500 },
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -798,7 +820,10 @@
             });
             
             // Confusion Matrix
-            const confusionCtx = document.getElementById('confusionChart').getContext('2d');
+            const confusionCanvas = document.getElementById('confusionChart');
+            console.log('Confusion canvas:', confusionCanvas, confusionCanvas.offsetWidth, confusionCanvas.offsetHeight);
+            
+            const confusionCtx = confusionCanvas.getContext('2d');
             confusionChart = new Chart(confusionCtx, {
                 type: 'bar',
                 data: {
@@ -812,6 +837,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 500 },
                     indexAxis: 'y',
                     plugins: { legend: { display: false } },
                     scales: {
@@ -822,7 +848,10 @@
             });
             
             // Production Chart
-            const prodCtx = document.getElementById('productionChart').getContext('2d');
+            const prodCanvas = document.getElementById('productionChart');
+            console.log('Production canvas:', prodCanvas, prodCanvas.offsetWidth, prodCanvas.offsetHeight);
+            
+            const prodCtx = prodCanvas.getContext('2d');
             productionChart = new Chart(prodCtx, {
                 type: 'line',
                 data: {
@@ -840,6 +869,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 500 },
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 7 }, maxRotation: 45 } },
@@ -847,6 +877,8 @@
                     }
                 }
             });
+            
+            console.log('All charts created successfully');
         }
         
         async function loadFromAPI() {
