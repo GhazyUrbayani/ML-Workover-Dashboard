@@ -765,7 +765,7 @@
         <div class="main-content">
             <!-- Panel 1: Workover Activities -->
             <div class="panel">
-                <div class="panel-title">🔧 Workover Activities</div>
+                <div class="panel-title">🔧 Workover Activities <span style="font-size:0.6rem;color:#666;font-weight:normal;">(Advisory Distribution)</span></div>
                 <div class="panel-content">
                     <div class="activities-grid">
                         <div class="activity-stats">
@@ -778,9 +778,15 @@
                                 <div class="stat-label">Test Wells</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 140px; width: 100%;">
-                            <canvas id="activityChart" width="200" height="140"></canvas>
+                        <div class="chart-container" style="height: 110px; width: 100%;">
+                            <canvas id="activityChart" width="200" height="110"></canvas>
                         </div>
+                        <div class="activity-legend">
+                            <div class="legend-item"><div class="legend-dot recommend"></div><span class="legend-label">Strongly Recommend</span><span class="legend-count" id="legendRecommend">45</span></div>
+                            <div class="legend-item"><div class="legend-dot review"></div><span class="legend-label">Review by Engineer</span><span class="legend-count" id="legendReview">10</span></div>
+                            <div class="legend-item"><div class="legend-dot low"></div><span class="legend-label">Low Priority</span><span class="legend-count" id="legendLow">5</span></div>
+                        </div>
+                        <div class="hover-hint">Hover cards for details</div>
                     </div>
                 </div>
             </div>
@@ -790,25 +796,25 @@
                 <div class="panel-title">✅ Success Score & Model Performance</div>
                 <div class="panel-content">
                     <div class="success-content">
-                        <div class="score-display">
+                        <div class="score-display tooltip-container" onmouseenter="showMetricTooltip(event, 'rocauc')" onmouseleave="hideTooltip()">
                             <div class="big-score" id="rocAuc">80.4%</div>
                             <div class="score-label">ROC-AUC Score</div>
                         </div>
                         <div class="metrics-col">
                             <div class="metrics-grid">
-                                <div class="metric-box">
+                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'accuracy')" onmouseleave="hideTooltip()">
                                     <div class="metric-value" id="accuracy">78.3%</div>
                                     <div class="metric-label">Accuracy</div>
                                 </div>
-                                <div class="metric-box">
+                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'precision')" onmouseleave="hideTooltip()">
                                     <div class="metric-value" id="precision">78.5%</div>
                                     <div class="metric-label">Precision</div>
                                 </div>
-                                <div class="metric-box">
+                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'recall')" onmouseleave="hideTooltip()">
                                     <div class="metric-value" id="recall">78.6%</div>
                                     <div class="metric-label">Recall</div>
                                 </div>
-                                <div class="metric-box">
+                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'f1score')" onmouseleave="hideTooltip()">
                                     <div class="metric-value" id="f1Score">78.5%</div>
                                     <div class="metric-label">F1-Score</div>
                                 </div>
@@ -816,8 +822,15 @@
                             <div class="chart-container" style="height: 80px; width: 100%;">
                                 <canvas id="confusionChart" width="300" height="80"></canvas>
                             </div>
+                            <div class="cm-legend">
+                                <div class="cm-item"><div class="cm-dot tn"></div>TN=True Neg</div>
+                                <div class="cm-item"><div class="cm-dot fp"></div>FP=False Pos</div>
+                                <div class="cm-item"><div class="cm-dot fn"></div>FN=False Neg</div>
+                                <div class="cm-item"><div class="cm-dot tp"></div>TP=True Pos</div>
+                            </div>
                         </div>
                     </div>
+                    <div class="hover-hint">Hover metrics for explanation</div>
                 </div>
             </div>
             
@@ -827,22 +840,28 @@
                 <div class="panel-content">
                     <div class="production-content">
                         <div class="prod-stats">
-                            <div class="prod-stat before">
+                            <div class="prod-stat before tooltip-container" onmouseenter="showProdTooltip(event, 'before')" onmouseleave="hideTooltip()">
                                 <div class="prod-value before" id="prodBefore">2850</div>
                                 <div class="prod-label">Avg Before (BOPD)</div>
                             </div>
-                            <div class="prod-stat after">
+                            <div class="prod-stat after tooltip-container" onmouseenter="showProdTooltip(event, 'after')" onmouseleave="hideTooltip()">
                                 <div class="prod-value after" id="prodAfter">3450</div>
                                 <div class="prod-label">Avg After (BOPD)</div>
                             </div>
-                            <div class="prod-stat uplift">
+                            <div class="prod-stat uplift tooltip-container" onmouseenter="showProdTooltip(event, 'uplift')" onmouseleave="hideTooltip()">
                                 <div class="prod-value uplift" id="prodUplift">+21%</div>
                                 <div class="prod-label">Uplift</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 100px; width: 100%;">
-                            <canvas id="productionChart" width="600" height="100"></canvas>
+                        <div class="chart-container" style="height: 90px; width: 100%;">
+                            <canvas id="productionChart" width="600" height="90"></canvas>
                         </div>
+                        <div class="prod-legend">
+                            <div class="prod-legend-item"><span>M-n</span> = n Months Before Workover</div>
+                            <div class="prod-legend-item"><span>WO</span> = Workover Period</div>
+                            <div class="prod-legend-item"><span>M+n</span> = n Months After Workover</div>
+                        </div>
+                        <div class="hover-hint">Hover stats for details</div>
                     </div>
                 </div>
             </div>
@@ -902,8 +921,28 @@
                                     <div class="axis-x">← Low Oil | High Oil →</div>
                                 </div>
                             </div>
+                            <div class="hi-legend">
+                                <div class="hi-legend-item">
+                                    <div class="hi-legend-box q1">1</div>
+                                    <div class="hi-legend-text">Best<br/>⬆Oil ⬇Water</div>
+                                </div>
+                                <div class="hi-legend-item">
+                                    <div class="hi-legend-box q2">2</div>
+                                    <div class="hi-legend-text">Monitor<br/>⬆Oil ⬆Water</div>
+                                </div>
+                                <div class="hi-legend-item">
+                                    <div class="hi-legend-box q3">3</div>
+                                    <div class="hi-legend-text">Stimulate<br/>⬇Oil ⬇Water</div>
+                                </div>
+                                <div class="hi-legend-item">
+                                    <div class="hi-legend-box q4">4</div>
+                                    <div class="hi-legend-text">High Risk<br/>⬇Oil ⬆Water</div>
+                                </div>
+                            </div>
+                            <div class="hover-hint">Hover quadrants for detailed analysis</div>
                         </div>
                     </div>
+                    <div class="hover-hint" style="margin-top:4px;">Hover cost cards for breakdown</div>
                 </div>
             </div>
         </div>
@@ -1020,23 +1059,54 @@
                 data: {
                     labels: ['Strongly Recommend', 'Review by Engineer', 'Low Priority'],
                     datasets: [{
-                        data: [34, 10, 156],
+                        data: [45, 10, 5],
                         backgroundColor: ['#00ff88', '#ffaa00', '#ff6b6b'],
-                        borderWidth: 0
+                        borderWidth: 2,
+                        borderColor: '#1a1a2e'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '55%',
                     animation: { duration: 500 },
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#ccc', font: { size: 9 }, boxWidth: 10, padding: 6 }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    const pct = ((ctx.raw / total) * 100).toFixed(1);
+                                    return `${ctx.label}: ${ctx.raw} wells (${pct}%)`;
+                                }
+                            }
                         }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'centerText',
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        ctx.save();
+                        ctx.font = 'bold 14px Segoe UI';
+                        ctx.fillStyle = '#fff';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
+                        const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
+                        ctx.fillText(total, centerX, centerY - 6);
+                        ctx.font = '9px Segoe UI';
+                        ctx.fillStyle = '#888';
+                        ctx.fillText('wells', centerX, centerY + 8);
+                        ctx.restore();
+                    }
+                }]
             });
+            // Update custom legend counts
+            document.getElementById('legendRecommend').textContent = '45';
+            document.getElementById('legendReview').textContent = '10';
+            document.getElementById('legendLow').textContent = '5';
             
             // Confusion Matrix
             const confusionCanvas = document.getElementById('confusionChart');
@@ -1048,7 +1118,7 @@
                 data: {
                     labels: ['TN', 'FP', 'FN', 'TP'],
                     datasets: [{
-                        data: [110, 21, 42, 27],
+                        data: [24, 8, 5, 23],
                         backgroundColor: ['#00cc88', '#ffaa00', '#ff6b6b', '#00ff88'],
                         borderRadius: 3
                     }]
@@ -1058,12 +1128,48 @@
                     maintainAspectRatio: false,
                     animation: { duration: 500 },
                     indexAxis: 'y',
-                    plugins: { legend: { display: false } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const labels = {
+                                        'TN': 'True Negative (Correctly predicted: No Intervention Needed)',
+                                        'FP': 'False Positive (Incorrectly predicted: Needs Intervention)',
+                                        'FN': 'False Negative (Missed: Actually Needed Intervention)',
+                                        'TP': 'True Positive (Correctly predicted: Needs Intervention)'
+                                    };
+                                    return labels[ctx.label] + ': ' + ctx.raw;
+                                }
+                            }
+                        }
+                    },
                     scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888', font: { size: 9 } } },
-                        y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 9 } } }
+                        x: { 
+                            grid: { color: 'rgba(255,255,255,0.1)' }, 
+                            ticks: { color: '#888', font: { size: 9 } },
+                            max: 30
+                        },
+                        y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 9 }, font: { weight: 'bold' } } }
                     }
-                }
+                },
+                plugins: [{
+                    id: 'datalabels',
+                    afterDatasetsDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        chart.data.datasets.forEach((dataset, i) => {
+                            const meta = chart.getDatasetMeta(i);
+                            meta.data.forEach((bar, index) => {
+                                const data = dataset.data[index];
+                                ctx.fillStyle = '#fff';
+                                ctx.font = 'bold 10px Segoe UI';
+                                ctx.textAlign = 'left';
+                                ctx.textBaseline = 'middle';
+                                ctx.fillText(data, bar.x + 5, bar.y);
+                            });
+                        });
+                    }
+                }]
             });
             
             // Production Chart
@@ -1335,10 +1441,17 @@
                     kpis.lowPriority
                 ];
                 activityChart.update();
+                // Update custom legend
+                document.getElementById('legendRecommend').textContent = kpis.stronglyRecommend;
+                document.getElementById('legendReview').textContent = kpis.reviewEngineer;
+                document.getElementById('legendLow').textContent = kpis.lowPriority;
             } else {
                 // Default advisory distribution from test set
                 activityChart.data.datasets[0].data = [45, 10, 5];
                 activityChart.update();
+                document.getElementById('legendRecommend').textContent = '45';
+                document.getElementById('legendReview').textContent = '10';
+                document.getElementById('legendLow').textContent = '5';
             }
             
             // Confusion matrix
@@ -1561,9 +1674,9 @@
                 titleEl.textContent = '🏭 Total Wells Analysis';
                 contentEl.innerHTML = `
                     <div class="tooltip-row"><span class="label">Total Wells:</span><span class="value">${totalWells}</span></div>
-                    <div class="tooltip-row"><span class="label">With Interventions:</span><span class="value">~20%</span></div>
+                    <div class="tooltip-row"><span class="label">With Interventions:</span><span class="value">82 wells (27%)</span></div>
                     <div class="tooltip-row"><span class="label">Active Producers:</span><span class="value">~85%</span></div>
-                    <div class="tooltip-row"><span class="label">Data Period:</span><span class="value">2020-2025</span></div>
+                    <div class="tooltip-row"><span class="label">Data Period:</span><span class="value">2015-2017</span></div>
                 `;
             } else if (cardType === 'testWells') {
                 const testWells = document.getElementById('testWells').textContent;
@@ -1571,8 +1684,105 @@
                 contentEl.innerHTML = `
                     <div class="tooltip-row"><span class="label">Test Wells:</span><span class="value">${testWells}</span></div>
                     <div class="tooltip-row"><span class="label">Split Ratio:</span><span class="value">20%</span></div>
-                    <div class="tooltip-row"><span class="label">Stratified:</span><span class="value positive">Yes</span></div>
-                    <div class="tooltip-row"><span class="label">INTV in Test:</span><span class="value">~12 wells</span></div>
+                    <div class="tooltip-row"><span class="label">Stratified:</span><span class="value positive">Yes (by INTV)</span></div>
+                    <div class="tooltip-row"><span class="label">INTV in Test:</span><span class="value">60 wells</span></div>
+                `;
+            }
+            
+            positionTooltip(event, tooltip);
+            tooltip.classList.add('show');
+        }
+        
+        function showMetricTooltip(event, metricType) {
+            const tooltip = document.getElementById('globalTooltip');
+            const titleEl = document.getElementById('tooltipTitle');
+            const contentEl = document.getElementById('tooltipContent');
+            
+            const metrics = {
+                accuracy: {
+                    title: '🎯 Accuracy',
+                    formula: '(TP + TN) / Total',
+                    value: document.getElementById('accuracy').textContent,
+                    meaning: 'Correct predictions out of all predictions',
+                    interpretation: 'Model correctly classifies 78% of wells'
+                },
+                precision: {
+                    title: '🔬 Precision',
+                    formula: 'TP / (TP + FP)',
+                    value: document.getElementById('precision').textContent,
+                    meaning: 'Correct positive predictions only',
+                    interpretation: '78% of "needs intervention" predictions are correct'
+                },
+                recall: {
+                    title: '📊 Recall (Sensitivity)',
+                    formula: 'TP / (TP + FN)',
+                    value: document.getElementById('recall').textContent,
+                    meaning: 'How many actual positives we found',
+                    interpretation: 'Model catches 79% of wells needing intervention'
+                },
+                f1score: {
+                    title: '⚖️ F1-Score',
+                    formula: '2 × (P × R) / (P + R)',
+                    value: document.getElementById('f1Score').textContent,
+                    meaning: 'Harmonic mean of Precision & Recall',
+                    interpretation: 'Balanced measure of model performance'
+                },
+                rocauc: {
+                    title: '📈 ROC-AUC Score',
+                    formula: 'Area Under ROC Curve',
+                    value: document.getElementById('rocAuc').textContent,
+                    meaning: 'Probability of ranking positive > negative',
+                    interpretation: '80.4% chance model ranks intervention wells higher'
+                }
+            };
+            
+            const m = metrics[metricType];
+            titleEl.textContent = m.title;
+            contentEl.innerHTML = `
+                <div class="tooltip-row"><span class="label">Value:</span><span class="value positive">${m.value}</span></div>
+                <div class="tooltip-row"><span class="label">Formula:</span><span class="value">${m.formula}</span></div>
+                <div class="tooltip-row"><span class="label">Meaning:</span><span class="value" style="font-size:0.6rem">${m.meaning}</span></div>
+                <div class="tooltip-row" style="margin-top:4px;border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;">
+                    <span class="label">💡</span><span class="value" style="font-size:0.55rem;font-weight:normal">${m.interpretation}</span>
+                </div>
+            `;
+            
+            positionTooltip(event, tooltip);
+            tooltip.classList.add('show');
+        }
+        
+        function showProdTooltip(event, type) {
+            const tooltip = document.getElementById('globalTooltip');
+            const titleEl = document.getElementById('tooltipTitle');
+            const contentEl = document.getElementById('tooltipContent');
+            
+            const before = document.getElementById('prodBefore').textContent;
+            const after = document.getElementById('prodAfter').textContent;
+            const uplift = document.getElementById('prodUplift').textContent;
+            
+            if (type === 'before') {
+                titleEl.textContent = '📉 Pre-Workover Production';
+                contentEl.innerHTML = `
+                    <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value negative">${before} BOPD</span></div>
+                    <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months before WO</span></div>
+                    <div class="tooltip-row"><span class="label">Trend:</span><span class="value negative">Declining</span></div>
+                    <div class="tooltip-row"><span class="label">Issue:</span><span class="value" style="font-size:0.6rem">Declining production triggers workover</span></div>
+                `;
+            } else if (type === 'after') {
+                titleEl.textContent = '📈 Post-Workover Production';
+                contentEl.innerHTML = `
+                    <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value positive">${after} BOPD</span></div>
+                    <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months after WO</span></div>
+                    <div class="tooltip-row"><span class="label">Trend:</span><span class="value positive">Stabilized</span></div>
+                    <div class="tooltip-row"><span class="label">Result:</span><span class="value" style="font-size:0.6rem">Production restored after intervention</span></div>
+                `;
+            } else {
+                titleEl.textContent = '🚀 Production Uplift';
+                contentEl.innerHTML = `
+                    <div class="tooltip-row"><span class="label">Uplift:</span><span class="value positive">${uplift}</span></div>
+                    <div class="tooltip-row"><span class="label">Before:</span><span class="value negative">${before} BOPD</span></div>
+                    <div class="tooltip-row"><span class="label">After:</span><span class="value positive">${after} BOPD</span></div>
+                    <div class="tooltip-row"><span class="label">Gain:</span><span class="value positive">+${parseInt(after) - parseInt(before)} BOPD</span></div>
                 `;
             }
             
