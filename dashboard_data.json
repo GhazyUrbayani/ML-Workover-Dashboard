@@ -1,81 +1,57 @@
 {
   "modelInfo": {
-    "rocAuc": 0.8036,
+    "rocAuc": 0.8878,
     "nWells": 300,
     "nFeatures": 32
   },
   "costAnalysis": {
-    "totalCostBaseline": 24760000,
-    "totalCostOptimized": 13005000,
-    "costSaving": 11755000,
-    "stronglyRecommend": 30,
-    "reviewEngineer": 2,
-    "lowPriority": 28
+    "totalCostBaseline": 25990000,
+    "totalCostOptimized": 15355000,
+    "costSaving": 10635000,
+    "stronglyRecommend": 28,
+    "reviewEngineer": 5,
+    "lowPriority": 27
   },
   "confusionMatrix": {
     "tn": 24,
-    "fp": 8,
-    "fn": 5,
-    "tp": 23
+    "fp": 6,
+    "fn": 6,
+    "tp": 24
   },
   "rocCurve": {
     "fpr": [
       0.0,
       0.0,
       0.0,
-      0.03125,
-      0.03125,
-      0.0625,
-      0.0625,
-      0.09375,
-      0.09375,
-      0.125,
-      0.125,
-      0.15625,
-      0.15625,
-      0.1875,
-      0.1875,
-      0.25,
-      0.25,
-      0.4375,
-      0.4375,
-      0.46875,
-      0.46875,
-      0.5,
-      0.5,
-      0.5625,
-      0.5625,
-      0.875,
-      0.875,
+      0.03333333333333333,
+      0.03333333333333333,
+      0.06666666666666667,
+      0.06666666666666667,
+      0.13333333333333333,
+      0.13333333333333333,
+      0.2,
+      0.2,
+      0.26666666666666666,
+      0.26666666666666666,
+      0.7,
+      0.7,
       1.0
     ],
     "tpr": [
       0.0,
-      0.03571428571428571,
-      0.10714285714285714,
-      0.10714285714285714,
-      0.14285714285714285,
-      0.14285714285714285,
-      0.32142857142857145,
-      0.32142857142857145,
-      0.35714285714285715,
-      0.35714285714285715,
-      0.6071428571428571,
-      0.6071428571428571,
-      0.6428571428571429,
-      0.6428571428571429,
-      0.6785714285714286,
-      0.6785714285714286,
-      0.8214285714285714,
-      0.8214285714285714,
-      0.8571428571428571,
-      0.8571428571428571,
-      0.8928571428571429,
-      0.8928571428571429,
-      0.9285714285714286,
-      0.9285714285714286,
-      0.9642857142857143,
-      0.9642857142857143,
+      0.03333333333333333,
+      0.1,
+      0.1,
+      0.3,
+      0.3,
+      0.6666666666666666,
+      0.6666666666666666,
+      0.7666666666666667,
+      0.7666666666666667,
+      0.9,
+      0.9,
+      0.9666666666666667,
+      0.9666666666666667,
       1.0,
       1.0
     ]
@@ -83,221 +59,221 @@
   "heteroIndex": [
     {
       "HETERO_INDEX": 1,
-      "count": 11,
-      "avg_cum_oil": 2086059.2062108277,
-      "avg_cum_water": 1408319.0678769527,
-      "avg_cost": 63181.818181818184,
-      "success_rate": 0.8181818181818182,
+      "count": 37,
+      "avg_cum_oil": 716533.6898015451,
+      "avg_cum_water": 326767.8787368208,
+      "avg_cost": 104459.45945945945,
+      "success_rate": 0.8648648648648649,
       "label": "High Oil - Low Water"
     },
     {
       "HETERO_INDEX": 2,
-      "count": 139,
-      "avg_cum_oil": 21232303.21552476,
-      "avg_cum_water": 16986590.958112743,
-      "avg_cost": 81654.67625899281,
-      "success_rate": 0.49640287769784175,
+      "count": 113,
+      "avg_cum_oil": 1135278.2216867357,
+      "avg_cum_water": 10872572.974073771,
+      "avg_cost": 72212.38938053098,
+      "success_rate": 0.23893805309734514,
       "label": "High Oil - High Water"
     },
     {
       "HETERO_INDEX": 3,
-      "count": 139,
-      "avg_cum_oil": 952023.7940341812,
-      "avg_cum_water": 803021.4695709115,
-      "avg_cost": 82517.9856115108,
-      "success_rate": 0.4316546762589928,
+      "count": 113,
+      "avg_cum_oil": 244044.76740128614,
+      "avg_cum_water": 137647.15952959575,
+      "avg_cost": 99070.79646017699,
+      "success_rate": 0.7964601769911505,
       "label": "Low Oil - Low Water"
     },
     {
       "HETERO_INDEX": 4,
-      "count": 11,
-      "avg_cum_oil": 1645424.9828533123,
-      "avg_cum_water": 1724978.145998109,
-      "avg_cost": 113181.81818181818,
-      "success_rate": 0.09090909090909091,
+      "count": 37,
+      "avg_cum_oil": 290459.7885069859,
+      "avg_cum_water": 5136776.54315373,
+      "avg_cost": 74864.86486486487,
+      "success_rate": 0.02702702702702703,
       "label": "Low Oil - High Water"
     }
   ],
   "quadrantTooltips": {
     "1": {
       "label": "High Oil - Low Water",
-      "wells": 11,
-      "avgEUR": "2.09M BBL",
-      "avgCost": "$63K",
-      "successRate": "81.8%"
+      "wells": 37,
+      "avgEUR": "0.72M BBL",
+      "avgCost": "$104K",
+      "successRate": "86.5%"
     },
     "2": {
       "label": "High Oil - High Water",
-      "wells": 139,
-      "avgEUR": "21.23M BBL",
-      "avgCost": "$82K",
-      "successRate": "49.6%"
+      "wells": 113,
+      "avgEUR": "1.14M BBL",
+      "avgCost": "$72K",
+      "successRate": "23.9%"
     },
     "3": {
       "label": "Low Oil - Low Water",
-      "wells": 139,
-      "avgEUR": "0.95M BBL",
-      "avgCost": "$83K",
-      "successRate": "43.2%"
+      "wells": 113,
+      "avgEUR": "0.24M BBL",
+      "avgCost": "$99K",
+      "successRate": "79.6%"
     },
     "4": {
       "label": "Low Oil - High Water",
-      "wells": 11,
-      "avgEUR": "1.65M BBL",
-      "avgCost": "$113K",
-      "successRate": "9.1%"
+      "wells": 37,
+      "avgEUR": "0.29M BBL",
+      "avgCost": "$75K",
+      "successRate": "2.7%"
     }
   },
   "costBreakdown": {
     "baseline": {
-      "total": 24760000,
-      "perWell": 82533,
+      "total": 25990000,
+      "perWell": 86633,
       "topIntv": "REPERFORATION"
     },
     "optimized": {
-      "total": 13005000,
-      "perWell": 43350,
+      "total": 15355000,
+      "perWell": 51183,
       "topIntv": "REPERFORATION"
     }
   },
   "topWells": [
     {
-      "WELL_NAME": "WELL_83",
-      "SUCCESS_PROB": 0.9998900837787663,
-      "HETERO_LABEL": "High Oil - Low Water",
+      "WELL_NAME": "WELL_250",
+      "SUCCESS_PROB": 0.9927478724473096,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 1
     },
     {
-      "WELL_NAME": "WELL_57",
-      "SUCCESS_PROB": 0.9994776588075781,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_284",
+      "SUCCESS_PROB": 0.9912482417410196,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 2
     },
     {
-      "WELL_NAME": "WELL_168",
-      "SUCCESS_PROB": 0.9987263376199758,
+      "WELL_NAME": "WELL_43",
+      "SUCCESS_PROB": 0.9889353025227421,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 3
     },
     {
-      "WELL_NAME": "WELL_204",
-      "SUCCESS_PROB": 0.9984618163406923,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_162",
+      "SUCCESS_PROB": 0.9884829476662215,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 4
     },
     {
-      "WELL_NAME": "WELL_81",
-      "SUCCESS_PROB": 0.9984280033515719,
+      "WELL_NAME": "WELL_183",
+      "SUCCESS_PROB": 0.9882356678636556,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 5
     },
     {
-      "WELL_NAME": "WELL_183",
-      "SUCCESS_PROB": 0.9978751350333235,
+      "WELL_NAME": "WELL_182",
+      "SUCCESS_PROB": 0.9871047433402661,
       "HETERO_LABEL": "High Oil - High Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 6
     },
     {
-      "WELL_NAME": "WELL_259",
-      "SUCCESS_PROB": 0.9970688346739035,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_67",
+      "SUCCESS_PROB": 0.9852150038760796,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 7
     },
     {
-      "WELL_NAME": "WELL_172",
-      "SUCCESS_PROB": 0.9969990297078529,
+      "WELL_NAME": "WELL_109",
+      "SUCCESS_PROB": 0.9850032035330271,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 8
     },
     {
-      "WELL_NAME": "WELL_109",
-      "SUCCESS_PROB": 0.9967627826623316,
-      "HETERO_LABEL": "High Oil - Low Water",
+      "WELL_NAME": "WELL_171",
+      "SUCCESS_PROB": 0.9812490833320744,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 9
     },
     {
-      "WELL_NAME": "WELL_250",
-      "SUCCESS_PROB": 0.995527428608003,
-      "HETERO_LABEL": "Low Oil - Low Water",
+      "WELL_NAME": "WELL_78",
+      "SUCCESS_PROB": 0.9811626469139466,
+      "HETERO_LABEL": "High Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 10
     },
     {
-      "WELL_NAME": "WELL_188",
-      "SUCCESS_PROB": 0.9934015400315659,
+      "WELL_NAME": "WELL_65",
+      "SUCCESS_PROB": 0.9796016386517831,
       "HETERO_LABEL": "High Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 11
     },
     {
-      "WELL_NAME": "WELL_80",
-      "SUCCESS_PROB": 0.9926291099384005,
+      "WELL_NAME": "WELL_158",
+      "SUCCESS_PROB": 0.977939272376955,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 12
     },
     {
-      "WELL_NAME": "WELL_231",
-      "SUCCESS_PROB": 0.9921586956571226,
+      "WELL_NAME": "WELL_255",
+      "SUCCESS_PROB": 0.975681703730404,
       "HETERO_LABEL": "High Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 13
     },
     {
-      "WELL_NAME": "WELL_27",
-      "SUCCESS_PROB": 0.9901744263719794,
+      "WELL_NAME": "WELL_55",
+      "SUCCESS_PROB": 0.9704763886911135,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 14
     },
     {
-      "WELL_NAME": "WELL_35",
-      "SUCCESS_PROB": 0.9885113596684826,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_160",
+      "SUCCESS_PROB": 0.9685549369338275,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 15
     },
     {
-      "WELL_NAME": "WELL_47",
-      "SUCCESS_PROB": 0.9883843399216772,
+      "WELL_NAME": "WELL_88",
+      "SUCCESS_PROB": 0.9678940164272184,
       "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 16
     },
     {
-      "WELL_NAME": "WELL_252",
-      "SUCCESS_PROB": 0.9866707761822379,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_234",
+      "SUCCESS_PROB": 0.9537873965034117,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 17
     },
     {
-      "WELL_NAME": "WELL_294",
-      "SUCCESS_PROB": 0.9857977760022634,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_164",
+      "SUCCESS_PROB": 0.941447956498369,
+      "HETERO_LABEL": "High Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 18
     },
     {
-      "WELL_NAME": "WELL_66",
-      "SUCCESS_PROB": 0.983639215805162,
-      "HETERO_LABEL": "High Oil - Low Water",
+      "WELL_NAME": "WELL_287",
+      "SUCCESS_PROB": 0.9392125324408226,
+      "HETERO_LABEL": "Low Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 19
     },
     {
-      "WELL_NAME": "WELL_29",
-      "SUCCESS_PROB": 0.9686672329948324,
-      "HETERO_LABEL": "High Oil - High Water",
+      "WELL_NAME": "WELL_244",
+      "SUCCESS_PROB": 0.9210208616482868,
+      "HETERO_LABEL": "High Oil - Low Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 20
     }
@@ -305,2103 +281,2103 @@
   "wellScatter": [
     {
       "WELL_NAME": "WELL_1",
-      "CUM_OIL": 1922425.3819238264,
-      "CUM_WATER": 2149368.0399735016,
+      "CUM_OIL": 574799.9539082983,
+      "CUM_WATER": 586607.9360006847,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_10",
-      "CUM_OIL": 902274.8458225832,
-      "CUM_WATER": 1093021.8474397492,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1062408.4912456037,
+      "CUM_WATER": 893862.1565486339,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_100",
-      "CUM_OIL": 6363738.555943041,
-      "CUM_WATER": 6033788.180385112,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 452619.61178157217,
+      "CUM_WATER": 5964791.755213512,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_101",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 527892.7391793247,
+      "CUM_WATER": 12158086.22908109,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_102",
-      "CUM_OIL": 723609.1267675527,
-      "CUM_WATER": 659697.0592618092,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 273538.9277877311,
+      "CUM_WATER": 1475955.2856662709,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_103",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 206146.66122344974,
+      "CUM_WATER": 72208.74104803485,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_104",
-      "CUM_OIL": 2409259.7066947147,
-      "CUM_WATER": 2022185.2848104767,
-      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_105",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "WELL_NAME": "WELL_104",
+      "CUM_OIL": 688714.7497723525,
+      "CUM_WATER": 27181917.523208678,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_105",
+      "CUM_OIL": 443751.7950917636,
+      "CUM_WATER": 217433.48201634808,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_106",
-      "CUM_OIL": 1672573.1620167766,
-      "CUM_WATER": 1302332.0292529522,
+      "CUM_OIL": 164262.71976915706,
+      "CUM_WATER": 90973.68247288269,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_107",
-      "CUM_OIL": 7251096.393034916,
-      "CUM_WATER": 5494106.477124044,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_108",
-      "CUM_OIL": 2239720.13241403,
-      "CUM_WATER": 1754158.6271143493,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_109",
-      "CUM_OIL": 2142146.730357974,
-      "CUM_WATER": 1493241.7250116428,
-      "HETERO_INDEX": 1,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_11",
-      "CUM_OIL": 1440021.9191841953,
-      "CUM_WATER": 1271682.3123839884,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_110",
-      "CUM_OIL": 4822124.028013901,
-      "CUM_WATER": 5889257.939773608,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_111",
-      "CUM_OIL": 1681578.279413227,
-      "CUM_WATER": 1707466.5745871977,
+      "CUM_OIL": 450202.3838052692,
+      "CUM_WATER": 803221.6706014096,
       "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_108",
+      "CUM_OIL": 430722.1841868034,
+      "CUM_WATER": 575074.8497238118,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_109",
+      "CUM_OIL": 454034.3958342413,
+      "CUM_WATER": 188104.9272214338,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_11",
+      "CUM_OIL": 246501.15597073687,
+      "CUM_WATER": 5295279.227799186,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_110",
+      "CUM_OIL": 159728.42114675368,
+      "CUM_WATER": 56730.55816509761,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_111",
+      "CUM_OIL": 746492.7310261126,
+      "CUM_WATER": 854724.0713891999,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_112",
-      "CUM_OIL": 65538105.73925621,
-      "CUM_WATER": 70432077.98631196,
+      "CUM_OIL": 1838932.71798634,
+      "CUM_WATER": 2133577.740009177,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_113",
-      "CUM_OIL": 1231531.7412898075,
-      "CUM_WATER": 1053230.9105934678,
+      "CUM_OIL": 36829.9274436,
+      "CUM_WATER": 47473.58491857897,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_114",
-      "CUM_OIL": 1193107.3159651444,
-      "CUM_WATER": 1048890.1638986408,
+      "CUM_OIL": 323593.4801813613,
+      "CUM_WATER": 237471.3940040882,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_115",
-      "CUM_OIL": 15676921.328366572,
-      "CUM_WATER": 12185583.393267237,
+      "CUM_OIL": 965235.9766694253,
+      "CUM_WATER": 2740620.7018534876,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_116",
-      "CUM_OIL": 952829.5251681801,
-      "CUM_WATER": 842282.6840587297,
+      "CUM_OIL": 372170.64900523605,
+      "CUM_WATER": 129639.03667613276,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_117",
-      "CUM_OIL": 885569.8687625944,
-      "CUM_WATER": 1119537.6766342495,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 2025961.741542015,
+      "CUM_WATER": 67355642.27443475,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_118",
-      "CUM_OIL": 4404092.709051011,
-      "CUM_WATER": 3211571.782597069,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 362385.4760114448,
+      "CUM_WATER": 641446.8722851429,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_119",
-      "CUM_OIL": 2000322.1254983863,
-      "CUM_WATER": 2149788.911576821,
+      "CUM_OIL": 647888.5902656842,
+      "CUM_WATER": 622326.9734784793,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_12",
-      "CUM_OIL": 927885.1329507657,
-      "CUM_WATER": 711428.375024454,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 617505.4251550796,
+      "CUM_WATER": 275340.4751066655,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_120",
-      "CUM_OIL": 5774732.345496506,
-      "CUM_WATER": 5646133.557538079,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 441870.05127524724,
+      "CUM_WATER": 214279.8233510978,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_121",
-      "CUM_OIL": 1707412.6232695451,
-      "CUM_WATER": 1581090.4572780156,
-      "HETERO_INDEX": 4,
+      "CUM_OIL": 1608217.6017616633,
+      "CUM_WATER": 5966986.680172554,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_122",
-      "CUM_OIL": 1212055.8486816478,
-      "CUM_WATER": 891778.7894689571,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 538477.3112458994,
+      "CUM_WATER": 605775.1988238989,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_123",
-      "CUM_OIL": 4885820.459105312,
-      "CUM_WATER": 4080780.962927746,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 556573.1483651019,
+      "CUM_WATER": 260503.31800513575,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_124",
-      "CUM_OIL": 958119.0960980791,
-      "CUM_WATER": 548562.0323875105,
+      "CUM_OIL": 141256.30362897032,
+      "CUM_WATER": 5101994.710533989,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_125",
+      "CUM_OIL": 323568.42424663197,
+      "CUM_WATER": 237502.34172274225,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_125",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
       "WELL_NAME": "WELL_126",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 349694.711290018,
+      "CUM_WATER": 147869.99107482226,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_127",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 1707124.4590792537,
+      "CUM_WATER": 909800.472845851,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_128",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 205679.45791237883,
+      "CUM_WATER": 106860.50987440985,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_129",
-      "CUM_OIL": 2931328.602553199,
-      "CUM_WATER": 2737797.7833232125,
+      "CUM_OIL": 2409112.200243862,
+      "CUM_WATER": 4022405.4475303334,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_13",
-      "CUM_OIL": 1118308.8377468765,
-      "CUM_WATER": 985241.8933079635,
+      "CUM_OIL": 182677.75096390367,
+      "CUM_WATER": 109901.59419566907,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_130",
-      "CUM_OIL": 1656803.2962244982,
-      "CUM_WATER": 1829492.7739522045,
-      "HETERO_INDEX": 4,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 1064666.7367251108,
+      "CUM_WATER": 483226.5339757008,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_131",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 171611.54277355853,
+      "CUM_WATER": 168205.3850525759,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_132",
-      "CUM_OIL": 2474945.8597715,
-      "CUM_WATER": 2511148.13044662,
+      "CUM_OIL": 520469.29892095143,
+      "CUM_WATER": 727408.5590609671,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_133",
-      "CUM_OIL": 1150749.506111362,
-      "CUM_WATER": 1141244.9664060478,
+      "CUM_OIL": 219142.04561091922,
+      "CUM_WATER": 113843.72543455563,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_134",
-      "CUM_OIL": 1960977.3697602462,
-      "CUM_WATER": 1900052.1995743266,
+      "CUM_OIL": 648646.8201937451,
+      "CUM_WATER": 1201062.4825869605,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_135",
-      "CUM_OIL": 3208394.806058266,
-      "CUM_WATER": 3116764.6491625495,
+      "CUM_OIL": 1077844.796384393,
+      "CUM_WATER": 3098080.0538463793,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_136",
-      "CUM_OIL": 19700524.68659543,
-      "CUM_WATER": 23241512.07080154,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 96545.50467929733,
+      "CUM_WATER": 34169.155958714124,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_137",
-      "CUM_OIL": 6419640.709624437,
-      "CUM_WATER": 3783068.5727104913,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 315787.0022141139,
+      "CUM_WATER": 129908.8097483435,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_138",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 391105.3237791358,
+      "CUM_WATER": 592670.2943940895,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_139",
-      "CUM_OIL": 2789015.0252676182,
-      "CUM_WATER": 3131828.3494103304,
+      "CUM_OIL": 520001.40261817974,
+      "CUM_WATER": 200378.17672935026,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_14",
+      "CUM_OIL": 1771082.562780431,
+      "CUM_WATER": 52459291.841184095,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_14",
-      "CUM_OIL": 908270.4286739745,
-      "CUM_WATER": 525893.601686454,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
       "WELL_NAME": "WELL_140",
-      "CUM_OIL": 2066697.7059403458,
-      "CUM_WATER": 2553076.090301728,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 164889.6960508233,
+      "CUM_WATER": 190139.96973640396,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_141",
-      "CUM_OIL": 2293112.274033428,
-      "CUM_WATER": 2152461.071841908,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 33801.25871608978,
+      "CUM_WATER": 1003862.0688640912,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_142",
-      "CUM_OIL": 2630910.7757780757,
-      "CUM_WATER": 2866472.0872467645,
+      "CUM_OIL": 2027249.3340810398,
+      "CUM_WATER": 1513004.533847031,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_143",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1400167.3760569117,
+      "CUM_WATER": 43366008.59437886,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_144",
-      "CUM_OIL": 827490.3033367792,
-      "CUM_WATER": 769288.6981171735,
+      "CUM_OIL": 90822.20197446052,
+      "CUM_WATER": 35364.48489410386,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_145",
-      "CUM_OIL": 1356418.274192245,
-      "CUM_WATER": 795390.6149780471,
+      "CUM_OIL": 283233.08775543614,
+      "CUM_WATER": 111233.25801088288,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_146",
-      "CUM_OIL": 2993940.594762986,
-      "CUM_WATER": 3182025.487709239,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 271301.47918465815,
+      "CUM_WATER": 216814.98210663887,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_147",
-      "CUM_OIL": 98056002.59935562,
-      "CUM_WATER": 70585061.33985364,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 160286.04365970803,
+      "CUM_WATER": 59798.25686133241,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_148",
-      "CUM_OIL": 926201.049867752,
-      "CUM_WATER": 636705.2909323826,
+      "CUM_OIL": 62118.476456377015,
+      "CUM_WATER": 353714.9977284445,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_149",
+      "CUM_OIL": 138828.63650498824,
+      "CUM_WATER": 107618.56554923119,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_149",
-      "CUM_OIL": 611954.7328461821,
-      "CUM_WATER": 623809.1610167843,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
       "WELL_NAME": "WELL_15",
-      "CUM_OIL": 606221.3019458232,
-      "CUM_WATER": 708528.0567443698,
+      "CUM_OIL": 424336.159621567,
+      "CUM_WATER": 173659.28157175958,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_150",
-      "CUM_OIL": 833076.195536416,
-      "CUM_WATER": 911708.2237362377,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1305926.6891548533,
+      "CUM_WATER": 46778443.922625676,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_151",
-      "CUM_OIL": 1455948.3046444943,
-      "CUM_WATER": 1074604.7121065229,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_152",
-      "CUM_OIL": 5237111.221519205,
-      "CUM_WATER": 4224936.488222454,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_153",
-      "CUM_OIL": 4432144.718451253,
-      "CUM_WATER": 5309477.969583072,
+      "CUM_OIL": 896234.9882240158,
+      "CUM_WATER": 1468940.7148247752,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_154",
-      "CUM_OIL": 1182329.246341828,
-      "CUM_WATER": 865474.0563776507,
-      "HETERO_INDEX": 3,
+      "WELL_NAME": "WELL_152",
+      "CUM_OIL": 551506.2923522053,
+      "CUM_WATER": 19515851.8759305,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_153",
+      "CUM_OIL": 1003778.3020533231,
+      "CUM_WATER": 510699.1859775606,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
+      "WELL_NAME": "WELL_154",
+      "CUM_OIL": 1019416.3183380314,
+      "CUM_WATER": 1391880.5077542178,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_155",
-      "CUM_OIL": 1538907.3291113037,
-      "CUM_WATER": 1406465.8110977192,
+      "CUM_OIL": 120539.06699803108,
+      "CUM_WATER": 66532.20488465083,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_156",
-      "CUM_OIL": 1436756.979176162,
-      "CUM_WATER": 1510414.074080716,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 139870.77365080873,
+      "CUM_WATER": 491391.5627195225,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_157",
-      "CUM_OIL": 1732257.9426557298,
-      "CUM_WATER": 1605599.9450267418,
-      "HETERO_INDEX": 4,
+      "CUM_OIL": 479992.63203238335,
+      "CUM_WATER": 372246.62542805984,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_158",
-      "CUM_OIL": 1748528.3037554207,
-      "CUM_WATER": 1442106.3961047463,
+      "CUM_OIL": 429363.8091407338,
+      "CUM_WATER": 195307.0539912806,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_159",
-      "CUM_OIL": 70224326.96878718,
-      "CUM_WATER": 48419734.8362448,
+      "CUM_OIL": 1125774.6735617341,
+      "CUM_WATER": 40373224.889520496,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_16",
-      "CUM_OIL": 984566.7276087374,
-      "CUM_WATER": 878159.8102502226,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1970648.9507735537,
+      "CUM_WATER": 1786735.9012813058,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_160",
-      "CUM_OIL": 4258591.123416686,
-      "CUM_WATER": 3372281.554798954,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 258118.14558351086,
+      "CUM_WATER": 102629.50481250981,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_161",
-      "CUM_OIL": 981462.8382686068,
-      "CUM_WATER": 984038.5608281872,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 785565.0791515127,
+      "CUM_WATER": 3680721.8959078947,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_162",
-      "CUM_OIL": 4767903.341380301,
-      "CUM_WATER": 3298345.2304166905,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 64294.693548958916,
+      "CUM_WATER": 25600.48980533062,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_163",
-      "CUM_OIL": 1943957.43988048,
-      "CUM_WATER": 2053815.8646426306,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_164",
-      "CUM_OIL": 4502416.975065793,
-      "CUM_WATER": 4104567.22524989,
+      "CUM_OIL": 1963249.7829807638,
+      "CUM_WATER": 6307766.207104206,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_164",
+      "CUM_OIL": 769881.2265613603,
+      "CUM_WATER": 267445.05210592004,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_165",
-      "CUM_OIL": 1096338.7624330565,
-      "CUM_WATER": 862803.8306983989,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 711018.9972634983,
+      "CUM_WATER": 429718.28998036514,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_166",
-      "CUM_OIL": 1121113.7878557788,
-      "CUM_WATER": 1394570.6060610577,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1353734.1828440449,
+      "CUM_WATER": 1715112.7240602532,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_167",
-      "CUM_OIL": 1037953.8771172143,
-      "CUM_WATER": 930980.096198312,
+      "CUM_OIL": 217805.01540956102,
+      "CUM_WATER": 86898.58479387287,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_168",
-      "CUM_OIL": 1005915.4560337613,
-      "CUM_WATER": 735555.0555329795,
+      "CUM_OIL": 249793.39083013328,
+      "CUM_WATER": 105547.23754013049,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_169",
-      "CUM_OIL": 52532163.430312015,
-      "CUM_WATER": 43793678.21523429,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 314597.1214808992,
+      "CUM_WATER": 142356.23492111976,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_17",
-      "CUM_OIL": 2359154.8781418502,
-      "CUM_WATER": 2451255.1988518257,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 356034.5714818253,
+      "CUM_WATER": 243239.59748589344,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_170",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_171",
-      "CUM_OIL": 2253104.3609594125,
-      "CUM_WATER": 1866970.5404423226,
+      "CUM_OIL": 512134.0696385048,
+      "CUM_WATER": 17668120.820897453,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_171",
+      "CUM_OIL": 103185.06311763632,
+      "CUM_WATER": 47101.84799806006,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_172",
-      "CUM_OIL": 1471318.7799708396,
-      "CUM_WATER": 963161.0700026405,
+      "CUM_OIL": 40344.78942834783,
+      "CUM_WATER": 17575.986091633815,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_173",
-      "CUM_OIL": 156069031.33668056,
-      "CUM_WATER": 155856169.51553094,
+      "CUM_OIL": 836196.839358848,
+      "CUM_WATER": 422712.1443451464,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_174",
-      "CUM_OIL": 884107.8318436389,
-      "CUM_WATER": 577836.3397714575,
+      "CUM_OIL": 377339.4777281638,
+      "CUM_WATER": 198817.95391155462,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_175",
-      "CUM_OIL": 2895344.1881658034,
-      "CUM_WATER": 2456461.181915999,
+      "CUM_OIL": 582639.0095452429,
+      "CUM_WATER": 15528825.011825288,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_176",
-      "CUM_OIL": 52670503.78728622,
-      "CUM_WATER": 54955608.53366335,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 328808.765248173,
+      "CUM_WATER": 129792.8787958628,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_177",
-      "CUM_OIL": 1816383.9601959437,
-      "CUM_WATER": 1683476.7884327115,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 878763.5986088751,
+      "CUM_WATER": 324927.06624573783,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_178",
-      "CUM_OIL": 1133791.738068488,
-      "CUM_WATER": 1214882.0756033335,
+      "CUM_OIL": 194110.73409464458,
+      "CUM_WATER": 285125.16593046073,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_179",
-      "CUM_OIL": 1768423.3897395213,
-      "CUM_WATER": 1695503.5591454522,
+      "CUM_OIL": 678340.4852478874,
+      "CUM_WATER": 623460.0239120508,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_18",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 193393.64032736633,
+      "CUM_WATER": 332435.8028329721,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_180",
-      "CUM_OIL": 962541.104156318,
-      "CUM_WATER": 934447.4062282551,
+      "CUM_OIL": 315929.837696213,
+      "CUM_WATER": 206495.5398806618,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_181",
-      "CUM_OIL": 89316346.86491394,
-      "CUM_WATER": 57466547.843827434,
+      "CUM_OIL": 275313.7870012753,
+      "CUM_WATER": 7302273.721709582,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_182",
+      "CUM_OIL": 2137565.8451569714,
+      "CUM_WATER": 1012149.4436818736,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_182",
-      "CUM_OIL": 2921780.159992076,
-      "CUM_WATER": 2417014.373129915,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
       "WELL_NAME": "WELL_183",
-      "CUM_OIL": 7453690.883447958,
-      "CUM_WATER": 5328375.603878436,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 106477.43052512563,
+      "CUM_WATER": 72389.68613615731,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_184",
-      "CUM_OIL": 1169005.6165478833,
-      "CUM_WATER": 1060447.3236028485,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1593496.3654247154,
+      "CUM_WATER": 982209.8591555078,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_185",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 96465.22025360804,
+      "CUM_WATER": 36900.86605420551,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_186",
-      "CUM_OIL": 3039285.2781655835,
-      "CUM_WATER": 2671206.179240886,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 222251.03988217234,
+      "CUM_WATER": 180785.90367253835,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_187",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 360337.61840154475,
+      "CUM_WATER": 234733.35017014472,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_188",
-      "CUM_OIL": 2036557.7591354523,
-      "CUM_WATER": 1209432.4886316727,
-      "HETERO_INDEX": 1,
+      "CUM_OIL": 248780.65742743528,
+      "CUM_WATER": 111004.03692900854,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_189",
-      "CUM_OIL": 3043460.28359368,
-      "CUM_WATER": 3249039.750674219,
+      "CUM_OIL": 534670.9848132896,
+      "CUM_WATER": 654873.7026035599,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_19",
-      "CUM_OIL": 489076.6579165793,
-      "CUM_WATER": 353471.4723586312,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 667578.6118520186,
+      "CUM_WATER": 12893511.083350658,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_190",
-      "CUM_OIL": 2161966.251319862,
-      "CUM_WATER": 1815964.8255796328,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_191",
-      "CUM_OIL": 1239449.1652159293,
-      "CUM_WATER": 1070655.8735070282,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_192",
-      "CUM_OIL": 737700.1421061901,
-      "CUM_WATER": 454299.19684713293,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_193",
-      "CUM_OIL": 74325929.51807368,
-      "CUM_WATER": 71867626.57502277,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_194",
-      "CUM_OIL": 649878.5000008738,
-      "CUM_WATER": 511925.12252705294,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_195",
-      "CUM_OIL": 1439571.2428245367,
-      "CUM_WATER": 1691256.8152314585,
+      "CUM_OIL": 180945.53317522106,
+      "CUM_WATER": 1307783.3067696188,
       "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_196",
-      "CUM_OIL": 1182655.130001672,
-      "CUM_WATER": 892255.8496071834,
+      "WELL_NAME": "WELL_191",
+      "CUM_OIL": 328486.24644320493,
+      "CUM_WATER": 168576.83947533276,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_197",
-      "CUM_OIL": 1245315.731319519,
-      "CUM_WATER": 1553915.089070863,
+      "WELL_NAME": "WELL_192",
+      "CUM_OIL": 121057.45168953396,
+      "CUM_WATER": 144260.37398117833,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_198",
-      "CUM_OIL": 1006457.6653162297,
-      "CUM_WATER": 988618.3361956412,
+      "WELL_NAME": "WELL_193",
+      "CUM_OIL": 407457.3385547552,
+      "CUM_WATER": 180478.11365276048,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_199",
-      "CUM_OIL": 949646.3599667381,
-      "CUM_WATER": 731747.1011829188,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_2",
-      "CUM_OIL": 8655569.002004012,
-      "CUM_WATER": 4830916.444839627,
+      "WELL_NAME": "WELL_194",
+      "CUM_OIL": 2042970.4917519402,
+      "CUM_WATER": 42843505.78741718,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_20",
-      "CUM_OIL": 1542397.9810214317,
-      "CUM_WATER": 1335063.3850233287,
-      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_200",
-      "CUM_OIL": 1698680.8881338828,
-      "CUM_WATER": 1338144.568162948,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_201",
-      "CUM_OIL": 832512.7030527414,
-      "CUM_WATER": 564249.2162576553,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_202",
-      "CUM_OIL": 1964172.2809845018,
-      "CUM_WATER": 1451936.166925703,
+      "WELL_NAME": "WELL_195",
+      "CUM_OIL": 882341.6266924116,
+      "CUM_WATER": 418533.83480099775,
       "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_203",
-      "CUM_OIL": 2046885.8499768788,
-      "CUM_WATER": 1952451.290716623,
+      "WELL_NAME": "WELL_196",
+      "CUM_OIL": 810627.945210541,
+      "CUM_WATER": 430811.75116118405,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_197",
+      "CUM_OIL": 767835.7563105533,
+      "CUM_WATER": 26571154.902114566,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_204",
-      "CUM_OIL": 8993401.916802606,
-      "CUM_WATER": 5513835.746412709,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_205",
-      "CUM_OIL": 919103.452466026,
-      "CUM_WATER": 863019.4622019719,
+      "WELL_NAME": "WELL_198",
+      "CUM_OIL": 203338.574722548,
+      "CUM_WATER": 101677.92812845898,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
+      "WELL_NAME": "WELL_199",
+      "CUM_OIL": 1667188.6270416812,
+      "CUM_WATER": 1540506.9685854726,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_2",
+      "CUM_OIL": 30637.207468463537,
+      "CUM_WATER": 1047090.6597609139,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_20",
+      "CUM_OIL": 1658302.8349641105,
+      "CUM_WATER": 1762985.2165131818,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_200",
+      "CUM_OIL": 187094.11649445991,
+      "CUM_WATER": 5763490.232049516,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_201",
+      "CUM_OIL": 1278475.6661381559,
+      "CUM_WATER": 47730752.094007246,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_202",
+      "CUM_OIL": 155615.89946230204,
+      "CUM_WATER": 155958.6736260789,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_203",
+      "CUM_OIL": 776399.3494445013,
+      "CUM_WATER": 368320.8462975739,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_204",
+      "CUM_OIL": 155940.68372897382,
+      "CUM_WATER": 93458.00948535385,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_205",
+      "CUM_OIL": 1019472.9692361591,
+      "CUM_WATER": 21649074.54036607,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_206",
-      "CUM_OIL": 3743637.575900095,
-      "CUM_WATER": 3863847.4627541536,
+      "CUM_OIL": 788759.52900514,
+      "CUM_WATER": 29626522.04784781,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_207",
-      "CUM_OIL": 44914260.87415293,
-      "CUM_WATER": 46759703.45805144,
+      "CUM_OIL": 1227805.9510909785,
+      "CUM_WATER": 525347.6977872736,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_208",
-      "CUM_OIL": 3214669.8130425704,
-      "CUM_WATER": 2359204.920069149,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 122808.56845928829,
+      "CUM_WATER": 52593.03301438861,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_209",
-      "CUM_OIL": 78432540.49117681,
-      "CUM_WATER": 50460014.55015707,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 739289.9449305985,
+      "CUM_WATER": 333794.062624273,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_21",
-      "CUM_OIL": 4885493.254715267,
-      "CUM_WATER": 4036397.045398921,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 427688.713982122,
+      "CUM_WATER": 222041.2504676117,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_210",
-      "CUM_OIL": 1216508.0937550073,
-      "CUM_WATER": 1053844.7352822446,
+      "CUM_OIL": 365822.1120304916,
+      "CUM_WATER": 363725.47556389845,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_211",
-      "CUM_OIL": 3502757.885271273,
-      "CUM_WATER": 2148257.4887431143,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 356761.46135335386,
+      "CUM_WATER": 202305.43892853754,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_212",
-      "CUM_OIL": 2034626.1990106872,
-      "CUM_WATER": 1878244.7348239773,
+      "CUM_OIL": 1423176.1945839436,
+      "CUM_WATER": 1730394.5269573743,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_213",
-      "CUM_OIL": 3377112.197449022,
-      "CUM_WATER": 3161064.6373864287,
+      "CUM_OIL": 768359.3890684815,
+      "CUM_WATER": 1091909.307797275,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_214",
-      "CUM_OIL": 4237505.976548495,
-      "CUM_WATER": 2754311.564585302,
+      "CUM_OIL": 822173.22581575,
+      "CUM_WATER": 976712.7331124542,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_215",
-      "CUM_OIL": 6130569.705411397,
-      "CUM_WATER": 7003026.613685806,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 1059392.7171052594,
+      "CUM_WATER": 379506.2548520204,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_216",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_217",
-      "CUM_OIL": 7413177.816031015,
-      "CUM_WATER": 8304901.856191928,
+      "CUM_OIL": 1061571.9750151103,
+      "CUM_WATER": 592037.4679514752,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_217",
+      "CUM_OIL": 307675.88833085535,
+      "CUM_WATER": 304109.1692716961,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_218",
-      "CUM_OIL": 1261899.7020423855,
-      "CUM_WATER": 858133.3258808518,
+      "CUM_OIL": 398776.73077861086,
+      "CUM_WATER": 162245.94501613872,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_219",
-      "CUM_OIL": 514837.3850857826,
-      "CUM_WATER": 358578.78198455815,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_22",
-      "CUM_OIL": 8416923.240287066,
-      "CUM_WATER": 6338032.750655578,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_220",
-      "CUM_OIL": 4908590.8726588935,
-      "CUM_WATER": 4327063.210229563,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_221",
-      "CUM_OIL": 1149588.6233327787,
-      "CUM_WATER": 687201.3422520078,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_222",
-      "CUM_OIL": 1970290.273250398,
-      "CUM_WATER": 1379161.657898606,
+      "CUM_OIL": 673793.4429192478,
+      "CUM_WATER": 321199.8544098524,
       "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_223",
-      "CUM_OIL": 1112140.3348330152,
-      "CUM_WATER": 699238.0810061131,
+      "WELL_NAME": "WELL_22",
+      "CUM_OIL": 238432.40911854687,
+      "CUM_WATER": 134101.0057447781,
       "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_220",
+      "CUM_OIL": 125711.38024784822,
+      "CUM_WATER": 65134.67379054697,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_221",
+      "CUM_OIL": 1409705.8032240584,
+      "CUM_WATER": 39339770.88466,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_222",
+      "CUM_OIL": 507234.5559505038,
+      "CUM_WATER": 16987250.885978352,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_223",
+      "CUM_OIL": 552138.628875441,
+      "CUM_WATER": 242118.70554594498,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_224",
-      "CUM_OIL": 1064562.2347340556,
-      "CUM_WATER": 770463.978277848,
+      "CUM_OIL": 392344.86057892727,
+      "CUM_WATER": 134939.89962851326,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_225",
-      "CUM_OIL": 1792113.6950263595,
-      "CUM_WATER": 1750598.5363845215,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 573892.478816788,
+      "CUM_WATER": 338262.9722853629,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_226",
-      "CUM_OIL": 2221376.19009235,
-      "CUM_WATER": 2052684.7700828577,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 505706.8118516639,
+      "CUM_WATER": 219831.24146073547,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_227",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 271444.31928146054,
+      "CUM_WATER": 168934.04412140133,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_228",
-      "CUM_OIL": 3766237.9618807007,
-      "CUM_WATER": 2147341.25949536,
+      "CUM_OIL": 2637204.888065523,
+      "CUM_WATER": 3905849.336711528,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_229",
-      "CUM_OIL": 1190695.9665401445,
-      "CUM_WATER": 980237.3062665644,
-      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_229",
+      "CUM_OIL": 113690.17422254398,
+      "CUM_WATER": 49152.569809162014,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_23",
-      "CUM_OIL": 5704882.756533521,
-      "CUM_WATER": 3301533.120044292,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 652770.6901879029,
+      "CUM_WATER": 238859.82447615435,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_230",
-      "CUM_OIL": 1673666.9152699132,
-      "CUM_WATER": 1908223.560084821,
-      "HETERO_INDEX": 4,
+      "CUM_OIL": 364256.4054990323,
+      "CUM_WATER": 200770.0589007794,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_231",
-      "CUM_OIL": 2176779.568623099,
-      "CUM_WATER": 1410066.4107252941,
-      "HETERO_INDEX": 1,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 683714.198782937,
+      "CUM_WATER": 427673.74601811776,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_232",
-      "CUM_OIL": 2435385.311631948,
-      "CUM_WATER": 2063395.4680993096,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 284512.52513281885,
+      "CUM_WATER": 6761823.3454477405,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_233",
-      "CUM_OIL": 1715304.9930948904,
-      "CUM_WATER": 1578061.559436232,
-      "HETERO_INDEX": 4,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_234",
-      "CUM_OIL": 1760619.1238156825,
-      "CUM_WATER": 1872542.046964896,
-      "HETERO_INDEX": 4,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_235",
-      "CUM_OIL": 1609927.9357565655,
-      "CUM_WATER": 1769643.5349902024,
-      "HETERO_INDEX": 4,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_236",
-      "CUM_OIL": 2119187.852076196,
-      "CUM_WATER": 1503170.8203181513,
-      "HETERO_INDEX": 1,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_237",
-      "CUM_OIL": 53894054.25272663,
-      "CUM_WATER": 29375344.95437734,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 132094.25846832272,
+      "CUM_WATER": 52100.91870137363,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_238",
-      "CUM_OIL": 1444282.1575651288,
-      "CUM_WATER": 1780216.8507803935,
+      "WELL_NAME": "WELL_234",
+      "CUM_OIL": 471756.94187819166,
+      "CUM_WATER": 236037.88216973946,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_235",
+      "CUM_OIL": 764197.9970465119,
+      "CUM_WATER": 413350.68236735224,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_236",
+      "CUM_OIL": 646063.7325742827,
+      "CUM_WATER": 328379.6244991781,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_237",
+      "CUM_OIL": 392404.22171880334,
+      "CUM_WATER": 13137089.090910686,
       "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_238",
+      "CUM_OIL": 1127513.0708645573,
+      "CUM_WATER": 26247445.077186134,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_239",
-      "CUM_OIL": 7120026.1087324405,
-      "CUM_WATER": 5860699.549612429,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 745047.2252985723,
+      "CUM_WATER": 301605.05529211817,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_24",
-      "CUM_OIL": 5914015.397450143,
-      "CUM_WATER": 4603234.519340526,
+      "CUM_OIL": 817232.5547379793,
+      "CUM_WATER": 638022.7115701875,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_240",
-      "CUM_OIL": 1155687.3839303455,
-      "CUM_WATER": 1038646.8129502098,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 445742.73353245755,
+      "CUM_WATER": 17386869.4237638,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_241",
-      "CUM_OIL": 1677220.0725836398,
-      "CUM_WATER": 1241390.9095463848,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 646805.7182632487,
+      "CUM_WATER": 396766.8679356158,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_242",
-      "CUM_OIL": 1503118.750837006,
-      "CUM_WATER": 1331700.409457075,
+      "CUM_OIL": 56355.26444893865,
+      "CUM_WATER": 29942.310964225642,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_243",
-      "CUM_OIL": 15900261.757490998,
-      "CUM_WATER": 14224643.589266142,
+      "CUM_OIL": 660766.8692675873,
+      "CUM_WATER": 25044951.50047761,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_244",
-      "CUM_OIL": 3261391.2600491107,
-      "CUM_WATER": 3237551.7549560787,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 608031.8681934751,
+      "CUM_WATER": 374470.94621901,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_245",
-      "CUM_OIL": 1325445.657470589,
-      "CUM_WATER": 882726.9783438644,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 867780.703832262,
+      "CUM_WATER": 355735.31191647943,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_246",
-      "CUM_OIL": 4309948.197870089,
-      "CUM_WATER": 3672701.716466392,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 335365.7187602177,
+      "CUM_WATER": 137114.69602362998,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_247",
-      "CUM_OIL": 5199404.8999278685,
-      "CUM_WATER": 5499245.056570676,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 332806.9240090731,
+      "CUM_WATER": 180821.96039644448,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_248",
-      "CUM_OIL": 2721146.8246104144,
-      "CUM_WATER": 2020814.0088769754,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 85654.54690163475,
+      "CUM_WATER": 48979.52514397151,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_249",
-      "CUM_OIL": 1436387.156969714,
-      "CUM_WATER": 1211082.875034404,
+      "CUM_OIL": 114098.7757184124,
+      "CUM_WATER": 46465.335199481,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_25",
-      "CUM_OIL": 1153763.6507299286,
-      "CUM_WATER": 1161257.3253776296,
+      "CUM_OIL": 84959.50789780066,
+      "CUM_WATER": 71488.5026577591,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_250",
-      "CUM_OIL": 1726193.0847163196,
-      "CUM_WATER": 1473885.651862787,
+      "CUM_OIL": 347797.1782501624,
+      "CUM_WATER": 138018.80905457737,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_251",
-      "CUM_OIL": 5843428.924619298,
-      "CUM_WATER": 4028828.9833406834,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 659286.152882078,
+      "CUM_WATER": 356567.38262055174,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_252",
-      "CUM_OIL": 9072773.974435538,
-      "CUM_WATER": 6266306.193998225,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 258397.33283118665,
+      "CUM_WATER": 215001.67488112475,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_253",
-      "CUM_OIL": 1243581.5174688771,
-      "CUM_WATER": 809213.2524051993,
+      "CUM_OIL": 231900.50381641806,
+      "CUM_WATER": 93865.51757143674,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_254",
-      "CUM_OIL": 642661.6616933022,
-      "CUM_WATER": 508756.07292968646,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 253297.13542139152,
+      "CUM_WATER": 6838105.509606427,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_255",
-      "CUM_OIL": 2963399.2945406353,
-      "CUM_WATER": 2086733.5829221602,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 1057272.202712878,
+      "CUM_WATER": 376597.0216627259,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_256",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 68695.51807963867,
+      "CUM_WATER": 1505446.6856597054,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_257",
-      "CUM_OIL": 1147795.1897067353,
-      "CUM_WATER": 1072337.994670242,
+      "CUM_OIL": 213195.3320172634,
+      "CUM_WATER": 88004.84416389036,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_258",
-      "CUM_OIL": 2622940.646367004,
-      "CUM_WATER": 2003311.9060832902,
+      "CUM_OIL": 1264147.4957794836,
+      "CUM_WATER": 641653.5179489978,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_259",
-      "CUM_OIL": 2964416.0279881447,
-      "CUM_WATER": 1879442.3120757132,
+      "CUM_OIL": 1303584.5057366632,
+      "CUM_WATER": 29681159.36621494,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_26",
-      "CUM_OIL": 1016729.2732037618,
-      "CUM_WATER": 772082.1832429569,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 796350.3732399357,
+      "CUM_WATER": 535007.9973073099,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_260",
-      "CUM_OIL": 2203887.4267322877,
-      "CUM_WATER": 1367261.7753377974,
-      "HETERO_INDEX": 1,
+      "CUM_OIL": 954224.5249987742,
+      "CUM_WATER": 470436.7725215185,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_261",
-      "CUM_OIL": 1025051.3389848402,
-      "CUM_WATER": 1157051.5315471452,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1299990.5477928144,
+      "CUM_WATER": 49542435.50014869,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_262",
-      "CUM_OIL": 7710487.945194858,
-      "CUM_WATER": 5340231.387314938,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 544249.6184854138,
+      "CUM_WATER": 258428.3229289989,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_263",
-      "CUM_OIL": 1178737.4727186796,
-      "CUM_WATER": 677214.1294713245,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_264",
-      "CUM_OIL": 1518882.723131058,
-      "CUM_WATER": 1378273.9279727496,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_265",
-      "CUM_OIL": 2327552.0003488422,
-      "CUM_WATER": 2377661.0272717834,
+      "CUM_OIL": 984039.3029100893,
+      "CUM_WATER": 639361.5560310074,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_264",
+      "CUM_OIL": 657229.6284641057,
+      "CUM_WATER": 368332.0537947316,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_265",
+      "CUM_OIL": 2453794.6547485604,
+      "CUM_WATER": 1774065.8132652722,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_266",
-      "CUM_OIL": 1408427.333663344,
-      "CUM_WATER": 937261.9052140065,
+      "CUM_OIL": 240339.0676422453,
+      "CUM_WATER": 198274.89676965761,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_267",
-      "CUM_OIL": 577339.5420139364,
-      "CUM_WATER": 579092.0941591646,
+      "CUM_OIL": 221182.9095502762,
+      "CUM_WATER": 149704.67326098186,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_268",
-      "CUM_OIL": 1309025.885638235,
-      "CUM_WATER": 1494999.481163936,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 217158.90141546412,
+      "CUM_WATER": 3487707.532605519,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_269",
-      "CUM_OIL": 17335486.51852159,
-      "CUM_WATER": 13670646.059913864,
+      "CUM_OIL": 1344130.4406645363,
+      "CUM_WATER": 2236931.0527826985,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_27",
-      "CUM_OIL": 1292801.2456000873,
-      "CUM_WATER": 1137811.439132412,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 757200.6951182588,
+      "CUM_WATER": 817209.7386206979,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_270",
-      "CUM_OIL": 4046710.2956048353,
-      "CUM_WATER": 2725937.3796956786,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 257400.94745458744,
+      "CUM_WATER": 4669211.089124246,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_271",
-      "CUM_OIL": 608528.9695992679,
-      "CUM_WATER": 717543.9002078687,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1243749.6998217974,
+      "CUM_WATER": 41569069.50792837,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_272",
-      "CUM_OIL": 621082.7863089762,
-      "CUM_WATER": 506275.53401280666,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 553290.2875531297,
+      "CUM_WATER": 20392145.184722915,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_273",
-      "CUM_OIL": 5729777.7698629815,
-      "CUM_WATER": 6172873.676739542,
+      "CUM_OIL": 1139924.372827691,
+      "CUM_WATER": 2649315.231080445,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_274",
-      "CUM_OIL": 1783580.1790806076,
-      "CUM_WATER": 1712397.8951269062,
+      "CUM_OIL": 1872572.538798936,
+      "CUM_WATER": 647412.2494865368,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_275",
-      "CUM_OIL": 1644950.2795633648,
-      "CUM_WATER": 1529595.6532757145,
+      "CUM_OIL": 272415.58636086143,
+      "CUM_WATER": 101760.89111966641,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_276",
-      "CUM_OIL": 7468269.102266546,
-      "CUM_WATER": 5903094.612004471,
+      "CUM_OIL": 1750250.3990678547,
+      "CUM_WATER": 921457.3510308991,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_277",
-      "CUM_OIL": 862469.1370078367,
-      "CUM_WATER": 623341.7553494883,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 577592.6278317588,
+      "CUM_WATER": 241614.52953794706,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_278",
-      "CUM_OIL": 1311091.0030194744,
-      "CUM_WATER": 1126973.0828657541,
+      "CUM_OIL": 240416.86141255643,
+      "CUM_WATER": 129904.11899760645,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_279",
-      "CUM_OIL": 122649263.16544744,
-      "CUM_WATER": 81717646.113448,
+      "CUM_OIL": 1833359.2634568901,
+      "CUM_WATER": 60366367.46478576,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_28",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_280",
-      "CUM_OIL": 64097274.66518875,
-      "CUM_WATER": 72567975.56185716,
-      "HETERO_INDEX": 2,
+      "WELL_NAME": "WELL_28",
+      "CUM_OIL": 76826.75262967161,
+      "CUM_WATER": 32124.940264217268,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_280",
+      "CUM_OIL": 553763.7462038586,
+      "CUM_WATER": 733176.1589300348,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_281",
-      "CUM_OIL": 1580174.0845134633,
-      "CUM_WATER": 1029402.3381802988,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 582323.2872804758,
+      "CUM_WATER": 7320564.326335774,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_282",
-      "CUM_OIL": 1313295.6363165595,
-      "CUM_WATER": 1035624.051342698,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 816698.8385083918,
+      "CUM_WATER": 419665.24381806876,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_283",
-      "CUM_OIL": 842195.7833081443,
-      "CUM_WATER": 1036254.1088146789,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 322875.6331153512,
+      "CUM_WATER": 8503473.560449164,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_284",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 440085.08008582535,
+      "CUM_WATER": 196190.64557861516,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_285",
-      "CUM_OIL": 895272.2045094749,
-      "CUM_WATER": 684342.0512237797,
+      "CUM_OIL": 434416.8339782004,
+      "CUM_WATER": 289865.89709637244,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_286",
-      "CUM_OIL": 1692186.5231813837,
-      "CUM_WATER": 1528077.3882479672,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 342375.77768949163,
+      "CUM_WATER": 3601515.0950388084,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_287",
-      "CUM_OIL": 955836.560875102,
-      "CUM_WATER": 649399.9987032319,
+      "CUM_OIL": 119096.14684308108,
+      "CUM_WATER": 49268.00764651141,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_288",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 330967.7173567938,
+      "CUM_WATER": 11526850.35469807,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_289",
-      "CUM_OIL": 2597545.4501351537,
-      "CUM_WATER": 2386702.0245495304,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 439866.23978760844,
+      "CUM_WATER": 170105.1842923717,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_29",
-      "CUM_OIL": 3422956.3050672784,
-      "CUM_WATER": 2025833.8049478212,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 254627.54097808237,
+      "CUM_WATER": 123582.02715958413,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_290",
-      "CUM_OIL": 2618686.3545062197,
-      "CUM_WATER": 1892652.8712413996,
+      "CUM_OIL": 746894.2767423767,
+      "CUM_WATER": 568343.8650080273,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_291",
-      "CUM_OIL": 1039446.8031240372,
-      "CUM_WATER": 607186.7831528555,
+      "CUM_OIL": 328250.28514867893,
+      "CUM_WATER": 222174.34583274176,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_292",
-      "CUM_OIL": 3888511.4090947867,
-      "CUM_WATER": 3121094.8260885873,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 213866.16193605098,
+      "CUM_WATER": 7761589.700002831,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_293",
-      "CUM_OIL": 1388739.2375976301,
-      "CUM_WATER": 1281140.890999264,
+      "CUM_OIL": 219289.27246741665,
+      "CUM_WATER": 1585302.494056934,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_294",
+      "CUM_OIL": 439882.1158605089,
+      "CUM_WATER": 200242.95321464073,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_294",
-      "CUM_OIL": 52228983.99848889,
-      "CUM_WATER": 40119158.511070155,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
       "WELL_NAME": "WELL_295",
-      "CUM_OIL": 1678250.30149672,
-      "CUM_WATER": 1651165.4876470354,
+      "CUM_OIL": 452198.57373836933,
+      "CUM_WATER": 6673389.169145509,
       "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_296",
-      "CUM_OIL": 2174360.9804416746,
-      "CUM_WATER": 2456069.2679356765,
+      "CUM_OIL": 889852.948512618,
+      "CUM_WATER": 476134.75658630294,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_297",
-      "CUM_OIL": 1599826.0919531486,
-      "CUM_WATER": 1534035.9868640888,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_298",
-      "CUM_OIL": 1107957.7637042662,
-      "CUM_WATER": 1046236.1579655807,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_299",
-      "CUM_OIL": 121702108.42790781,
-      "CUM_WATER": 102830045.26091519,
+      "CUM_OIL": 746534.7145003371,
+      "CUM_WATER": 5041192.221292827,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_298",
+      "CUM_OIL": 205087.17346705915,
+      "CUM_WATER": 7095667.946400248,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_299",
+      "CUM_OIL": 102557.42302987087,
+      "CUM_WATER": 39549.78081367309,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_3",
-      "CUM_OIL": 2021216.8883773196,
-      "CUM_WATER": 1556915.8959502534,
+      "CUM_OIL": 750982.4730321713,
+      "CUM_WATER": 312101.7497876204,
       "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_30",
-      "CUM_OIL": 972140.2722673938,
-      "CUM_WATER": 824057.4434133399,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 611283.4497801203,
+      "CUM_WATER": 320174.0021616292,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_300",
-      "CUM_OIL": 1335303.2417370973,
-      "CUM_WATER": 958045.5138327671,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1042076.8815855263,
+      "CUM_WATER": 560373.4235947356,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_31",
-      "CUM_OIL": 6187004.421836073,
-      "CUM_WATER": 5932249.306222644,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 116540.63377490826,
+      "CUM_WATER": 102057.02608950391,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_32",
-      "CUM_OIL": 148354191.0189258,
-      "CUM_WATER": 91101267.04369819,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 109759.91290474484,
+      "CUM_WATER": 44760.06743877059,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_33",
-      "CUM_OIL": 1403504.6102714944,
-      "CUM_WATER": 1288611.208540922,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 449706.40269668325,
+      "CUM_WATER": 865162.0944484362,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_34",
-      "CUM_OIL": 37550176.99457088,
-      "CUM_WATER": 35051480.9078944,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 200773.21068205018,
+      "CUM_WATER": 110612.48508402056,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_35",
-      "CUM_OIL": 2155214.9779611514,
-      "CUM_WATER": 1576216.375574126,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 103532.13039346987,
+      "CUM_WATER": 44330.26438948438,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_36",
-      "CUM_OIL": 129369366.75840639,
-      "CUM_WATER": 87569297.7344315,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_37",
-      "CUM_OIL": 11059461.104082817,
-      "CUM_WATER": 6905197.341798721,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 72272.49465077686,
+      "CUM_WATER": 27783.78383027692,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_38",
-      "CUM_OIL": 849168.6994582275,
-      "CUM_WATER": 739693.2627234397,
+      "WELL_NAME": "WELL_37",
+      "CUM_OIL": 266221.90132269374,
+      "CUM_WATER": 274669.5993816055,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_38",
+      "CUM_OIL": 1019350.6012578525,
+      "CUM_WATER": 372033.7478813294,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_39",
-      "CUM_OIL": 7375119.932434326,
-      "CUM_WATER": 7601138.849655126,
+      "CUM_OIL": 795475.9333496921,
+      "CUM_WATER": 29266909.16543097,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_4",
-      "CUM_OIL": 2262221.941457353,
-      "CUM_WATER": 2769201.3677313817,
+      "CUM_OIL": 574429.0408676127,
+      "CUM_WATER": 15673343.321101606,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_40",
+      "CUM_OIL": 673217.1068944406,
+      "CUM_WATER": 669983.1245136213,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_40",
-      "CUM_OIL": 957918.0531497754,
-      "CUM_WATER": 639811.9887692587,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
       "WELL_NAME": "WELL_41",
-      "CUM_OIL": 1375461.093212049,
-      "CUM_WATER": 1431118.7189075532,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 332761.1691231145,
+      "CUM_WATER": 9984991.800253198,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_42",
-      "CUM_OIL": 38574554.720507205,
-      "CUM_WATER": 61775281.81411314,
+      "CUM_OIL": 1149252.729914668,
+      "CUM_WATER": 1452381.3740053955,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_43",
-      "CUM_OIL": 1469984.8747036287,
-      "CUM_WATER": 1131956.7340615538,
+      "CUM_OIL": 34592.226062882975,
+      "CUM_WATER": 11782.396020688637,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_44",
-      "CUM_OIL": 6078635.743942942,
-      "CUM_WATER": 4665052.610087216,
-      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
+      "WELL_NAME": "WELL_44",
+      "CUM_OIL": 1074848.4380618266,
+      "CUM_WATER": 4379895.057325991,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_45",
-      "CUM_OIL": 1955415.0354300516,
-      "CUM_WATER": 1297590.9465680963,
-      "HETERO_INDEX": 1,
+      "CUM_OIL": 1153800.9245504125,
+      "CUM_WATER": 802822.0727473333,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_46",
-      "CUM_OIL": 2349660.593627147,
-      "CUM_WATER": 2443362.768747498,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_47",
-      "CUM_OIL": 1251618.402055534,
-      "CUM_WATER": 968981.5555695436,
+      "CUM_OIL": 120853.15399152982,
+      "CUM_WATER": 53007.59289936694,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_48",
-      "CUM_OIL": 460010.27920199663,
-      "CUM_WATER": 367622.98962106236,
+      "WELL_NAME": "WELL_47",
+      "CUM_OIL": 210221.3120662878,
+      "CUM_WATER": 102349.64006870422,
       "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_48",
+      "CUM_OIL": 870457.2457349233,
+      "CUM_WATER": 422334.71906717034,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_49",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 2139771.3513424997,
+      "CUM_WATER": 1173438.061496289,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_5",
-      "CUM_OIL": 22470083.591825984,
-      "CUM_WATER": 16712436.791138137,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 163795.97312563434,
+      "CUM_WATER": 79615.61114074354,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_50",
-      "CUM_OIL": 1259319.8057115064,
-      "CUM_WATER": 910827.7483091014,
+      "CUM_OIL": 102294.57797634865,
+      "CUM_WATER": 48497.20539864768,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_51",
-      "CUM_OIL": 3632438.0271474062,
-      "CUM_WATER": 2505585.0738691892,
+      "CUM_OIL": 866224.004511909,
+      "CUM_WATER": 700001.778420141,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_52",
-      "CUM_OIL": 2960361.40385036,
-      "CUM_WATER": 3211048.2368024946,
+      "CUM_OIL": 1300582.1593433842,
+      "CUM_WATER": 1019503.0099635267,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_53",
-      "CUM_OIL": 510564.8093304589,
-      "CUM_WATER": 474201.4510504558,
+      "CUM_OIL": 217433.95146499068,
+      "CUM_WATER": 184862.4009658053,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_54",
-      "CUM_OIL": 27655528.432816185,
-      "CUM_WATER": 27502321.651459154,
-      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_55",
-      "CUM_OIL": 19746102.27986124,
-      "CUM_WATER": 10955859.119958287,
+      "WELL_NAME": "WELL_54",
+      "CUM_OIL": 1013611.7875126036,
+      "CUM_WATER": 610790.0554295473,
       "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_55",
+      "CUM_OIL": 485728.63322791515,
+      "CUM_WATER": 211631.91039340151,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_56",
-      "CUM_OIL": 206094740.72056437,
-      "CUM_WATER": 134336825.2817632,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_57",
-      "CUM_OIL": 108160818.2394429,
-      "CUM_WATER": 59927332.63795193,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_58",
-      "CUM_OIL": 2262113.741519817,
-      "CUM_WATER": 1786016.4121732055,
+      "CUM_OIL": 1401736.1434130175,
+      "CUM_WATER": 2341515.349535879,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_59",
-      "CUM_OIL": 1443670.123666006,
-      "CUM_WATER": 1039004.7594744229,
-      "HETERO_INDEX": 3,
+      "WELL_NAME": "WELL_57",
+      "CUM_OIL": 318987.9156572995,
+      "CUM_WATER": 12351235.20655576,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_58",
+      "CUM_OIL": 419361.85381746496,
+      "CUM_WATER": 9986262.872710431,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_59",
+      "CUM_OIL": 74695.02802383575,
+      "CUM_WATER": 2447480.8431127504,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_6",
-      "CUM_OIL": 3498341.7746276786,
-      "CUM_WATER": 2269575.881711807,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 279240.8129279082,
+      "CUM_WATER": 505491.64387886727,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_60",
-      "CUM_OIL": 1193698.1224791373,
-      "CUM_WATER": 1092657.0280988042,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 489958.3863751102,
+      "CUM_WATER": 433549.30941036134,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_61",
-      "CUM_OIL": 2284447.3710570154,
-      "CUM_WATER": 2215129.453767082,
+      "CUM_OIL": 623716.6550083419,
+      "CUM_WATER": 590788.6523628081,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_62",
-      "CUM_OIL": 846489.6998919746,
-      "CUM_WATER": 500015.3561979042,
+      "CUM_OIL": 411750.3270134472,
+      "CUM_WATER": 177718.32983172373,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_63",
-      "CUM_OIL": 5457371.984834926,
-      "CUM_WATER": 3002879.2470135773,
+      "CUM_OIL": 622664.9642530411,
+      "CUM_WATER": 10270956.887023438,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_64",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
-      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_64",
+      "CUM_OIL": 346344.2274524454,
+      "CUM_WATER": 138778.88791464537,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_65",
-      "CUM_OIL": 2461456.4717982467,
-      "CUM_WATER": 2023302.2974945642,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 610684.279159676,
+      "CUM_WATER": 274991.6137304347,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_66",
-      "CUM_OIL": 2173048.114907309,
-      "CUM_WATER": 1346116.1300531744,
+      "CUM_OIL": 584199.8540445815,
+      "CUM_WATER": 226954.0520685646,
       "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_67",
-      "CUM_OIL": 0.0,
-      "CUM_WATER": 0.0,
+      "CUM_OIL": 374150.47277222306,
+      "CUM_WATER": 148442.32150708293,
       "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_68",
-      "CUM_OIL": 19147113.292741273,
-      "CUM_WATER": 12547751.42474565,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 410071.95701636694,
+      "CUM_WATER": 142712.80626965137,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_69",
-      "CUM_OIL": 6033090.924227476,
-      "CUM_WATER": 5171720.967488057,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 764019.7799806861,
+      "CUM_WATER": 330547.6098591071,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_7",
-      "CUM_OIL": 3353585.4787658975,
-      "CUM_WATER": 2713019.68413941,
+      "CUM_OIL": 1622194.784371808,
+      "CUM_WATER": 1291804.3949854136,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_70",
-      "CUM_OIL": 130941824.29447837,
-      "CUM_WATER": 78251772.01499929,
+      "CUM_OIL": 725038.6064413012,
+      "CUM_WATER": 20920360.907236967,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_71",
-      "CUM_OIL": 3354878.136352652,
-      "CUM_WATER": 2053386.5353447353,
+      "CUM_OIL": 628587.6700587347,
+      "CUM_WATER": 10072091.445400136,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_72",
-      "CUM_OIL": 1711616.5222537348,
-      "CUM_WATER": 1256661.768900682,
+      "CUM_OIL": 148086.9303097181,
+      "CUM_WATER": 96972.8764550698,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_73",
-      "CUM_OIL": 3215794.344896024,
-      "CUM_WATER": 2093710.5686353822,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 722323.1578638772,
+      "CUM_WATER": 415551.56877622457,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_74",
-      "CUM_OIL": 1313581.2413129,
-      "CUM_WATER": 1311430.49241967,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 895837.0933711166,
+      "CUM_WATER": 494247.27894548996,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_75",
-      "CUM_OIL": 1002559.1222107883,
-      "CUM_WATER": 1066456.8257728124,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1098881.027600206,
+      "CUM_WATER": 2449457.8665681435,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_76",
-      "CUM_OIL": 15618734.477566257,
-      "CUM_WATER": 13513888.663718356,
+      "CUM_OIL": 1107840.9080082108,
+      "CUM_WATER": 1059045.5399190807,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_77",
-      "CUM_OIL": 1387912.2695810643,
-      "CUM_WATER": 1440508.4023769526,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 1091746.9685707255,
+      "CUM_WATER": 35040477.45234598,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_78",
-      "CUM_OIL": 7285894.414070284,
-      "CUM_WATER": 5756947.41925273,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 833134.8924619905,
+      "CUM_WATER": 375569.89728567743,
+      "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_79",
-      "CUM_OIL": 3607419.636926975,
-      "CUM_WATER": 3018141.8080020435,
+      "CUM_OIL": 1493902.8231108175,
+      "CUM_WATER": 6298042.151290887,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_8",
-      "CUM_OIL": 78886501.40778083,
-      "CUM_WATER": 64293124.79984689,
+      "CUM_OIL": 1934653.469879967,
+      "CUM_WATER": 74369136.75562035,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_80",
-      "CUM_OIL": 894589.6589784144,
-      "CUM_WATER": 816339.3620150308,
-      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 0
     },
     {
+      "WELL_NAME": "WELL_80",
+      "CUM_OIL": 144977.42137438708,
+      "CUM_WATER": 78903.18950815052,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
       "WELL_NAME": "WELL_81",
-      "CUM_OIL": 1137713.7953046954,
-      "CUM_WATER": 673736.5117437257,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_82",
-      "CUM_OIL": 1725071.9493566207,
-      "CUM_WATER": 1268347.5845562655,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_83",
-      "CUM_OIL": 2183949.3384445137,
-      "CUM_WATER": 1476615.7292260865,
+      "CUM_OIL": 646440.0163054165,
+      "CUM_WATER": 347563.4920751324,
       "HETERO_INDEX": 1,
       "INTERVENTION_SUCCESS": 1
     },
     {
+      "WELL_NAME": "WELL_82",
+      "CUM_OIL": 2798229.4104257664,
+      "CUM_WATER": 2164564.9355861587,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_83",
+      "CUM_OIL": 1075786.7725450855,
+      "CUM_WATER": 13738257.402722176,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
       "WELL_NAME": "WELL_84",
-      "CUM_OIL": 1407427.635610147,
-      "CUM_WATER": 1250354.8315100167,
-      "HETERO_INDEX": 3,
+      "CUM_OIL": 746091.1489179374,
+      "CUM_WATER": 2993898.9616375035,
+      "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_85",
-      "CUM_OIL": 1024359.1127217306,
-      "CUM_WATER": 978754.072675062,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 1404106.665462467,
+      "CUM_WATER": 6067254.732146531,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_86",
-      "CUM_OIL": 1938084.4801188654,
-      "CUM_WATER": 1898612.2376314797,
+      "CUM_OIL": 684986.3463467135,
+      "CUM_WATER": 3085912.1902448223,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_87",
-      "CUM_OIL": 34955027.92735198,
-      "CUM_WATER": 33548940.76097044,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 270509.56251203973,
+      "CUM_WATER": 163031.75874706026,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_88",
-      "CUM_OIL": 19995927.07842932,
-      "CUM_WATER": 19106545.3989287,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 356854.23241219885,
+      "CUM_WATER": 131941.84618157035,
+      "HETERO_INDEX": 3,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_89",
-      "CUM_OIL": 74831440.62820426,
-      "CUM_WATER": 74419119.99242781,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 320222.71070440364,
+      "CUM_WATER": 500607.38432917075,
+      "HETERO_INDEX": 4,
       "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_9",
-      "CUM_OIL": 72592878.61500464,
-      "CUM_WATER": 51014854.80594218,
-      "HETERO_INDEX": 2,
+      "CUM_OIL": 141698.9220806363,
+      "CUM_WATER": 78593.8646744092,
+      "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_90",
-      "CUM_OIL": 750042.2255869305,
-      "CUM_WATER": 871706.8532726226,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 0
+      "CUM_OIL": 1452333.7112590815,
+      "CUM_WATER": 845776.5679033722,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_91",
-      "CUM_OIL": 1152460.0836417507,
-      "CUM_WATER": 768762.7701761889,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 1100582.1890379034,
+      "CUM_WATER": 976420.690606222,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_92",
-      "CUM_OIL": 4318241.211962088,
-      "CUM_WATER": 4562750.507137395,
+      "CUM_OIL": 750163.9668104824,
+      "CUM_WATER": 312054.3330309776,
+      "HETERO_INDEX": 1,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_93",
+      "CUM_OIL": 1185835.400360097,
+      "CUM_WATER": 41676770.39760945,
       "HETERO_INDEX": 2,
       "INTERVENTION_SUCCESS": 0
     },
     {
-      "WELL_NAME": "WELL_93",
-      "CUM_OIL": 1305759.1660011553,
-      "CUM_WATER": 1031143.4573375969,
+      "WELL_NAME": "WELL_94",
+      "CUM_OIL": 460211.5594489802,
+      "CUM_WATER": 15085583.72698867,
+      "HETERO_INDEX": 4,
+      "INTERVENTION_SUCCESS": 0
+    },
+    {
+      "WELL_NAME": "WELL_95",
+      "CUM_OIL": 1228517.511485559,
+      "CUM_WATER": 532090.5603937504,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 1
+    },
+    {
+      "WELL_NAME": "WELL_96",
+      "CUM_OIL": 344198.9760885957,
+      "CUM_WATER": 134539.378997209,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
-      "WELL_NAME": "WELL_94",
-      "CUM_OIL": 8837292.782357983,
-      "CUM_WATER": 6722961.461280331,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
-    },
-    {
-      "WELL_NAME": "WELL_95",
-      "CUM_OIL": 72675255.33603051,
-      "CUM_WATER": 70173662.30921376,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
-      "WELL_NAME": "WELL_96",
-      "CUM_OIL": 12079652.359589804,
-      "CUM_WATER": 10941110.191867385,
-      "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 0
-    },
-    {
       "WELL_NAME": "WELL_97",
-      "CUM_OIL": 1664146.2500900652,
-      "CUM_WATER": 1171637.183669013,
+      "CUM_OIL": 151868.18637343546,
+      "CUM_WATER": 77043.85061538368,
       "HETERO_INDEX": 3,
       "INTERVENTION_SUCCESS": 1
     },
     {
       "WELL_NAME": "WELL_98",
-      "CUM_OIL": 1071352.8325831294,
-      "CUM_WATER": 1006059.9039061106,
-      "HETERO_INDEX": 3,
-      "INTERVENTION_SUCCESS": 1
+      "CUM_OIL": 560540.6079700772,
+      "CUM_WATER": 1058559.5929923912,
+      "HETERO_INDEX": 2,
+      "INTERVENTION_SUCCESS": 0
     },
     {
       "WELL_NAME": "WELL_99",
-      "CUM_OIL": 4418746.890629005,
-      "CUM_WATER": 3542231.2547168806,
+      "CUM_OIL": 688404.5860843848,
+      "CUM_WATER": 14642381.887984889,
       "HETERO_INDEX": 2,
-      "INTERVENTION_SUCCESS": 1
+      "INTERVENTION_SUCCESS": 0
     }
   ]
 }

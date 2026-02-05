@@ -31,7 +31,7 @@
         /* HEADER */
         .header {
             background: rgba(0,0,0,0.4);
-            padding: 6px 20px;
+            padding: 4px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -40,7 +40,7 @@
         }
         
         .header h1 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             background: linear-gradient(90deg, #00d4ff, #00ff88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -49,13 +49,13 @@
         
         .header-badges {
             display: flex;
-            gap: 12px;
-            font-size: 0.75rem;
+            gap: 10px;
+            font-size: 0.65rem;
         }
         
         .badge {
-            padding: 3px 10px;
-            border-radius: 15px;
+            padding: 2px 8px;
+            border-radius: 12px;
             background: rgba(0,212,255,0.2);
             border: 1px solid rgba(0,212,255,0.4);
         }
@@ -63,14 +63,14 @@
         /* UPLOAD SECTION */
         .upload-section {
             background: linear-gradient(135deg, rgba(0,100,150,0.3), rgba(0,50,100,0.3));
-            padding: 8px 20px;
+            padding: 5px 15px;
             border-bottom: 2px solid rgba(0,212,255,0.3);
             flex-shrink: 0;
         }
         
         .upload-container {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
@@ -78,16 +78,16 @@
         
         .upload-box {
             background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 8px 15px;
+            border-radius: 6px;
+            padding: 5px 12px;
             border: 1px solid rgba(255,255,255,0.15);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         
         .upload-box h3 {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             white-space: nowrap;
         }
         
@@ -95,28 +95,28 @@
         .upload-box h3.csv-title { color: #ffaa00; }
         
         .upload-box .file-info {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             color: #888;
-            margin-top: 4px;
+            margin-top: 2px;
         }
         
         .upload-box input[type="file"] {
-            width: 180px;
-            padding: 4px;
+            width: 140px;
+            padding: 3px;
             background: rgba(255,255,255,0.1);
             border: 1px dashed rgba(255,255,255,0.3);
-            border-radius: 4px;
+            border-radius: 3px;
             color: #ccc;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
         }
         
         .btn {
-            padding: 5px 12px;
+            padding: 3px 8px;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             transition: all 0.3s;
         }
         
@@ -131,8 +131,8 @@
         }
         
         .status-msg {
-            font-size: 0.7rem;
-            padding: 3px 8px;
+            font-size: 0.6rem;
+            padding: 2px 6px;
             border-radius: 4px;
             display: none;
         }
@@ -147,27 +147,25 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: 10px;
-            padding: 10px 15px;
-            min-height: 400px;
-            overflow: auto;
+            gap: 8px;
+            padding: 8px;
+            overflow: hidden;
         }
         
         .panel {
             background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 8px;
+            padding: 6px;
             border: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
-            min-height: 200px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         .panel-title {
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             color: #00d4ff;
             flex-shrink: 0;
         }
@@ -176,39 +174,79 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 150px;
-            overflow: visible;
+            overflow: hidden;
         }
         
         /* PANEL 1: Workover Activities */
         .activities-grid {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 8px;
+            grid-template-columns: 1.3fr 0.7fr;
+            grid-template-rows: 1fr;
+            gap: 12px;
             height: 100%;
-            min-height: 150px;
-            overflow: visible;
+            overflow: hidden;
+        }
+        
+        .activity-left {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
         }
         
         .activity-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .activities-grid .chart-container {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 5px;
+        }
+
+        /* Panel 1 Cost Section - Horizontal 3 columns */
+        .activity-left .cost-section {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr 1fr !important;
+            flex-direction: row !important;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .activity-left .cost-card {
+            padding: 8px 4px;
+        }
+        
+        .activity-left .cost-value {
+            font-size: 1.4rem;
+        }
+        
+        .activity-left .cost-value.saving {
+            font-size: 1.5rem;
+        }
+        
+        .activity-left .cost-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 3px;
         }
         
         .stat-card {
             background: rgba(0,0,0,0.3);
             border-radius: 6px;
-            padding: 8px;
+            padding: 10px 8px;
             text-align: center;
-            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
             background: linear-gradient(90deg, #00d4ff, #00ff88);
             -webkit-background-clip: text;
@@ -218,85 +256,164 @@
         
         .stat-label {
             font-size: 0.65rem;
-            color: #999;
+            color: #aaa;
             text-transform: uppercase;
+            margin-top: 3px;
         }
         
         .chart-container {
             position: relative;
-            min-height: 80px;
-            height: 100%;
-            width: 100%;
             flex: 1;
-            overflow: visible;
+            overflow: hidden;
+            min-height: 0;
         }
         
         .chart-container canvas {
-            width: 100% !important;
-            height: 100% !important;
-            display: block !important;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .activities-grid .chart-container canvas {
+            max-width: 160px !important;
+            max-height: 160px !important;
         }
         
         /* PANEL 2: Success Score */
+        .success-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .success-left {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .metrics-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            height: 100%;
+        }
+        
+        .metric-box-large {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .metric-value-large {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        
+        .metric-label-large {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-top: 3px;
+        }
+        
+        .success-right {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            height: 100%;
+        }
+        
+        .roc-display {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .roc-score {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00ff88;
+        }
+        
+        .roc-label {
+            font-size: 0.7rem;
+            color: #999;
+        }
+        
         .success-content {
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 8px;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 5px;
             height: 100%;
-            min-height: 150px;
+            overflow: hidden;
         }
         
         .score-display {
+            grid-column: 2 / 3; /* Move to the right */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            padding: 8px;
+            border-radius: 6px;
+            padding: 6px;
         }
         
         .big-score {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             color: #00ff88;
         }
         
         .score-label {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #999;
         }
         
         .metrics-col {
+            grid-column: 1 / 2; /* Move to the left */
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            min-height: 0;
-            flex: 1;
+            justify-content: space-between; /* Distribute space */
+            gap: 4px;
+            overflow: hidden;
         }
         
         .metrics-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4px;
+            gap: 3px;
         }
         
         .metric-box {
             background: rgba(0,0,0,0.3);
-            border-radius: 5px;
-            padding: 6px;
+            border-radius: 4px;
+            padding: 4px;
             text-align: center;
         }
         
         .metric-value {
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #00d4ff;
         }
         
         .metric-label {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             color: #888;
+        }
+        
+        .metrics-col .chart-container {
+            margin-top: 4px; /* Add some space */
         }
         
         /* PANEL 3: Production */
@@ -304,22 +421,21 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            gap: 6px;
-            min-height: 150px;
-            overflow: visible;
+            gap: 4px;
+            overflow: hidden;
         }
         
         .prod-stats {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
         }
         
         .prod-stat {
             flex: 1;
             background: rgba(0,0,0,0.3);
-            border-radius: 6px;
-            padding: 6px;
+            border-radius: 5px;
+            padding: 4px;
             text-align: center;
         }
         
@@ -328,7 +444,7 @@
         .prod-stat.uplift { border-left: 3px solid #00d4ff; }
         
         .prod-value {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 700;
         }
         
@@ -337,7 +453,7 @@
         .prod-value.uplift { color: #00d4ff; }
         
         .prod-label {
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             color: #888;
         }
         
@@ -358,31 +474,35 @@
         .cost-card {
             background: rgba(0,0,0,0.3);
             border-radius: 6px;
-            padding: 8px;
+            padding: 10px 5px;
             text-align: center;
-            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-left: 3px solid;
         }
         
+        .cost-card.baseline-card { border-left-color: #ff6b6b; }
+        .cost-card.optimized-card { border-left-color: #00d4ff; }
         .cost-card.saving {
             background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,100,0.1));
             border: 1px solid rgba(0,255,136,0.3);
+            border-left: 3px solid #00ff88;
         }
         
         .cost-value {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 700;
         }
         
         .cost-value.baseline { color: #ff6b6b; }
         .cost-value.optimized { color: #00d4ff; }
-        .cost-value.saving { color: #00ff88; font-size: 1.2rem; }
+        .cost-value.saving { color: #00ff88; font-size: 1.3rem; }
         
         .cost-label {
-            font-size: 0.6rem;
-            color: #888;
+            font-size: 0.55rem;
+            color: #999;
+            margin-top: 2px;
         }
         
         /* Heterogeneity */
@@ -434,7 +554,7 @@
         
         .quadrant {
             border-radius: 6px;
-            padding: 6px;
+            padding: 4px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -442,24 +562,24 @@
             text-align: center;
         }
         
-        /* Q4: Low Oil, High Water - WORST (red/warning) */
-        .quadrant.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
-        /* Q1: High Oil, High Water - Monitor (yellow) */
-        .quadrant.q1 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        /* Q1: High Oil, Low Water - BEST (green) */
+        .quadrant.q1 { background: linear-gradient(135deg, #1a4a3a, #0d3025); border: 1px solid #2a6a5a; }
+        /* Q2: High Oil, High Water - Monitor (yellow) */
+        .quadrant.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
         /* Q3: Low Oil, Low Water - Needs stimulation (teal) */
         .quadrant.q3 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
-        /* Q2: High Oil, Low Water - BEST (green) */
-        .quadrant.q2 { background: linear-gradient(135deg, #1a4a3a, #0d3025); border: 1px solid #2a6a5a; }
+        /* Q4: Low Oil, High Water - WORST (red/warning) */
+        .quadrant.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
         
         .q-index {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 800;
         }
         
-        .q4 .q-index { color: #ff6688; }  /* WORST - red */
-        .q1 .q-index { color: #ffcc00; }  /* Monitor - yellow */
+        .q1 .q-index { color: #00ff88; }  /* BEST - green */
+        .q2 .q-index { color: #ffcc00; }  /* Monitor - yellow */
         .q3 .q-index { color: #00ccaa; }  /* Stimulate - teal */
-        .q2 .q-index { color: #00ff88; }  /* BEST - green */
+        .q4 .q-index { color: #ff6688; }  /* WORST - red */
         
         .q-label {
             font-size: 0.55rem;
@@ -467,19 +587,19 @@
         }
         
         .q-wells {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #fff;
         }
         
         .q-success {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
         }
         
-        .q4 .q-success { color: #ff6688; }  /* WORST */
-        .q1 .q-success { color: #ffcc00; }  /* Monitor */
+        .q1 .q-success { color: #00ff88; }  /* BEST */
+        .q2 .q-success { color: #ffcc00; }  /* Monitor */
         .q3 .q-success { color: #00ccaa; }  /* Stimulate */
-        .q2 .q-success { color: #00ff88; }  /* BEST */
+        .q4 .q-success { color: #ff6688; }  /* WORST */
         
         .axis-x {
             font-size: 0.55rem;
@@ -488,12 +608,84 @@
             margin-top: 2px;
         }
         
+        /* Full-width HI Layout (Panel 4) */
+        .hi-full-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 4px;
+            overflow: hidden;
+        }
+        
+        .quadrant-wrapper-full {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            overflow: hidden;
+        }
+        
+        .axis-y-label {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-size: 0.65rem;
+            color: #00d4ff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 6px;
+        }
+        
+        .quadrant-main-full {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .quadrant-grid-full {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            flex: 1;
+        }
+        
+        .quadrant-grid-full .quadrant {
+            padding: 6px;
+        }
+        
+        .quadrant-grid-full .q-index {
+            font-size: 1.2rem;
+        }
+        
+        .quadrant-grid-full .q-label {
+            font-size: 0.5rem;
+        }
+        
+        .quadrant-grid-full .q-wells {
+            font-size: 0.8rem;
+        }
+        
+        .quadrant-grid-full .q-success {
+            font-size: 0.6rem;
+        }
+        
+        .axis-x-label {
+            font-size: 0.65rem;
+            color: #00d4ff;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 6px;
+        }
+        
         /* Footer */
         .footer {
             background: rgba(0,0,0,0.3);
-            padding: 4px 20px;
+            padding: 3px 15px;
             text-align: center;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #666;
             border-top: 1px solid rgba(255,255,255,0.1);
             flex-shrink: 0;
@@ -517,22 +709,22 @@
         /* FILTER BAR (Power BI Slicer Style) */
         .filter-bar {
             background: rgba(0,0,0,0.4);
-            padding: 8px 15px;
+            padding: 5px 12px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
             flex-shrink: 0;
         }
         
         .filter-bar-title {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #00d4ff;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
         
         .filter-group {
@@ -604,6 +796,13 @@
             background: rgba(255,68,68,0.2);
             border-color: #ff6b6b;
             color: #ff6b6b;
+        }
+        
+        .filter-hint {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+            font-style: italic;
+            margin-left: auto;
         }
         
         /* TOOLTIPS (Power BI Style) */
@@ -686,6 +885,153 @@
             transform: scale(1.05);
             z-index: 10;
         }
+        
+        /* Hover Hint Style */
+        .hover-hint {
+            font-size: 0.45rem;
+            color: #555;
+            font-style: italic;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        /* Activity Legend - Improved Layout */
+        .activity-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 4px;
+            padding: 4px 6px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 4px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.55rem;
+        }
+        
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .legend-dot.recommend { background: #00ff88; }
+        .legend-dot.review { background: #ffaa00; }
+        .legend-dot.low { background: #ff6b6b; }
+        
+        .legend-label {
+            color: #bbb;
+            flex: 1;
+            white-space: nowrap;
+        }
+        
+        .legend-count {
+            font-weight: bold;
+            color: #fff;
+            min-width: 22px;
+            text-align: right;
+            background: rgba(255,255,255,0.1);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+        }
+        
+        /* Production Legend */
+        .prod-legend {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 2px;
+            font-size: 0.5rem;
+            color: #777;
+            flex-wrap: wrap;
+        }
+        
+        .prod-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .prod-legend-item span {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        /* HI Legend - Horizontal Layout for Full Panel */
+        .hi-legend {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 4px;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            flex-wrap: wrap;
+        }
+        
+        .hi-legend-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .hi-legend-box {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.65rem;
+        }
+        
+        .hi-legend-box.q1 { background: linear-gradient(135deg, #1a4a3a, #0d3025); color: #00ff88; border: 1px solid #2a6a5a; }
+        .hi-legend-box.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); color: #ffcc00; border: 1px solid #6a5a30; }
+        .hi-legend-box.q3 { background: linear-gradient(135deg, #0a3030, #052020); color: #00ccaa; border: 1px solid #1a5050; }
+        .hi-legend-box.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); color: #ff6688; border: 1px solid #6a2a4a; }
+        
+        .hi-legend-text {
+            color: #aaa;
+            font-size: 0.5rem;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+        
+        /* CM Legend */
+        .cm-legend {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 3px;
+            font-size: 0.5rem;
+            color: #888;
+            flex-wrap: wrap;
+        }
+        
+        .cm-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .cm-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+        }
+        
+        .cm-dot.tn { background: #00cc88; }
+        .cm-dot.fp { background: #ffaa00; }
+        .cm-dot.fn { background: #ff6b6b; }
+        .cm-dot.tp { background: #00ff88; }
     </style>
 </head>
 <body>
@@ -695,7 +1041,7 @@
             <h1>🛢️ ML Workover Optimization Dashboard</h1>
             <div class="header-badges">
                 <span class="badge">📊 Model: LightGBM</span>
-                <span class="badge" id="badge-roc">🎯 ROC-AUC: 80.4%</span>
+                <span class="badge" id="badge-roc">🎯 ROC-AUC: 81.9%</span>
                 <span class="badge" id="badge-wells">🏭 Wells: 300</span>
             </div>
         </div>
@@ -759,34 +1105,46 @@
             <div id="activeFilters" style="display: flex; gap: 5px; flex-wrap: wrap;"></div>
             
             <button class="btn-reset-filter" onclick="resetFilters()">✕ Reset All</button>
+            
+            <span class="filter-hint">💡 Hover for Details</span>
         </div>
         
         <!-- MAIN 4-PANEL -->
         <div class="main-content">
-            <!-- Panel 1: Workover Activities -->
+            <!-- Panel 1: Workover Activities & Cost Optimization -->
             <div class="panel">
-                <div class="panel-title">🔧 Workover Activities <span style="font-size:0.6rem;color:#666;font-weight:normal;">(Advisory Distribution)</span></div>
+                <div class="panel-title">🔧 Workover Activities & 💰 Cost Optimization</div>
                 <div class="panel-content">
                     <div class="activities-grid">
-                        <div class="activity-stats">
-                            <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'totalWells')" onmouseleave="hideTooltip()">
-                                <div class="stat-value" id="totalWells">300</div>
-                                <div class="stat-label">Total Wells</div>
+                        <div class="activity-left">
+                            <div class="activity-stats">
+                                <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'totalWells')" onmouseleave="hideTooltip()">
+                                    <div class="stat-value" id="totalWells">300</div>
+                                    <div class="stat-label">Total Wells</div>
+                                </div>
+                                <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'testWells')" onmouseleave="hideTooltip()">
+                                    <div class="stat-value" id="testWells">60</div>
+                                    <div class="stat-label">Test Wells</div>
+                                </div>
                             </div>
-                            <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'testWells')" onmouseleave="hideTooltip()">
-                                <div class="stat-value" id="testWells">60</div>
-                                <div class="stat-label">Test Wells</div>
+                            <div class="cost-section">
+                                <div class="cost-card baseline-card tooltip-container" onmouseenter="showCostTooltip(event, 'baseline')" onmouseleave="hideTooltip()">
+                                    <div class="cost-value baseline" id="costBaseline">$26.0M</div>
+                                    <div class="cost-label">Baseline</div>
+                                </div>
+                                <div class="cost-card optimized-card tooltip-container" onmouseenter="showCostTooltip(event, 'optimized')" onmouseleave="hideTooltip()">
+                                    <div class="cost-value optimized" id="costOptimized">$15.4M</div>
+                                    <div class="cost-label">ML-Optimized</div>
+                                </div>
+                                <div class="cost-card saving tooltip-container" onmouseenter="showCostTooltip(event, 'saving')" onmouseleave="hideTooltip()">
+                                    <div class="cost-value saving" id="costSaving">$10.6M</div>
+                                    <div class="cost-label" id="savingLabel">💵 Savings (40.9%)</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 110px; width: 100%;">
-                            <canvas id="activityChart" width="200" height="110"></canvas>
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
                         </div>
-                        <div class="activity-legend">
-                            <div class="legend-item"><div class="legend-dot recommend"></div><span class="legend-label">Strongly Recommend</span><span class="legend-count" id="legendRecommend">45</span></div>
-                            <div class="legend-item"><div class="legend-dot review"></div><span class="legend-label">Review by Engineer</span><span class="legend-count" id="legendReview">10</span></div>
-                            <div class="legend-item"><div class="legend-dot low"></div><span class="legend-label">Low Priority</span><span class="legend-count" id="legendLow">5</span></div>
-                        </div>
-                        <div class="hover-hint">Hover cards for details</div>
                     </div>
                 </div>
             </div>
@@ -795,32 +1153,34 @@
             <div class="panel">
                 <div class="panel-title">✅ Success Score & Model Performance</div>
                 <div class="panel-content">
-                    <div class="success-content">
-                        <div class="score-display tooltip-container" onmouseenter="showMetricTooltip(event, 'rocauc')" onmouseleave="hideTooltip()">
-                            <div class="big-score" id="rocAuc">80.4%</div>
-                            <div class="score-label">ROC-AUC Score</div>
-                        </div>
-                        <div class="metrics-col">
-                            <div class="metrics-grid">
-                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'accuracy')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value" id="accuracy">78.3%</div>
-                                    <div class="metric-label">Accuracy</div>
+                    <div class="success-grid">
+                        <div class="success-left">
+                            <div class="metrics-grid-2x2">
+                                <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'accuracy')" onmouseleave="hideTooltip()">
+                                    <div class="metric-value-large" id="accuracy">78.3%</div>
+                                    <div class="metric-label-large">Accuracy</div>
                                 </div>
-                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'precision')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value" id="precision">78.5%</div>
-                                    <div class="metric-label">Precision</div>
+                                <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'precision')" onmouseleave="hideTooltip()">
+                                    <div class="metric-value-large" id="precision">76.7%</div>
+                                    <div class="metric-label-large">Precision</div>
                                 </div>
-                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'recall')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value" id="recall">78.6%</div>
-                                    <div class="metric-label">Recall</div>
+                                <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'recall')" onmouseleave="hideTooltip()">
+                                    <div class="metric-value-large" id="recall">76.7%</div>
+                                    <div class="metric-label-large">Recall</div>
                                 </div>
-                                <div class="metric-box tooltip-container" onmouseenter="showMetricTooltip(event, 'f1score')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value" id="f1Score">78.5%</div>
-                                    <div class="metric-label">F1-Score</div>
+                                <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'f1score')" onmouseleave="hideTooltip()">
+                                    <div class="metric-value-large" id="f1Score">76.7%</div>
+                                    <div class="metric-label-large">F1-Score</div>
                                 </div>
                             </div>
-                            <div class="chart-container" style="height: 80px; width: 100%;">
-                                <canvas id="confusionChart" width="300" height="80"></canvas>
+                        </div>
+                        <div class="success-right">
+                            <div class="roc-display tooltip-container" onmouseenter="showMetricTooltip(event, 'rocauc')" onmouseleave="hideTooltip()">
+                                <div class="roc-score" id="rocAuc">81.9%</div>
+                                <div class="roc-label">ROC-AUC Score</div>
+                            </div>
+                            <div class="chart-container" style="flex: 1; min-height: 60px;">
+                                <canvas id="confusionChart"></canvas>
                             </div>
                             <div class="cm-legend">
                                 <div class="cm-item"><div class="cm-dot tn"></div>TN=True Neg</div>
@@ -830,7 +1190,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hover-hint">Hover metrics for explanation</div>
                 </div>
             </div>
             
@@ -853,8 +1212,8 @@
                                 <div class="prod-label">Uplift</div>
                             </div>
                         </div>
-                        <div class="chart-container" style="height: 90px; width: 100%;">
-                            <canvas id="productionChart" width="600" height="90"></canvas>
+                        <div class="chart-container" style="flex: 1; min-height: 60px;">
+                            <canvas id="productionChart"></canvas>
                         </div>
                         <div class="prod-legend">
                             <div class="prod-legend-item"><span>M-n</span> = n Months Before Workover</div>
@@ -866,83 +1225,65 @@
                 </div>
             </div>
             
-            <!-- Panel 4: Cost & Heterogeneity -->
+            <!-- Panel 4: Heterogeneity Index -->
             <div class="panel">
-                <div class="panel-title">💰 Cost Optimization & 🔬 Heterogeneity Index</div>
+                <div class="panel-title">🔬 Heterogeneity Index (4-Quadrant Analysis)</div>
                 <div class="panel-content">
-                    <div class="cost-hetero-content">
-                        <div class="cost-section">
-                            <div class="cost-card tooltip-container" onmouseenter="showCostTooltip(event, 'baseline')" onmouseleave="hideTooltip()">
-                                <div class="cost-value baseline" id="costBaseline">$24.8M</div>
-                                <div class="cost-label">Baseline Cost</div>
-                            </div>
-                            <div class="cost-card tooltip-container" onmouseenter="showCostTooltip(event, 'optimized')" onmouseleave="hideTooltip()">
-                                <div class="cost-value optimized" id="costOptimized">$13.0M</div>
-                                <div class="cost-label">ML-Optimized</div>
-                            </div>
-                            <div class="cost-card saving tooltip-container" onmouseenter="showCostTooltip(event, 'saving')" onmouseleave="hideTooltip()">
-                                <div class="cost-value saving" id="costSaving">$11.8M</div>
-                                <div class="cost-label" id="savingLabel">💵 Savings (47.5%)</div>
-                            </div>
-                        </div>
-                        <div class="hetero-section">
-                            <div class="hetero-title">4-Quadrant by Oil & Water Production</div>
-                            <div class="quadrant-wrapper">
-                                <div class="axis-y">← High Water | Low Water →</div>
-                                <div class="quadrant-main">
-                                    <div class="quadrant-grid">
-                                        <!-- Row 1: High Water -->
-                                        <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()">
-                                            <div class="q-index">4</div>
-                                            <div class="q-label">Low Oil - High Water</div>
-                                            <div class="q-wells" id="q4Wells">11 wells</div>
-                                            <div class="q-success" id="q4Success">65% Success</div>
-                                        </div>
-                                        <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()">
-                                            <div class="q-index">2</div>
-                                            <div class="q-label">High Oil - High Water</div>
-                                            <div class="q-wells" id="q1Wells">139 wells</div>
-                                            <div class="q-success" id="q1Success">78% Success</div>
-                                        </div>
-                                        <!-- Row 2: Low Water -->
-                                        <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()">
-                                            <div class="q-index">3</div>
-                                            <div class="q-label">Low Oil - Low Water</div>
-                                            <div class="q-wells" id="q3Wells">139 wells</div>
-                                            <div class="q-success" id="q3Success">76% Success</div>
-                                        </div>
-                                        <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()">
-                                            <div class="q-index">1</div>
-                                            <div class="q-label">High Oil - Low Water</div>
-                                            <div class="q-wells" id="q2Wells">11 wells</div>
-                                            <div class="q-success" id="q2Success">85% Success</div>
-                                        </div>
+                    <div class="hi-full-content">
+                        <div class="quadrant-wrapper-full">
+                            <div class="axis-y-label">Net HI Water Production →</div>
+                            <div class="quadrant-main-full">
+                                <div class="quadrant-grid-full">
+                                    <!-- Row 1: High Water (top) -->
+                                    <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()">
+                                        <div class="q-index">1</div>
+                                        <div class="q-label">Low Oil & High Water</div>
+                                        <div class="q-wells" id="q1Wells">37 wells</div>
+                                        <div class="q-success" id="q1Success">73% Success</div>
                                     </div>
-                                    <div class="axis-x">← Low Oil | High Oil →</div>
+                                    <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()">
+                                        <div class="q-index">3</div>
+                                        <div class="q-label">High Oil & High Water</div>
+                                        <div class="q-wells" id="q3Wells">113 wells</div>
+                                        <div class="q-success" id="q3Success">79% Success</div>
+                                    </div>
+                                    <!-- Row 2: Low Water (bottom) -->
+                                    <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()">
+                                        <div class="q-index">2</div>
+                                        <div class="q-label">Low Oil & Low Water</div>
+                                        <div class="q-wells" id="q2Wells">113 wells</div>
+                                        <div class="q-success" id="q2Success">77% Success</div>
+                                    </div>
+                                    <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()">
+                                        <div class="q-index">4</div>
+                                        <div class="q-label">High Oil & Low Water</div>
+                                        <div class="q-wells" id="q4Wells">37 wells</div>
+                                        <div class="q-success" id="q4Success">81% Success</div>
+                                    </div>
                                 </div>
+                                <div class="axis-x-label">Net HI Oil Production →</div>
                             </div>
-                            <div class="hi-legend">
-                                <div class="hi-legend-item">
-                                    <div class="hi-legend-box q1">1</div>
-                                    <div class="hi-legend-text">Best<br/>⬆Oil ⬇Water</div>
-                                </div>
-                                <div class="hi-legend-item">
-                                    <div class="hi-legend-box q2">2</div>
-                                    <div class="hi-legend-text">Monitor<br/>⬆Oil ⬆Water</div>
-                                </div>
-                                <div class="hi-legend-item">
-                                    <div class="hi-legend-box q3">3</div>
-                                    <div class="hi-legend-text">Stimulate<br/>⬇Oil ⬇Water</div>
-                                </div>
-                                <div class="hi-legend-item">
-                                    <div class="hi-legend-box q4">4</div>
-                                    <div class="hi-legend-text">High Risk<br/>⬇Oil ⬆Water</div>
-                                </div>
-                            </div>
-                            <div class="hover-hint">Hover quadrants for detailed analysis</div>
                         </div>
+                        <div class="hi-legend">
+                            <div class="hi-legend-item">
+                                <div class="hi-legend-box q4">1</div>
+                                <div class="hi-legend-text">Risk (Low Oil, High Water)</div>
+                            </div>
+                            <div class="hi-legend-item">
+                                <div class="hi-legend-box q3">2</div>
+                                <div class="hi-legend-text">Stimulate (Low Oil, Low Water)</div>
+                            </div>
+                            <div class="hi-legend-item">
+                                <div class="hi-legend-box q2">3</div>
+                                <div class="hi-legend-text">Monitor (High Oil, High Water)</div>
+                            </div>
+                            <div class="hi-legend-item">
+                                <div class="hi-legend-box q1">4</div>
+                                <div class="hi-legend-text">Best (High Oil, Low Water)</div>
+                            </div>
+                        </div>
+                        <div class="hover-hint">Hover quadrants for detailed analysis</div>
                     </div>
-                    <div class="hover-hint" style="margin-top:4px;">Hover cost cards for breakdown</div>
                 </div>
             </div>
         </div>
@@ -974,10 +1315,21 @@
                 console.log('Charts initialized:', { activityChart, confusionChart, productionChart });
                 
                 // Force resize after init
-                window.dispatchEvent(new Event('resize'));
+                setTimeout(() => {
+                    if (activityChart) activityChart.resize();
+                    if (confusionChart) confusionChart.resize();
+                    if (productionChart) productionChart.resize();
+                }, 200);
                 
                 loadFromAPI();
             }, 100);
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (activityChart) activityChart.resize();
+            if (confusionChart) confusionChart.resize();
+            if (productionChart) productionChart.resize();
         });
         
         function showToast(message, type = 'success') {
@@ -996,15 +1348,15 @@
         function exportDashboardJSON() {
             const exportData = {
                 kpis: {
-                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 999,
-                    testWells: parseInt(document.getElementById('testWells').textContent) || 200,
-                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.78,
-                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.685,
-                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.562,
-                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.391,
-                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 167740000,
-                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 96355000,
-                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 71385000,
+                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 300,
+                    testWells: parseInt(document.getElementById('testWells').textContent) || 60,
+                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.819,
+                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.783,
+                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.767,
+                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.767,
+                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 25990000,
+                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 15355000,
+                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 10635000,
                     stronglyRecommend: activityChart.data.datasets[0].data[0],
                     reviewEngineer: activityChart.data.datasets[0].data[1],
                     lowPriority: activityChart.data.datasets[0].data[2]
@@ -1051,7 +1403,6 @@
             
             // Activity Donut
             const activityCanvas = document.getElementById('activityChart');
-            console.log('Activity canvas:', activityCanvas, activityCanvas.offsetWidth, activityCanvas.offsetHeight);
             
             const activityCtx = activityCanvas.getContext('2d');
             activityChart = new Chart(activityCtx, {
@@ -1067,8 +1418,8 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '55%',
+                    maintainAspectRatio: true,
+                    cutout: '50%',
                     animation: { duration: 500 },
                     plugins: {
                         legend: { display: false },
@@ -1087,30 +1438,49 @@
                     id: 'centerText',
                     afterDraw: function(chart) {
                         const ctx = chart.ctx;
-                        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        const data = chart.data.datasets[0].data;
+                        const total = data.reduce((a, b) => a + b, 0);
+                        
+                        // Draw center text
                         ctx.save();
-                        ctx.font = 'bold 14px Segoe UI';
+                        ctx.font = 'bold 18px Segoe UI';
                         ctx.fillStyle = '#fff';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         const centerX = (chart.chartArea.left + chart.chartArea.right) / 2;
                         const centerY = (chart.chartArea.top + chart.chartArea.bottom) / 2;
-                        ctx.fillText(total, centerX, centerY - 6);
+                        ctx.fillText(total, centerX, centerY - 5);
                         ctx.font = '9px Segoe UI';
                         ctx.fillStyle = '#888';
                         ctx.fillText('wells', centerX, centerY + 8);
                         ctx.restore();
+                        
+                        // Draw percentage labels on segments
+                        const meta = chart.getDatasetMeta(0);
+                        ctx.save();
+                        ctx.font = 'bold 10px Segoe UI';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        meta.data.forEach((arc, i) => {
+                            const pct = Math.round((data[i] / total) * 100);
+                            if (pct >= 10) { // Only show if >= 10%
+                                const angle = (arc.startAngle + arc.endAngle) / 2;
+                                const radius = (arc.innerRadius + arc.outerRadius) / 2;
+                                const x = centerX + Math.cos(angle) * radius;
+                                const y = centerY + Math.sin(angle) * radius;
+                                
+                                ctx.fillStyle = '#000';
+                                ctx.fillText(data[i], x, y);
+                            }
+                        });
+                        ctx.restore();
                     }
                 }]
             });
-            // Update custom legend counts
-            document.getElementById('legendRecommend').textContent = '45';
-            document.getElementById('legendReview').textContent = '10';
-            document.getElementById('legendLow').textContent = '5';
             
             // Confusion Matrix
             const confusionCanvas = document.getElementById('confusionChart');
-            console.log('Confusion canvas:', confusionCanvas, confusionCanvas.offsetWidth, confusionCanvas.offsetHeight);
             
             const confusionCtx = confusionCanvas.getContext('2d');
             confusionChart = new Chart(confusionCtx, {
@@ -1118,9 +1488,10 @@
                 data: {
                     labels: ['TN', 'FP', 'FN', 'TP'],
                     datasets: [{
-                        data: [24, 8, 5, 23],
+                        data: [24, 6, 7, 23],
                         backgroundColor: ['#00cc88', '#ffaa00', '#ff6b6b', '#00ff88'],
-                        borderRadius: 3
+                        borderRadius: 2,
+                        barThickness: 12
                     }]
                 },
                 options: {
@@ -1147,10 +1518,10 @@
                     scales: {
                         x: { 
                             grid: { color: 'rgba(255,255,255,0.1)' }, 
-                            ticks: { color: '#888', font: { size: 9 } },
+                            ticks: { color: '#888', font: { size: 8 } },
                             max: 30
                         },
-                        y: { grid: { display: false }, ticks: { color: '#ccc', font: { size: 9 }, font: { weight: 'bold' } } }
+                        y: { grid: { display: false }, ticks: { color: '#fff', font: { size: 8, weight: 'bold' } } }
                     }
                 },
                 plugins: [{
@@ -1162,10 +1533,10 @@
                             meta.data.forEach((bar, index) => {
                                 const data = dataset.data[index];
                                 ctx.fillStyle = '#fff';
-                                ctx.font = 'bold 10px Segoe UI';
+                                ctx.font = 'bold 8px Segoe UI';
                                 ctx.textAlign = 'left';
                                 ctx.textBaseline = 'middle';
-                                ctx.fillText(data, bar.x + 5, bar.y);
+                                ctx.fillText(data, bar.x + 4, bar.y);
                             });
                         });
                     }
@@ -1188,7 +1559,8 @@
                         backgroundColor: 'rgba(0,212,255,0.1)',
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 0
+                        pointRadius: 0,
+                        borderWidth: 1.5
                     }]
                 },
                 options: {
@@ -1197,8 +1569,8 @@
                     animation: { duration: 500 },
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 7 }, maxRotation: 45 } },
-                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888', font: { size: 8 } } }
+                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 6 }, maxRotation: 45 } },
+                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888', font: { size: 7 } } }
                     }
                 }
             });
@@ -1240,27 +1612,73 @@
                     const data = JSON.parse(e.target.result);
                     console.log('Parsed JSON data:', data);
                     
-                    // Validate structure
-                    if (!data.kpis && !data.totalWells && !data.rocAuc) {
-                        throw new Error('Invalid dashboard JSON structure - missing kpis or metrics');
+                    // Validate structure - accept multiple formats
+                    const hasKpis = data.kpis;
+                    const hasModelInfo = data.modelInfo;
+                    const hasCostAnalysis = data.costAnalysis;
+                    const hasDirectMetrics = data.totalWells || data.rocAuc;
+                    
+                    if (!hasKpis && !hasModelInfo && !hasCostAnalysis && !hasDirectMetrics) {
+                        throw new Error('Invalid dashboard JSON structure - missing kpis, modelInfo, or metrics');
                     }
                     
-                    const kpis = data.kpis || data;
+                    // Normalize data structure for updateDashboard
+                    let normalizedData = {};
+                    
+                    if (hasModelInfo) {
+                        normalizedData.kpis = {
+                            rocAuc: data.modelInfo.rocAuc,
+                            totalWells: data.modelInfo.nWells || 300,
+                            testWells: 60,
+                            accuracy: data.modelInfo.accuracy || 0.783,
+                            precision: data.modelInfo.precision || 0.767,
+                            recall: data.modelInfo.recall || 0.767
+                        };
+                    }
+                    
+                    if (hasCostAnalysis) {
+                        normalizedData.kpis = normalizedData.kpis || {};
+                        normalizedData.kpis.totalCostBaseline = data.costAnalysis.totalCostBaseline;
+                        normalizedData.kpis.totalCostOptimized = data.costAnalysis.totalCostOptimized;
+                        normalizedData.kpis.costSaving = data.costAnalysis.costSaving;
+                        normalizedData.kpis.stronglyRecommend = data.costAnalysis.stronglyRecommend;
+                        normalizedData.kpis.reviewEngineer = data.costAnalysis.reviewEngineer;
+                        normalizedData.kpis.lowPriority = data.costAnalysis.lowPriority;
+                    }
+                    
+                    if (data.confusionMatrix) {
+                        normalizedData.confusionMatrix = data.confusionMatrix;
+                    }
+                    
+                    if (data.heteroIndex) {
+                        normalizedData.heteroIndex = data.heteroIndex;
+                    }
+                    
+                    if (data.productionData) {
+                        normalizedData.productionData = data.productionData;
+                    }
+                    
+                    // If original format, use as-is
+                    if (hasKpis || hasDirectMetrics) {
+                        normalizedData = data;
+                    }
+                    
+                    const kpis = normalizedData.kpis || normalizedData;
                     console.log('KPIs found:', {
                         totalWells: kpis.totalWells,
                         rocAuc: kpis.rocAuc,
                         accuracy: kpis.accuracy
                     });
                     
-                    if (data.heteroIndex) {
-                        console.log('Hetero Index found:', data.heteroIndex);
+                    if (normalizedData.heteroIndex) {
+                        console.log('Hetero Index found:', normalizedData.heteroIndex);
                     }
                     
-                    if (data.confusionMatrix) {
-                        console.log('Confusion Matrix found:', data.confusionMatrix);
+                    if (normalizedData.confusionMatrix) {
+                        console.log('Confusion Matrix found:', normalizedData.confusionMatrix);
                     }
                     
-                    updateDashboard(data);
+                    updateDashboard(normalizedData);
                     setStatus('jsonStatus', '✅ JSON loaded', 'success');
                     showToast('Dashboard data loaded from JSON!', 'success');
                 } catch (err) {
@@ -1404,8 +1822,8 @@
                 document.getElementById('rocAuc').textContent = rocVal;
                 document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocVal;
             } else {
-                document.getElementById('rocAuc').textContent = '80.4%';
-                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: 80.4%';
+                document.getElementById('rocAuc').textContent = '81.9%';
+                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: 81.9%';
             }
             
             // Metrics
@@ -1417,19 +1835,19 @@
             if (kpis.precision) {
                 document.getElementById('precision').textContent = (kpis.precision * 100).toFixed(1) + '%';
             } else {
-                document.getElementById('precision').textContent = '78.5%';
+                document.getElementById('precision').textContent = '76.7%';
             }
             if (kpis.recall) {
                 document.getElementById('recall').textContent = (kpis.recall * 100).toFixed(1) + '%';
             } else {
-                document.getElementById('recall').textContent = '78.6%';
+                document.getElementById('recall').textContent = '76.7%';
             }
             
             if (kpis.precision && kpis.recall) {
                 const f1 = 2 * (kpis.precision * kpis.recall) / (kpis.precision + kpis.recall);
                 document.getElementById('f1Score').textContent = (f1 * 100).toFixed(1) + '%';
             } else {
-                document.getElementById('f1Score').textContent = '78.5%';
+                document.getElementById('f1Score').textContent = '76.7%';
             }
             
             // Activity chart
@@ -1461,8 +1879,8 @@
                 confusionChart.data.datasets[0].data = [cm.tn, cm.fp, cm.fn, cm.tp];
                 confusionChart.update();
             } else {
-                // Use actual test set values: TN:24, FP:8, FN:5, TP:23
-                confusionChart.data.datasets[0].data = [24, 8, 5, 23];
+                // Use actual test set values: TN:24, FP:6, FN:7, TP:23
+                confusionChart.data.datasets[0].data = [24, 6, 7, 23];
                 confusionChart.update();
             }
             
@@ -1470,20 +1888,20 @@
             if (kpis.totalCostBaseline) {
                 document.getElementById('costBaseline').textContent = '$' + (kpis.totalCostBaseline / 1000000).toFixed(1) + 'M';
             } else {
-                document.getElementById('costBaseline').textContent = '$24.8M';
+                document.getElementById('costBaseline').textContent = '$26.0M';
             }
             if (kpis.totalCostOptimized) {
                 document.getElementById('costOptimized').textContent = '$' + (kpis.totalCostOptimized / 1000000).toFixed(1) + 'M';
             } else {
-                document.getElementById('costOptimized').textContent = '$13.0M';
+                document.getElementById('costOptimized').textContent = '$15.4M';
             }
             if (kpis.costSaving && kpis.totalCostBaseline) {
                 const savingPct = ((kpis.costSaving / kpis.totalCostBaseline) * 100).toFixed(1);
                 document.getElementById('costSaving').textContent = '$' + (kpis.costSaving / 1000000).toFixed(1) + 'M';
                 document.getElementById('savingLabel').textContent = '💵 Savings (' + savingPct + '%)';
             } else {
-                document.getElementById('costSaving').textContent = '$11.8M';
-                document.getElementById('savingLabel').textContent = '💵 Savings (47.5%)';
+                document.getElementById('costSaving').textContent = '$10.6M';
+                document.getElementById('savingLabel').textContent = '💵 Savings (40.9%)';
             }
             
             // Heterogeneity
@@ -1498,15 +1916,15 @@
                     if (successEl) successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
                 });
             } else {
-                // Use actual distribution: Q1:11, Q2:139, Q3:139, Q4:11
-                document.getElementById('q1Wells').textContent = '11 wells';
-                document.getElementById('q2Wells').textContent = '139 wells';
-                document.getElementById('q3Wells').textContent = '139 wells';
-                document.getElementById('q4Wells').textContent = '11 wells';
-                document.getElementById('q1Success').textContent = '85% Success';
-                document.getElementById('q2Success').textContent = '78% Success';
-                document.getElementById('q3Success').textContent = '76% Success';
-                document.getElementById('q4Success').textContent = '65% Success';
+                // Use actual distribution: Q1:37, Q2:113, Q3:113, Q4:37 (12.3%, 37.7%, 37.7%, 12.3%)
+                document.getElementById('q1Wells').textContent = '37 wells';
+                document.getElementById('q2Wells').textContent = '113 wells';
+                document.getElementById('q3Wells').textContent = '113 wells';
+                document.getElementById('q4Wells').textContent = '37 wells';
+                document.getElementById('q1Success').textContent = '81% Success';
+                document.getElementById('q2Success').textContent = '79% Success';
+                document.getElementById('q3Success').textContent = '77% Success';
+                document.getElementById('q4Success').textContent = '73% Success';
             }
             
             // Production
@@ -1544,17 +1962,22 @@
         }
         
         // ========== TOOLTIP FUNCTIONS (Power BI Style) ==========
+        // Quadrant numbering matches reference image:
+        // Q1 = Low Oil & High Water (top-left, RISK)
+        // Q2 = Low Oil & Low Water (bottom-left, Stimulate)
+        // Q3 = High Oil & High Water (top-right, Monitor)
+        // Q4 = High Oil & Low Water (bottom-right, BEST)
         let tooltipData = {
             quadrants: {
-                1: { label: 'High Oil - Low Water', avgEUR: '3.2M BBL', avgCost: '$82.5K', success: '85%', recommendation: 'Best candidates for workover' },
-                2: { label: 'High Oil - High Water', avgEUR: '2.85M BBL', avgCost: '$178.5K', success: '78%', recommendation: 'Monitor water cut closely' },
-                3: { label: 'Low Oil - Low Water', avgEUR: '2.45M BBL', avgCost: '$88K', success: '76%', recommendation: 'Consider stimulation' },
-                4: { label: 'Low Oil - High Water', avgEUR: '1.95M BBL', avgCost: '$195K', success: '65%', recommendation: 'High risk - detailed review needed' }
+                1: { label: 'High Oil - Low Water', avgEUR: '3.2M BBL', avgCost: '$86.7K', success: '81%', recommendation: 'Best candidates for workover' },
+                2: { label: 'High Oil - High Water', avgEUR: '2.85M BBL', avgCost: '$86.7K', success: '79%', recommendation: 'Monitor water cut closely' },
+                3: { label: 'Low Oil - Low Water', avgEUR: '2.45M BBL', avgCost: '$86.7K', success: '77%', recommendation: 'Consider stimulation to boost production' },
+                4: { label: 'Low Oil - High Water', avgEUR: '1.95M BBL', avgCost: '$86.7K', success: '73%', recommendation: 'High risk - detailed engineering review needed' }
             },
             costs: {
-                baseline: { perWell: '$82.5K', totalOps: '300', topIntv: 'Artificial Lift (45%)' },
-                optimized: { perWell: '$43.4K', totalOps: '300', topIntv: 'Water Shutoff (30%)' },
-                saving: { perWell: '$39.2K', reduction: '47.5%', roiPeriod: '6 months' }
+                baseline: { perWell: '$86.6K', totalOps: '300', topIntv: 'Artificial Lift (40%)' },
+                optimized: { perWell: '$51.2K', totalOps: '300', topIntv: 'Stimulation (35%)' },
+                saving: { perWell: '$35.5K', reduction: '40.9%', roiPeriod: '8 months' }
             }
         };
         
@@ -1595,10 +2018,10 @@
         
         function getRecommendation(quadrant) {
             const recommendations = {
-                1: 'Best candidates for workover - high success probability',
-                2: 'Monitor water cut - consider water shutoff',
-                3: 'Consider stimulation to boost production',
-                4: 'High risk - detailed engineering review needed'
+                1: 'High risk - detailed engineering review needed',
+                2: 'Consider stimulation to boost production',
+                3: 'Monitor water cut - consider water shutoff',
+                4: 'Best candidates for workover - high success probability'
             };
             return recommendations[quadrant] || 'Review required';
         }
