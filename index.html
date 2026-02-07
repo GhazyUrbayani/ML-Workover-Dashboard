@@ -200,11 +200,18 @@
             gap: 10px;
         }
         
+        .activity-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
         .activities-grid .chart-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100%;
             padding: 5px;
         }
 
@@ -565,9 +572,9 @@
         /* Q1: High Oil, Low Water - BEST (green) */
         .quadrant.q1 { background: linear-gradient(135deg, #1a4a3a, #0d3025); border: 1px solid #2a6a5a; }
         /* Q2: High Oil, High Water - Monitor (yellow) */
-        .quadrant.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        .quadrant.q2 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
         /* Q3: Low Oil, Low Water - Needs stimulation (teal) */
-        .quadrant.q3 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
+        .quadrant.q3 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
         /* Q4: Low Oil, High Water - WORST (red/warning) */
         .quadrant.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
         
@@ -886,15 +893,6 @@
             z-index: 10;
         }
         
-        /* Hover Hint Style */
-        .hover-hint {
-            font-size: 0.45rem;
-            color: #555;
-            font-style: italic;
-            text-align: center;
-            margin-top: 2px;
-        }
-        
         /* Activity Legend - Improved Layout */
         .activity-legend {
             display: flex;
@@ -1142,8 +1140,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="chart-container">
-                            <canvas id="activityChart"></canvas>
+                        <div class="activity-right" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div class="chart-container">
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                            <div class="activity-legend">
+                                <div class="legend-item">
+                                    <div class="legend-dot recommend"></div>
+                                    <span class="legend-label">Strongly Recommend</span>
+                                    <span class="legend-count" id="legendRecommend">45</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot review"></div>
+                                    <span class="legend-label">Review Engineer</span>
+                                    <span class="legend-count" id="legendReview">10</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot low"></div>
+                                    <span class="legend-label">Low Priority</span>
+                                    <span class="legend-count" id="legendLow">5</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1220,7 +1237,6 @@
                             <div class="prod-legend-item"><span>WO</span> = Workover Period</div>
                             <div class="prod-legend-item"><span>M+n</span> = n Months After Workover</div>
                         </div>
-                        <div class="hover-hint">Hover stats for details</div>
                     </div>
                 </div>
             </div>
@@ -1282,7 +1298,6 @@
                                 <div class="hi-legend-text">Best (High Oil, Low Water)</div>
                             </div>
                         </div>
-                        <div class="hover-hint">Hover quadrants for detailed analysis</div>
                     </div>
                 </div>
             </div>
@@ -1962,11 +1977,6 @@
         }
         
         // ========== TOOLTIP FUNCTIONS (Power BI Style) ==========
-        // Quadrant numbering matches reference image:
-        // Q1 = Low Oil & High Water (top-left, RISK)
-        // Q2 = Low Oil & Low Water (bottom-left, Stimulate)
-        // Q3 = High Oil & High Water (top-right, Monitor)
-        // Q4 = High Oil & Low Water (bottom-right, BEST)
         let tooltipData = {
             quadrants: {
                 1: { label: 'High Oil - Low Water', avgEUR: '3.2M BBL', avgCost: '$86.7K', success: '81%', recommendation: 'Best candidates for workover' },
