@@ -37,6 +37,10 @@ class LogTransformer(BaseEstimator, TransformerMixin):
     def get_feature_names_out(self, input_features=None):
         return input_features if input_features is not None else self.columns
 
+# Register LogTransformer
+import __main__
+__main__.LogTransformer = LogTransformer
+
 app = Flask(__name__, static_folder='.')
 # Configure max content length (100MB - Render free tier has 512MB RAM)
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
