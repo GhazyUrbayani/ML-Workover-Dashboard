@@ -1922,6 +1922,27 @@
                 kpis = data;
             }
             
+            // Derive accuracy/precision/recall from confusion matrix if not directly available
+            const cm = data.confusionMatrix;
+            if (cm && cm.tn != null && cm.fp != null && cm.fn != null && cm.tp != null) {
+                const total = cm.tn + cm.fp + cm.fn + cm.tp;
+                if (total > 0) {
+                    if (kpis.accuracy == null) {
+                        kpis.accuracy = (cm.tn + cm.tp) / total;
+                    }
+                    if (kpis.precision == null && (cm.tp + cm.fp) > 0) {
+                        kpis.precision = cm.tp / (cm.tp + cm.fp);
+                    }
+                    if (kpis.recall == null && (cm.tp + cm.fn) > 0) {
+                        kpis.recall = cm.tp / (cm.tp + cm.fn);
+                    }
+                }
+                // Also derive testWells from CM total if not set
+                if (kpis.testWells == null) {
+                    kpis.testWells = total;
+                }
+            }
+            
             // Normalize heteroIndex — dashboard_data.json uses HETERO_INDEX, prediction uses index
             let heteroIndex = data.heteroIndex;
             if (heteroIndex && Array.isArray(heteroIndex)) {
@@ -1973,17 +1994,14 @@
             
             // Confusion matrix
             if (data.confusionMatrix != null) {
-                const cm = data.confusionMatrix;
-                console.log('Updating confusion matrix:', cm);
-                confusionChart.data.datasets[0].data = [cm.tn || 0, cm.fp || 0, cm.fn || 0, cm.tp || 0];
+                console.log('Updating confusion matrix:', data.confusionMatrix);
+                confusionChart.data.datasets[0].data = [data.confusionMatrix.tn || 0, data.confusionMatrix.fp || 0, data.confusionMatrix.fn || 0, data.confusionMatrix.tp || 0];
                 const maxCM = Math.max(...confusionChart.data.datasets[0].data, 1);
                 confusionChart.options.scales.x.max = Math.ceil(maxCM * 1.2);
                 confusionChart.update();
             } else {
-                // No confusion matrix data — show zeros
-                confusionChart.data.datasets[0].data = [0, 0, 0, 0];
-                confusionChart.options.scales.x.max = 1;
-                confusionChart.update();
+                // No confusion matrix data — keep existing chart as-is
+                console.log('No confusionMatrix in response, keeping existing values');
             }
             
             // Cost
@@ -2015,16 +2033,11 @@
                     }
                 });
             } else {
-                // No hetero data — show dashes
-                for (let q = 1; q <= 4; q++) {
-                    const wellsEl = document.getElementById('q' + q + 'Wells');
-                    const successEl = document.getElementById('q' + q + 'Success');
-                    if (wellsEl) wellsEl.textContent = '- wells';
-                    if (successEl) successEl.textContent = '- Success';
-                }
+                // No hetero data in response — keep existing values as-is
+                console.log('No heteroIndex in response, keeping existing values');
             }
             
-            // Production
+            // Production — only update if data actually provides productionData
             if (data.productionData != null) {
                 console.log('Updating productionData');
                 const pd = data.productionData;
@@ -2057,12 +2070,8 @@
                     document.getElementById('prodUplift').textContent = '-';
                 }
             } else {
-                // No production data — show dashes, clear chart
-                productionChart.data.datasets[0].data = [];
-                productionChart.update();
-                document.getElementById('prodBefore').textContent = '-';
-                document.getElementById('prodAfter').textContent = '-';
-                document.getElementById('prodUplift').textContent = '-';
+                // No production data in response — keep existing chart/values as-is
+                console.log('No productionData in response, keeping existing values');
             }
             
             console.log('=== DASHBOARD UPDATE COMPLETE ===');
