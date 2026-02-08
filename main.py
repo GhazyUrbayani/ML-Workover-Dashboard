@@ -4,6 +4,7 @@ import warnings
 import json
 import logging
 import io
+import gc
 #Suppress all warnings
 os.environ['LIGHTGBM_SUPPRESS_WARNINGS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -334,16 +335,35 @@ def predict():
         # Read file based on extension (CSV or Parquet)
         filename = file.filename.lower()
         if filename.endswith('.parquet'):
-            # Read Parquet file
-            file_bytes = io.BytesIO(file.read())
+            # Read Parquet file - memory efficient: read into bytes then free upload
+            raw_bytes = file.read()
+            file_bytes = io.BytesIO(raw_bytes)
+            del raw_bytes
+            gc.collect()
             df = pd.read_parquet(file_bytes, engine='pyarrow')
+            del file_bytes
+            gc.collect()
             print(f"📊 Received Parquet: {len(df)} rows, {len(df.columns)} columns")
         elif filename.endswith('.csv'):
-            # Read CSV file
-            df = pd.read_csv(file)
+            # Read CSV file with low_memory mode
+            df = pd.read_csv(file, low_memory=True)
             print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
         else:
             return jsonify({"error": "Unsupported file format. Use .csv or .parquet"}), 400
+        
+        # Memory check: log approximate size
+        mem_mb = df.memory_usage(deep=True).sum() / (1024 * 1024)
+        print(f"💾 DataFrame memory: {mem_mb:.1f} MB")
+        sys.stdout.flush()
+        
+        # If DataFrame is very large, downsample numeric columns to float32
+        if mem_mb > 100:
+            print("   ⚡ Optimizing memory: downcasting float64 → float32")
+            float_cols = df.select_dtypes(include=['float64']).columns
+            df[float_cols] = df[float_cols].astype(np.float32)
+            gc.collect()
+            mem_mb_after = df.memory_usage(deep=True).sum() / (1024 * 1024)
+            print(f"   💾 After optimization: {mem_mb_after:.1f} MB")
         
         # Standardize column names (handle both formats)
         df.columns = df.columns.str.upper().str.replace(' ', '_')
@@ -469,11 +489,18 @@ def predict():
             }
         }
         
-        return jsonify({
+        # Free large objects before building response
+        del X, y_prob, y_pred, df
+        gc.collect()
+        
+        response_data = {
             "success": True,
             "summary": summary,
             "predictions": results
-        })
+        }
+        print(f"✅ Prediction complete: {len(results)} wells")
+        sys.stdout.flush()
+        return jsonify(response_data)
         
     except RequestEntityTooLarge:
         return jsonify({"error": "File too large. Maximum allowed size is 500MB."}), 413

@@ -1772,25 +1772,31 @@
                 console.log('File:', fileName, 'Type:', fileType, 'Size:', fileInput.files[0].size, 'bytes');
                 console.log('Sending to: /api/predict');
                 
+                // Use AbortController for timeout (5 minutes)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 300000);
+                
                 const response = await fetch('/api/predict', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
                 
                 console.log('Response received:', response.status, response.statusText);
+                
+                // Read response body as text first to avoid JSON parse errors on empty/truncated body
+                const responseText = await response.text();
+                console.log('Response body length:', responseText.length);
                 
                 // Handle non-OK responses (413, 500, etc.)
                 if (!response.ok) {
                     let errorMsg = `Server error (${response.status})`;
                     try {
-                        const errResult = await response.json();
+                        const errResult = JSON.parse(responseText);
                         errorMsg = errResult.error || errorMsg;
                     } catch (parseErr) {
-                        // Response wasn't JSON (e.g. raw 413 from proxy/server)
-                        try {
-                            const textBody = await response.text();
-                            if (textBody) errorMsg = textBody.substring(0, 200);
-                        } catch (_) {}
+                        if (responseText) errorMsg = responseText.substring(0, 200);
                     }
                     if (response.status === 413) {
                         errorMsg = 'File too large. Try reducing file size or splitting into smaller files.';
@@ -1800,7 +1806,24 @@
                     return;
                 }
                 
-                const result = await response.json();
+                // Guard against empty/truncated response body (server OOM or connection drop)
+                if (!responseText || responseText.trim().length === 0) {
+                    const emptyMsg = 'Server returned empty response. The file may be too large for the server\'s memory. Try a smaller file.';
+                    setStatus('csvStatus', '❌ ' + emptyMsg, 'error');
+                    showToast(emptyMsg, 'error');
+                    return;
+                }
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (jsonErr) {
+                    const parseMsg = 'Server returned invalid response (possibly ran out of memory). Try a smaller file or fewer rows.';
+                    console.error('JSON parse error:', jsonErr, 'Body preview:', responseText.substring(0, 500));
+                    setStatus('csvStatus', '❌ ' + parseMsg, 'error');
+                    showToast(parseMsg, 'error');
+                    return;
+                }
                 console.log('Result:', result);
                 
                 if (result.error) {
@@ -1825,8 +1848,14 @@
                 console.error('Error message:', error.message);
                 console.error('Full error:', error);
                 
-                setStatus('csvStatus', '❌ ' + error.message, 'error');
-                showToast('Prediction failed: ' + error.message, 'error');
+                let userMsg = error.message;
+                if (error.name === 'AbortError') {
+                    userMsg = 'Request timed out (5 min). The file may be too large. Try splitting into smaller files.';
+                } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    userMsg = 'Connection lost. Server may have run out of memory processing large file. Try a smaller file.';
+                }
+                setStatus('csvStatus', '❌ ' + userMsg, 'error');
+                showToast('Prediction failed: ' + userMsg, 'error');
             }
         }
         
