@@ -1039,7 +1039,7 @@
             <h1>🛢️ ML Workover Optimization Dashboard</h1>
             <div class="header-badges">
                 <span class="badge">📊 Model: LightGBM</span>
-                <span class="badge" id="badge-roc">🎯 ROC-AUC: 81.9%</span>
+                <span class="badge" id="badge-roc">🎯 ROC-AUC: ⏳</span>
                 <span class="badge" id="badge-wells">🏭 Wells: 300</span>
             </div>
         </div>
@@ -1174,26 +1174,26 @@
                         <div class="success-left">
                             <div class="metrics-grid-2x2">
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'accuracy')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="accuracy">78.3%</div>
+                                    <div class="metric-value-large" id="accuracy">⏳</div>
                                     <div class="metric-label-large">Accuracy</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'precision')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="precision">76.7%</div>
+                                    <div class="metric-value-large" id="precision">⏳</div>
                                     <div class="metric-label-large">Precision</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'recall')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="recall">76.7%</div>
+                                    <div class="metric-value-large" id="recall">⏳</div>
                                     <div class="metric-label-large">Recall</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'f1score')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="f1Score">76.7%</div>
+                                    <div class="metric-value-large" id="f1Score">⏳</div>
                                     <div class="metric-label-large">F1-Score</div>
                                 </div>
                             </div>
                         </div>
                         <div class="success-right">
                             <div class="roc-display tooltip-container" onmouseenter="showMetricTooltip(event, 'rocauc')" onmouseleave="hideTooltip()">
-                                <div class="roc-score" id="rocAuc">81.9%</div>
+                                <div class="roc-score" id="rocAuc">⏳</div>
                                 <div class="roc-label">ROC-AUC Score</div>
                             </div>
                             <div class="chart-container" style="flex: 1; min-height: 60px;">
@@ -1906,11 +1906,11 @@
                 const ca = data.costAnalysis || {};
                 kpis = {
                     totalWells: mi.nWells || null,
-                    testWells: mi.nWells ? Math.round(mi.nWells * 0.2) : null,
-                    rocAuc: mi.rocAuc || null,
-                    accuracy: mi.accuracy || null,
-                    precision: mi.precision || null,
-                    recall: mi.recall || null,
+                    testWells: mi.nTestWells || (mi.nWells ? Math.round(mi.nWells * 0.2) : null),
+                    rocAuc: mi.rocAuc != null ? mi.rocAuc : null,
+                    accuracy: mi.accuracy != null ? mi.accuracy : null,
+                    precision: mi.precision != null ? mi.precision : null,
+                    recall: mi.recall != null ? mi.recall : null,
                     totalCostBaseline: ca.totalCostBaseline || null,
                     totalCostOptimized: ca.totalCostOptimized || null,
                     costSaving: ca.costSaving || null,
