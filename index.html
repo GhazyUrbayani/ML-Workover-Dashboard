@@ -1642,12 +1642,12 @@
                     
                     if (hasModelInfo) {
                         normalizedData.kpis = {
-                            rocAuc: data.modelInfo.rocAuc,
-                            totalWells: data.modelInfo.nWells || 300,
-                            testWells: 60,
-                            accuracy: data.modelInfo.accuracy || 0.783,
-                            precision: data.modelInfo.precision || 0.767,
-                            recall: data.modelInfo.recall || 0.767
+                            rocAuc: data.modelInfo.rocAuc || null,
+                            totalWells: data.modelInfo.nWells || null,
+                            testWells: data.modelInfo.nWells ? Math.round(data.modelInfo.nWells * 0.2) : null,
+                            accuracy: data.modelInfo.accuracy || null,
+                            precision: data.modelInfo.precision || null,
+                            recall: data.modelInfo.recall || null
                         };
                     }
                     
@@ -1728,12 +1728,12 @@
             }
             
             // Warn about large files (Render free tier has 512MB RAM)
-            if (fileSizeMB > 80) {
+            if (fileSizeMB > 120) {
                 setStatus('csvStatus', '❌ File too large (' + fileSizeMB.toFixed(0) + 'MB)', 'error');
-                showToast('File is ' + fileSizeMB.toFixed(0) + 'MB — server only has 512MB RAM. Please reduce rows/columns or split the file.', 'error');
+                showToast('File is ' + fileSizeMB.toFixed(0) + 'MB — server limit is 150MB. Please reduce rows/columns.', 'error');
                 return;
             }
-            if (fileSizeMB > 40) {
+            if (fileSizeMB > 60) {
                 console.warn('Large file warning:', fileSizeMB.toFixed(1), 'MB — may be slow on free tier');
             }
             
@@ -1842,15 +1842,28 @@
                     showToast(result.error, 'error');
                 } else {
                     setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
-                    showToast('Prediction complete!', 'success');
-                    if (result.summary) {
-                        document.getElementById('testWells').textContent = result.summary.total_wells;
-                        activityChart.data.datasets[0].data = [
-                            result.summary.strongly_recommend,
-                            result.summary.review_engineer,
-                            result.summary.low_priority
-                        ];
-                        activityChart.update();
+                    showToast('Prediction complete! Dashboard updated.', 'success');
+                    
+                    // Update entire dashboard from prediction response
+                    if (result.dashboard_data) {
+                        console.log('📊 Updating dashboard from prediction response');
+                        updateDashboard(result.dashboard_data);
+                    } else {
+                        // Fallback: update only what we have
+                        if (result.summary) {
+                            document.getElementById('testWells').textContent = result.summary.total_wells;
+                            document.getElementById('totalWells').textContent = result.summary.total_wells;
+                            document.getElementById('badge-wells').textContent = '🏭 Wells: ' + result.summary.total_wells;
+                            activityChart.data.datasets[0].data = [
+                                result.summary.strongly_recommend,
+                                result.summary.review_engineer,
+                                result.summary.low_priority
+                            ];
+                            activityChart.update();
+                            document.getElementById('legendRecommend').textContent = result.summary.strongly_recommend;
+                            document.getElementById('legendReview').textContent = result.summary.review_engineer;
+                            document.getElementById('legendLow').textContent = result.summary.low_priority;
+                        }
                     }
                 }
             } catch (error) {
@@ -1874,138 +1887,145 @@
             console.log('=== UPDATING DASHBOARD ===');
             console.log('Input data:', data);
             
-            const kpis = data.kpis || data;
+            // Helper: format value or return "-" if null/undefined
+            function valOrDash(v, formatter) {
+                if (v === null || v === undefined || v === '-' || (typeof v === 'number' && isNaN(v))) return '-';
+                return formatter ? formatter(v) : v;
+            }
+            function pct(v) { return (v * 100).toFixed(1) + '%'; }
+            function money(v) { return '$' + (v / 1000000).toFixed(1) + 'M'; }
+            
+            // ---- Normalize: support both dashboard_data.json format and prediction format ----
+            let kpis;
+            if (data.kpis) {
+                // Prediction response format — already has kpis object
+                kpis = data.kpis;
+            } else if (data.modelInfo || data.costAnalysis) {
+                // dashboard_data.json format — build kpis from parts
+                const mi = data.modelInfo || {};
+                const ca = data.costAnalysis || {};
+                kpis = {
+                    totalWells: mi.nWells || null,
+                    testWells: mi.nWells ? Math.round(mi.nWells * 0.2) : null,
+                    rocAuc: mi.rocAuc || null,
+                    accuracy: mi.accuracy || null,
+                    precision: mi.precision || null,
+                    recall: mi.recall || null,
+                    totalCostBaseline: ca.totalCostBaseline || null,
+                    totalCostOptimized: ca.totalCostOptimized || null,
+                    costSaving: ca.costSaving || null,
+                    stronglyRecommend: ca.stronglyRecommend,
+                    reviewEngineer: ca.reviewEngineer,
+                    lowPriority: ca.lowPriority,
+                };
+            } else {
+                kpis = data;
+            }
+            
+            // Normalize heteroIndex — dashboard_data.json uses HETERO_INDEX, prediction uses index
+            let heteroIndex = data.heteroIndex;
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                heteroIndex = heteroIndex.map(h => ({
+                    index: h.index || h.HETERO_INDEX,
+                    count: h.count,
+                    success_rate: h.success_rate,
+                    label: h.label,
+                }));
+            }
+            
             console.log('KPIs extracted:', kpis);
             
             // Wells
-            if (kpis.totalWells) {
-                console.log('Updating totalWells:', kpis.totalWells);
-                document.getElementById('totalWells').textContent = kpis.totalWells;
-                document.getElementById('badge-wells').textContent = '🏭 Wells: ' + kpis.totalWells;
-            } else {
-                document.getElementById('totalWells').textContent = '300';
-                document.getElementById('badge-wells').textContent = '🏭 Wells: 300';
-            }
-            if (kpis.testWells) {
-                document.getElementById('testWells').textContent = kpis.testWells;
-            } else {
-                document.getElementById('testWells').textContent = '60';
-            }
+            document.getElementById('totalWells').textContent = valOrDash(kpis.totalWells);
+            document.getElementById('badge-wells').textContent = '🏭 Wells: ' + valOrDash(kpis.totalWells);
+            document.getElementById('testWells').textContent = valOrDash(kpis.testWells);
             
             // ROC AUC
-            if (kpis.rocAuc) {
-                const rocVal = (kpis.rocAuc * 100).toFixed(1) + '%';
-                console.log('Updating rocAuc:', rocVal);
-                document.getElementById('rocAuc').textContent = rocVal;
-                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocVal;
-            } else {
-                document.getElementById('rocAuc').textContent = '81.9%';
-                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: 81.9%';
-            }
+            const rocText = valOrDash(kpis.rocAuc, pct);
+            document.getElementById('rocAuc').textContent = rocText;
+            document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocText;
             
             // Metrics
-            if (kpis.accuracy) {
-                document.getElementById('accuracy').textContent = (kpis.accuracy * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('accuracy').textContent = '78.3%';
-            }
-            if (kpis.precision) {
-                document.getElementById('precision').textContent = (kpis.precision * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('precision').textContent = '76.7%';
-            }
-            if (kpis.recall) {
-                document.getElementById('recall').textContent = (kpis.recall * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('recall').textContent = '76.7%';
-            }
+            document.getElementById('accuracy').textContent = valOrDash(kpis.accuracy, pct);
+            document.getElementById('precision').textContent = valOrDash(kpis.precision, pct);
+            document.getElementById('recall').textContent = valOrDash(kpis.recall, pct);
             
-            if (kpis.precision && kpis.recall) {
+            if (kpis.precision != null && kpis.recall != null) {
                 const f1 = 2 * (kpis.precision * kpis.recall) / (kpis.precision + kpis.recall);
-                document.getElementById('f1Score').textContent = (f1 * 100).toFixed(1) + '%';
+                document.getElementById('f1Score').textContent = pct(f1);
             } else {
-                document.getElementById('f1Score').textContent = '76.7%';
+                document.getElementById('f1Score').textContent = '-';
             }
             
             // Activity chart
-            if (kpis.stronglyRecommend !== undefined) {
+            if (kpis.stronglyRecommend !== undefined && kpis.stronglyRecommend !== null) {
                 console.log('Updating activity chart:', kpis.stronglyRecommend, kpis.reviewEngineer, kpis.lowPriority);
                 activityChart.data.datasets[0].data = [
-                    kpis.stronglyRecommend,
-                    kpis.reviewEngineer,
-                    kpis.lowPriority
+                    kpis.stronglyRecommend || 0,
+                    kpis.reviewEngineer || 0,
+                    kpis.lowPriority || 0
                 ];
                 activityChart.update();
-                // Update custom legend
-                document.getElementById('legendRecommend').textContent = kpis.stronglyRecommend;
-                document.getElementById('legendReview').textContent = kpis.reviewEngineer;
-                document.getElementById('legendLow').textContent = kpis.lowPriority;
-            } else {
-                // Default advisory distribution from test set
-                activityChart.data.datasets[0].data = [45, 10, 5];
-                activityChart.update();
-                document.getElementById('legendRecommend').textContent = '45';
-                document.getElementById('legendReview').textContent = '10';
-                document.getElementById('legendLow').textContent = '5';
+                document.getElementById('legendRecommend').textContent = kpis.stronglyRecommend || 0;
+                document.getElementById('legendReview').textContent = kpis.reviewEngineer || 0;
+                document.getElementById('legendLow').textContent = kpis.lowPriority || 0;
             }
             
             // Confusion matrix
-            if (data.confusionMatrix) {
+            if (data.confusionMatrix != null) {
                 const cm = data.confusionMatrix;
                 console.log('Updating confusion matrix:', cm);
-                confusionChart.data.datasets[0].data = [cm.tn, cm.fp, cm.fn, cm.tp];
+                confusionChart.data.datasets[0].data = [cm.tn || 0, cm.fp || 0, cm.fn || 0, cm.tp || 0];
+                const maxCM = Math.max(...confusionChart.data.datasets[0].data, 1);
+                confusionChart.options.scales.x.max = Math.ceil(maxCM * 1.2);
                 confusionChart.update();
             } else {
-                // Use actual test set values: TN:24, FP:6, FN:7, TP:23
-                confusionChart.data.datasets[0].data = [24, 6, 7, 23];
+                // No confusion matrix data — show zeros
+                confusionChart.data.datasets[0].data = [0, 0, 0, 0];
+                confusionChart.options.scales.x.max = 1;
                 confusionChart.update();
             }
             
             // Cost
-            if (kpis.totalCostBaseline) {
-                document.getElementById('costBaseline').textContent = '$' + (kpis.totalCostBaseline / 1000000).toFixed(1) + 'M';
-            } else {
-                document.getElementById('costBaseline').textContent = '$26.0M';
-            }
-            if (kpis.totalCostOptimized) {
-                document.getElementById('costOptimized').textContent = '$' + (kpis.totalCostOptimized / 1000000).toFixed(1) + 'M';
-            } else {
-                document.getElementById('costOptimized').textContent = '$15.4M';
-            }
-            if (kpis.costSaving && kpis.totalCostBaseline) {
+            document.getElementById('costBaseline').textContent = valOrDash(kpis.totalCostBaseline, money);
+            document.getElementById('costOptimized').textContent = valOrDash(kpis.totalCostOptimized, money);
+            if (kpis.costSaving != null && kpis.totalCostBaseline != null && kpis.totalCostBaseline > 0) {
                 const savingPct = ((kpis.costSaving / kpis.totalCostBaseline) * 100).toFixed(1);
-                document.getElementById('costSaving').textContent = '$' + (kpis.costSaving / 1000000).toFixed(1) + 'M';
+                document.getElementById('costSaving').textContent = money(kpis.costSaving);
                 document.getElementById('savingLabel').textContent = '💵 Savings (' + savingPct + '%)';
             } else {
-                document.getElementById('costSaving').textContent = '$10.6M';
-                document.getElementById('savingLabel').textContent = '💵 Savings (40.9%)';
+                document.getElementById('costSaving').textContent = valOrDash(kpis.costSaving, money);
+                document.getElementById('savingLabel').textContent = '💵 Savings (-)';
             }
             
             // Heterogeneity
-            if (data.heteroIndex) {
-                console.log('Updating heteroIndex:', data.heteroIndex);
-                data.heteroIndex.forEach(h => {
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                console.log('Updating heteroIndex:', heteroIndex);
+                heteroIndex.forEach(h => {
                     const qId = 'q' + h.index;
                     const wellsEl = document.getElementById(qId + 'Wells');
                     const successEl = document.getElementById(qId + 'Success');
-                    console.log(`  Q${h.index}: ${h.count} wells, ${(h.success_rate * 100).toFixed(1)}% success`);
                     if (wellsEl) wellsEl.textContent = h.count + ' wells';
-                    if (successEl) successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
+                    if (successEl) {
+                        if (h.success_rate != null) {
+                            successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
+                        } else {
+                            successEl.textContent = '- Success';
+                        }
+                    }
                 });
             } else {
-                // Use actual distribution: Q1:37, Q2:113, Q3:113, Q4:37 (12.3%, 37.7%, 37.7%, 12.3%)
-                document.getElementById('q1Wells').textContent = '37 wells';
-                document.getElementById('q2Wells').textContent = '113 wells';
-                document.getElementById('q3Wells').textContent = '113 wells';
-                document.getElementById('q4Wells').textContent = '37 wells';
-                document.getElementById('q1Success').textContent = '81% Success';
-                document.getElementById('q2Success').textContent = '79% Success';
-                document.getElementById('q3Success').textContent = '77% Success';
-                document.getElementById('q4Success').textContent = '73% Success';
+                // No hetero data — show dashes
+                for (let q = 1; q <= 4; q++) {
+                    const wellsEl = document.getElementById('q' + q + 'Wells');
+                    const successEl = document.getElementById('q' + q + 'Success');
+                    if (wellsEl) wellsEl.textContent = '- wells';
+                    if (successEl) successEl.textContent = '- Success';
+                }
             }
             
             // Production
-            if (data.productionData) {
+            if (data.productionData != null) {
                 console.log('Updating productionData');
                 const pd = data.productionData;
                 const before = pd.beforeIntervention || [];
@@ -2017,19 +2037,31 @@
                     productionChart.data.datasets[0].data = fullData;
                     productionChart.update();
                     
-                    const avgBefore = before[before.length - 1] || 420;
-                    const avgAfter = after[after.length - 1] || 882;
-                    const uplift = ((avgAfter - avgBefore) / avgBefore * 100).toFixed(0);
+                    const avgBefore = before.length > 0 ? before[before.length - 1] : null;
+                    const avgAfter = after.length > 0 ? after[after.length - 1] : null;
                     
-                    document.getElementById('prodBefore').textContent = avgBefore;
-                    document.getElementById('prodAfter').textContent = avgAfter;
-                    document.getElementById('prodUplift').textContent = '+' + uplift + '%';
+                    document.getElementById('prodBefore').textContent = valOrDash(avgBefore);
+                    document.getElementById('prodAfter').textContent = valOrDash(avgAfter);
+                    if (avgBefore != null && avgAfter != null && avgBefore > 0) {
+                        document.getElementById('prodUplift').textContent = '+' + ((avgAfter - avgBefore) / avgBefore * 100).toFixed(0) + '%';
+                    } else {
+                        document.getElementById('prodUplift').textContent = '-';
+                    }
+                } else {
+                    // Empty production data
+                    productionChart.data.datasets[0].data = [];
+                    productionChart.update();
+                    document.getElementById('prodBefore').textContent = '-';
+                    document.getElementById('prodAfter').textContent = '-';
+                    document.getElementById('prodUplift').textContent = '-';
                 }
             } else {
-                // Default production uplift
-                document.getElementById('prodBefore').textContent = '2850';
-                document.getElementById('prodAfter').textContent = '3450';
-                document.getElementById('prodUplift').textContent = '+21%';
+                // No production data — show dashes, clear chart
+                productionChart.data.datasets[0].data = [];
+                productionChart.update();
+                document.getElementById('prodBefore').textContent = '-';
+                document.getElementById('prodAfter').textContent = '-';
+                document.getElementById('prodUplift').textContent = '-';
             }
             
             console.log('=== DASHBOARD UPDATE COMPLETE ===');

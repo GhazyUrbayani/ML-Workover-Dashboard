@@ -42,9 +42,9 @@ import __main__
 __main__.LogTransformer = LogTransformer
 
 app = Flask(__name__, static_folder='.')
-# Configure max content length (50MB - Render free tier has 512MB RAM)
-# 75MB parquet can expand to 400MB+ in memory, OOMing the worker
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+# Configure max content length (150MB - Render free tier has 512MB RAM)
+# Column-pruned parquet reads keep memory manageable
+app.config['MAX_CONTENT_LENGTH'] = 150 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # Handle 413 Request Entity Too Large gracefully (return JSON instead of HTML)
@@ -54,8 +54,8 @@ from werkzeug.exceptions import RequestEntityTooLarge
 @app.errorhandler(RequestEntityTooLarge)
 def handle_file_too_large(e):
     return jsonify({
-        "error": "File too large. Maximum allowed size is 50MB. For larger datasets, please reduce columns or sample rows before uploading.",
-        "max_size_mb": 50
+        "error": "File too large. Maximum allowed size is 150MB. For larger datasets, please reduce columns or sample rows before uploading.",
+        "max_size_mb": 150
     }), 413
 
 # Log all incoming requests
@@ -118,6 +118,78 @@ INTERVENTION_COSTS = {
     "ZONAL_ISOLATION": 235000,
     "NONE": 0,
 }
+
+
+def generate_dashboard_from_predictions(results, summary, df=None):
+    """Generate dashboard-compatible data from prediction results.
+    
+    For fields that cannot be computed from predictions alone (model metrics,
+    cost optimization, production lifecycle), return '-' so the frontend
+    shows a dash instead of stale data.
+    """
+    # Advisory distribution
+    advisory_dist = {
+        "stronglyRecommend": summary.get("strongly_recommend", 0),
+        "reviewEngineer": summary.get("review_engineer", 0),
+        "lowPriority": summary.get("low_priority", 0),
+    }
+
+    # Hetero index from results
+    hetero_index = []
+    for q in [1, 2, 3, 4]:
+        wells_in_q = [r for r in results if r.get("hetero_index") == q]
+        count = len(wells_in_q)
+        if count > 0:
+            success_rate = sum(1 for w in wells_in_q if w["success_class"] == 1) / count
+        else:
+            success_rate = None
+        hetero_index.append({
+            "index": q,
+            "count": count,
+            "success_rate": round(success_rate, 4) if success_rate is not None else None,
+        })
+
+    # Cost estimation from INTV_TYPE if available
+    total_cost_baseline = None
+    total_cost_optimized = None
+    cost_saving = None
+    if df is not None and 'INTV_TYPE' in df.columns:
+        try:
+            cost_per_well = df['INTV_TYPE'].map(INTERVENTION_COSTS).fillna(0)
+            total_cost_baseline = float(cost_per_well.sum())
+            # ML-optimized: only intervene on wells with success_class == 1
+            success_wells = set(r['well_name'] for r in results if r['success_class'] == 1)
+            mask = df['WELL_NAME'].isin(success_wells)
+            total_cost_optimized = float(cost_per_well[mask].sum())
+            cost_saving = total_cost_baseline - total_cost_optimized
+        except Exception:
+            pass
+
+    dashboard = {
+        "kpis": {
+            "totalWells": summary.get("total_wells", len(results)),
+            "testWells": summary.get("total_wells", len(results)),
+            # Model metrics not available from predictions alone → "-"
+            "rocAuc": None,
+            "accuracy": None,
+            "precision": None,
+            "recall": None,
+            # Cost
+            "totalCostBaseline": total_cost_baseline,
+            "totalCostOptimized": total_cost_optimized,
+            "costSaving": cost_saving,
+            # Advisory
+            "stronglyRecommend": advisory_dist["stronglyRecommend"],
+            "reviewEngineer": advisory_dist["reviewEngineer"],
+            "lowPriority": advisory_dist["lowPriority"],
+        },
+        # Confusion matrix not available from predictions alone
+        "confusionMatrix": None,
+        "heteroIndex": hetero_index,
+        # Production lifecycle not available from predictions alone
+        "productionData": None,
+    }
+    return dashboard
 
 def process_timeseries_data(df):
     print("   🔄 Standardizing column names...")
@@ -512,8 +584,8 @@ def predict():
         
         # Early check: reject very large uploads that will OOM on free tier
         content_length = request.content_length
-        if content_length and content_length > 50 * 1024 * 1024:
-            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 50MB — a 75MB parquet can expand to 400MB+ in RAM, exceeding Render free tier's 512MB limit. Please reduce rows/columns before uploading."}), 413
+        if content_length and content_length > 150 * 1024 * 1024:
+            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 150MB. Please reduce rows/columns before uploading."}), 413
         
         # Save uploaded file to disk (temp file)
         tmp_path = None
@@ -758,15 +830,22 @@ def predict():
         }
         
         # Free large objects before building response
-        del X, y_prob, y_pred, df
+        del X, y_prob, y_pred
+        gc.collect()
+        
+        # Generate dashboard data from predictions
+        dashboard_update = generate_dashboard_from_predictions(results, summary, df)
+        
+        del df
         gc.collect()
         
         response_data = {
             "success": True,
             "summary": summary,
-            "predictions": results
+            "predictions": results,
+            "dashboard_data": dashboard_update
         }
-        print(f"✅ Prediction complete: {len(results)} wells")
+        print(f"✅ Prediction complete: {len(results)} wells (with dashboard_data)")
         sys.stdout.flush()
         return jsonify(response_data)
         
