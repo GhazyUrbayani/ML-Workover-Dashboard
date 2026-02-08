@@ -2037,8 +2037,9 @@
                     productionChart.data.datasets[0].data = fullData;
                     productionChart.update();
                     
-                    const avgBefore = before.length > 0 ? before[before.length - 1] : null;
-                    const avgAfter = after.length > 0 ? after[after.length - 1] : null;
+                    // Use average of before/after curves for summary stats
+                    const avgBefore = before.length > 0 ? Math.round(before.reduce((a,b)=>a+b,0) / before.length) : null;
+                    const avgAfter = after.length > 0 ? Math.round(after.reduce((a,b)=>a+b,0) / after.length) : null;
                     
                     document.getElementById('prodBefore').textContent = valOrDash(avgBefore);
                     document.getElementById('prodAfter').textContent = valOrDash(avgAfter);
