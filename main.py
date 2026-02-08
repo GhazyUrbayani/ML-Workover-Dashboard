@@ -42,8 +42,9 @@ import __main__
 __main__.LogTransformer = LogTransformer
 
 app = Flask(__name__, static_folder='.')
-# Configure max content length (100MB - Render free tier has 512MB RAM)
-app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
+# Configure max content length (50MB - Render free tier has 512MB RAM)
+# 75MB parquet can expand to 400MB+ in memory, OOMing the worker
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # Handle 413 Request Entity Too Large gracefully (return JSON instead of HTML)
@@ -53,8 +54,8 @@ from werkzeug.exceptions import RequestEntityTooLarge
 @app.errorhandler(RequestEntityTooLarge)
 def handle_file_too_large(e):
     return jsonify({
-        "error": "File too large. Maximum allowed size is 100MB. For larger datasets, please reduce columns or sample rows before uploading.",
-        "max_size_mb": 100
+        "error": "File too large. Maximum allowed size is 50MB. For larger datasets, please reduce columns or sample rows before uploading.",
+        "max_size_mb": 50
     }), 413
 
 # Log all incoming requests
@@ -511,8 +512,8 @@ def predict():
         
         # Early check: reject very large uploads that will OOM on free tier
         content_length = request.content_length
-        if content_length and content_length > 100 * 1024 * 1024:
-            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 100MB for server with limited memory. Please reduce rows/columns before uploading."}), 413
+        if content_length and content_length > 50 * 1024 * 1024:
+            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 50MB — a 75MB parquet can expand to 400MB+ in RAM, exceeding Render free tier's 512MB limit. Please reduce rows/columns before uploading."}), 413
         
         # Save uploaded file to disk (temp file)
         tmp_path = None
@@ -534,12 +535,53 @@ def predict():
             file.close()
             gc.collect()
             
+            # Columns actually used by the pipeline — prune everything else
+            _NEEDED_COLS = {
+                'WELL_NAME', 'DATE_TIME', 'DATETIME',
+                'OIL_PROD', 'OILPROD', 'WATER_PROD', 'WATERPROD',
+                'GAS_PROD', 'GASPROD', 'WATER_CUT', 'WATERCUT',
+                'FBHP', 'FTHP', 'FBHT', 'FTHT', 'POROSITY', 'GOR',
+                'SHUT_IN', 'SHUTIN', 'INTERVENTION_FLAG', 'INTERVENTIONFLAG',
+                'INTERVENTION_COST', 'INTERVENTIONCOST',
+                'INTERVENTION_SUCCESS', 'INTERVENTIONSUCCESS',
+                'WELL_TYPE', 'WELLTYPE', 'RESERVOIR_QUALITY', 'RESERVOIRQUALITY',
+                'INTV_TYPE', 'INTVTYPE', 'EVAL_INTV_TYPE', 'EVALINTVTYPE',
+                'CUM_OIL', 'CUM_WATER', 'CUM_GAS', 'CUM_LIQUID',
+                'PERM_LOG_MEAN', 'NET_PAY_FROM_LOG', 'PHIE_MEAN', 'SW_MEAN',
+                'VCLGR_MEAN', 'PAYFLAG_RATIO', 'RESFLAG_RATIO',
+                'DEPTH', 'PAYFLAG', 'PAY_FLAG', 'PHIE', 'PHI',
+                'SWARCHIE', 'SW', 'SW_ARCHIE', 'VCLGR', 'VCL', 'VCL_GR',
+                'VSHALE', 'VSH', 'PERMEABILITY', 'PERM', 'K', 'PERM_LOG',
+                'RESFLAG', 'RES_FLAG', 'RES', 'RESERVOIR_FLAG',
+                'HETERO_INDEX',
+            }
+            _NEEDED_UPPER = {c.upper().replace(' ', '_') for c in _NEEDED_COLS}
+
             # Read file based on extension (CSV or Parquet) from disk
             if filename.endswith('.parquet'):
-                df = pd.read_parquet(tmp_path, engine='pyarrow')
+                # Column-pruned read: only load columns we actually need
+                import pyarrow.parquet as pq
+                pf = pq.ParquetFile(tmp_path)
+                all_parquet_cols = [c for c in pf.schema.names]
+                keep_cols = [c for c in all_parquet_cols
+                             if c.upper().replace(' ', '_') in _NEEDED_UPPER]
+                if not keep_cols:
+                    keep_cols = all_parquet_cols  # fallback
+                print(f"   📦 Parquet has {len(all_parquet_cols)} cols, reading {len(keep_cols)}")
+                sys.stdout.flush()
+                df = pf.read(columns=keep_cols).to_pandas()
+                del pf
+                gc.collect()
                 print(f"📊 Received Parquet: {len(df)} rows, {len(df.columns)} columns")
             elif filename.endswith('.csv'):
-                df = pd.read_csv(tmp_path, low_memory=True)
+                # For CSV we can sniff columns first too
+                sample = pd.read_csv(tmp_path, nrows=0)
+                all_csv_cols = list(sample.columns)
+                keep_cols = [c for c in all_csv_cols
+                             if c.upper().replace(' ', '_') in _NEEDED_UPPER]
+                if not keep_cols:
+                    keep_cols = None  # read all as fallback
+                df = pd.read_csv(tmp_path, usecols=keep_cols, low_memory=True)
                 print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
             else:
                 return jsonify({"error": "Unsupported file format. Use .csv or .parquet"}), 400
@@ -552,6 +594,18 @@ def predict():
         mem_mb = df.memory_usage(deep=True).sum() / (1024 * 1024)
         print(f"💾 DataFrame memory: {mem_mb:.1f} MB")
         sys.stdout.flush()
+
+        # Safety check: reject if DataFrame already too large for processing
+        # Feature engineering can 3-4x memory usage
+        if mem_mb > 150:
+            del df
+            gc.collect()
+            return jsonify({
+                "error": f"Dataset too large for server memory ({mem_mb:.0f}MB in RAM). "
+                         f"Render free tier has 512MB total. "
+                         f"Please reduce rows (sample) or columns before uploading.",
+                "mem_mb": round(mem_mb, 1)
+            }), 413
         
         # Immediately downcast floats to float32 to save ~50% memory
         float_cols = df.select_dtypes(include=['float64']).columns
