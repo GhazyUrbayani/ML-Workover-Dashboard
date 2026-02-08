@@ -5,6 +5,7 @@ import json
 import logging
 import io
 import gc
+import tempfile
 #Suppress all warnings
 os.environ['LIGHTGBM_SUPPRESS_WARNINGS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -37,8 +38,8 @@ class LogTransformer(BaseEstimator, TransformerMixin):
         return input_features if input_features is not None else self.columns
 
 app = Flask(__name__, static_folder='.')
-# Configure max content length (500MB to support large parquet/CSV files)
-app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
+# Configure max content length (100MB - Render free tier has 512MB RAM)
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
 
 # Handle 413 Request Entity Too Large gracefully (return JSON instead of HTML)
@@ -48,8 +49,8 @@ from werkzeug.exceptions import RequestEntityTooLarge
 @app.errorhandler(RequestEntityTooLarge)
 def handle_file_too_large(e):
     return jsonify({
-        "error": "File too large. Maximum allowed size is 500MB.",
-        "max_size_mb": 500
+        "error": "File too large. Maximum allowed size is 100MB. For larger datasets, please reduce columns or sample rows before uploading.",
+        "max_size_mb": 100
     }), 413
 
 # Log all incoming requests
@@ -116,10 +117,10 @@ INTERVENTION_COSTS = {
 def process_timeseries_data(df):
     """
     Process time-series production data into well-level features.
-    This handles both old CSV format and new Parquet format.
-    Generates MA/Diff features required by the model.
+    Memory-optimized: drops unused columns aggressively.
     """
     print("   🔄 Standardizing column names...")
+    sys.stdout.flush()
     
     # Map alternative column names to standard names
     col_mapping = {
@@ -135,6 +136,30 @@ def process_timeseries_data(df):
     for old_name, new_name in col_mapping.items():
         if old_name in df.columns and new_name not in df.columns:
             df[new_name] = df[old_name]
+            df.drop(columns=[old_name], inplace=True)
+    
+    # Define which columns are actually needed for feature engineering
+    needed_cols = {
+        'WELL_NAME', 'DATE_TIME', 'OIL_PROD', 'WATER_PROD', 'GAS_PROD',
+        'WATER_CUT', 'FBHP', 'FTHP', 'FBHT', 'FTHT', 'POROSITY', 'GOR',
+        'SHUT_IN', 'INTERVENTION_FLAG', 'INTERVENTION_COST', 'INTERVENTION_SUCCESS',
+        'WELL_TYPE', 'RESERVOIR_QUALITY', 'INTV_TYPE', 'EVAL_INTV_TYPE',
+        'CUM_OIL', 'CUM_WATER', 'CUM_GAS', 'CUM_LIQUID',
+        'PERM_LOG_MEAN', 'NET_PAY_FROM_LOG', 'PHIE_MEAN', 'SW_MEAN', 'VCLGR_MEAN',
+        'PAYFLAG_RATIO', 'RESFLAG_RATIO'
+    }
+    # Drop columns we don't need to save memory
+    drop_cols = [c for c in df.columns if c not in needed_cols]
+    if drop_cols:
+        print(f"   🗑️  Dropping {len(drop_cols)} unused columns to save memory")
+        df.drop(columns=drop_cols, inplace=True)
+        gc.collect()
+    
+    # Downcast floats to float32 early
+    float_cols = df.select_dtypes(include=['float64']).columns
+    if len(float_cols) > 0:
+        df[float_cols] = df[float_cols].astype(np.float32)
+        gc.collect()
     
     # Ensure datetime
     if 'DATE_TIME' in df.columns:
@@ -143,32 +168,35 @@ def process_timeseries_data(df):
     
     # Calculate GOR if missing
     if 'GOR' not in df.columns and 'GAS_PROD' in df.columns and 'OIL_PROD' in df.columns:
-        df['GOR'] = df['GAS_PROD'] / (df['OIL_PROD'] + 1e-6)
+        df['GOR'] = (df['GAS_PROD'] / (df['OIL_PROD'] + 1e-6)).astype(np.float32)
     
     print("   🔄 Generating MA & Diff features...")
+    sys.stdout.flush()
     
-    # Generate MA and Diff features
+    # Generate MA and Diff features (compute one at a time to save memory)
     for col in ['OIL_PROD', 'WATER_CUT', 'GOR', 'FBHP']:
         if col in df.columns:
             df[f'{col}_MA7'] = df.groupby('WELL_NAME')[col].transform(
                 lambda x: x.rolling(7, min_periods=1).mean()
-            )
+            ).astype(np.float32)
             df[f'{col}_MA90'] = df.groupby('WELL_NAME')[col].transform(
                 lambda x: x.rolling(90, min_periods=1).mean()
-            )
+            ).astype(np.float32)
             df[f'{col}_DIFF7'] = df.groupby('WELL_NAME')[col].transform(
                 lambda x: x.diff(7)
-            )
+            ).astype(np.float32)
     
     # Calculate cumulative production if missing
     if 'CUM_OIL' not in df.columns and 'OIL_PROD' in df.columns:
-        df['CUM_OIL'] = df.groupby('WELL_NAME')['OIL_PROD'].cumsum()
+        df['CUM_OIL'] = df.groupby('WELL_NAME')['OIL_PROD'].cumsum().astype(np.float32)
     if 'CUM_WATER' not in df.columns and 'WATER_PROD' in df.columns:
-        df['CUM_WATER'] = df.groupby('WELL_NAME')['WATER_PROD'].cumsum()
+        df['CUM_WATER'] = df.groupby('WELL_NAME')['WATER_PROD'].cumsum().astype(np.float32)
     if 'CUM_GAS' not in df.columns and 'GAS_PROD' in df.columns:
-        df['CUM_GAS'] = df.groupby('WELL_NAME')['GAS_PROD'].cumsum()
+        df['CUM_GAS'] = df.groupby('WELL_NAME')['GAS_PROD'].cumsum().astype(np.float32)
     if 'CUM_LIQUID' not in df.columns:
-        df['CUM_LIQUID'] = df.get('CUM_OIL', 0) + df.get('CUM_WATER', 0)
+        df['CUM_LIQUID'] = (df.get('CUM_OIL', 0) + df.get('CUM_WATER', 0))
+        if hasattr(df['CUM_LIQUID'], 'astype'):
+            df['CUM_LIQUID'] = df['CUM_LIQUID'].astype(np.float32)
     
     # Oil decline rate
     df['OIL_DECLINE_RATE'] = df.groupby('WELL_NAME')['OIL_PROD'].transform(
@@ -216,21 +244,32 @@ def process_timeseries_data(df):
     
     well_df = df.groupby('WELL_NAME').agg(agg_dict).reset_index()
     
+    # Compute categorical modes BEFORE freeing df
+    cat_modes = {}
+    for cat_col in ['WELL_TYPE', 'RESERVOIR_QUALITY']:
+        if cat_col in df.columns:
+            cat_modes[cat_col] = df.groupby('WELL_NAME')[cat_col].agg(safe_mode).reset_index()
+    intv_modes = {}
+    for intv_col in ['INTV_TYPE', 'EVAL_INTV_TYPE']:
+        if intv_col in df.columns:
+            intv_modes[intv_col] = df.groupby('WELL_NAME')[intv_col].agg(mode_non_none).reset_index()
+    
+    # Free the large time-series DataFrame immediately
+    del df
+    gc.collect()
+    print(f"   🗑️  Freed time-series DataFrame")
+    sys.stdout.flush()
+    
     # Rename aggregated columns
     rename_map = {col: new_name for col, (new_name, _) in optional_aggs.items() if col in well_df.columns}
     well_df = well_df.rename(columns=rename_map)
     
-    # Add categorical columns (mode)
-    for cat_col in ['WELL_TYPE', 'RESERVOIR_QUALITY']:
-        if cat_col in df.columns:
-            cat_mode = df.groupby('WELL_NAME')[cat_col].agg(safe_mode).reset_index()
-            well_df = well_df.merge(cat_mode, on='WELL_NAME', how='left')
-    
-    # Add intervention types
-    for intv_col in ['INTV_TYPE', 'EVAL_INTV_TYPE']:
-        if intv_col in df.columns:
-            intv_mode = df.groupby('WELL_NAME')[intv_col].agg(mode_non_none).reset_index()
-            well_df = well_df.merge(intv_mode, on='WELL_NAME', how='left')
+    # Merge categorical columns
+    for cat_col, cat_df in cat_modes.items():
+        well_df = well_df.merge(cat_df, on='WELL_NAME', how='left')
+    for intv_col, intv_df in intv_modes.items():
+        well_df = well_df.merge(intv_df, on='WELL_NAME', how='left')
+    del cat_modes, intv_modes
     
     # Fill missing numeric columns with defaults
     default_values = {
@@ -319,7 +358,7 @@ def predict():
         except RequestEntityTooLarge:
             print("❌ File too large for server to process")
             sys.stdout.flush()
-            return jsonify({"error": "File too large. Maximum allowed size is 500MB. Try reducing the file or splitting into smaller files."}), 413
+            return jsonify({"error": "File too large. Maximum 100MB for server with limited memory. Please reduce rows/columns before uploading."}), 413
         
         if not has_file:
             print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
@@ -332,38 +371,60 @@ def predict():
         
         print(f"📄 File received: {file.filename}")
         
-        # Read file based on extension (CSV or Parquet)
-        filename = file.filename.lower()
-        if filename.endswith('.parquet'):
-            # Read Parquet file - memory efficient: read into bytes then free upload
-            raw_bytes = file.read()
-            file_bytes = io.BytesIO(raw_bytes)
-            del raw_bytes
+        # Early check: reject very large uploads that will OOM on free tier
+        content_length = request.content_length
+        if content_length and content_length > 100 * 1024 * 1024:
+            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 100MB for server with limited memory. Please reduce rows/columns before uploading."}), 413
+        
+        # Save uploaded file to disk (temp file) instead of holding in RAM
+        # This prevents werkzeug from keeping the entire file in memory
+        tmp_path = None
+        try:
+            filename = file.filename.lower()
+            suffix = '.parquet' if filename.endswith('.parquet') else '.csv'
+            with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+                tmp_path = tmp.name
+                # Stream file to disk in chunks (8KB at a time)
+                while True:
+                    chunk = file.stream.read(8192)
+                    if not chunk:
+                        break
+                    tmp.write(chunk)
+            
+            file_size_mb = os.path.getsize(tmp_path) / (1024 * 1024)
+            print(f"💾 Saved to temp file: {file_size_mb:.1f} MB")
+            sys.stdout.flush()
+            
+            # Free the werkzeug file upload from memory
+            file.close()
             gc.collect()
-            df = pd.read_parquet(file_bytes, engine='pyarrow')
-            del file_bytes
-            gc.collect()
-            print(f"📊 Received Parquet: {len(df)} rows, {len(df.columns)} columns")
-        elif filename.endswith('.csv'):
-            # Read CSV file with low_memory mode
-            df = pd.read_csv(file, low_memory=True)
-            print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
-        else:
-            return jsonify({"error": "Unsupported file format. Use .csv or .parquet"}), 400
+            
+            # Read file based on extension (CSV or Parquet) from disk
+            if filename.endswith('.parquet'):
+                df = pd.read_parquet(tmp_path, engine='pyarrow')
+                print(f"📊 Received Parquet: {len(df)} rows, {len(df.columns)} columns")
+            elif filename.endswith('.csv'):
+                df = pd.read_csv(tmp_path, low_memory=True)
+                print(f"📊 Received CSV: {len(df)} rows, {len(df.columns)} columns")
+            else:
+                return jsonify({"error": "Unsupported file format. Use .csv or .parquet"}), 400
+        finally:
+            # Always clean up temp file
+            if tmp_path and os.path.exists(tmp_path):
+                os.unlink(tmp_path)
         
         # Memory check: log approximate size
         mem_mb = df.memory_usage(deep=True).sum() / (1024 * 1024)
         print(f"💾 DataFrame memory: {mem_mb:.1f} MB")
         sys.stdout.flush()
         
-        # If DataFrame is very large, downsample numeric columns to float32
-        if mem_mb > 100:
-            print("   ⚡ Optimizing memory: downcasting float64 → float32")
-            float_cols = df.select_dtypes(include=['float64']).columns
+        # Immediately downcast floats to float32 to save ~50% memory
+        float_cols = df.select_dtypes(include=['float64']).columns
+        if len(float_cols) > 0:
             df[float_cols] = df[float_cols].astype(np.float32)
             gc.collect()
             mem_mb_after = df.memory_usage(deep=True).sum() / (1024 * 1024)
-            print(f"   💾 After optimization: {mem_mb_after:.1f} MB")
+            print(f"   ⚡ After float32 optimization: {mem_mb_after:.1f} MB")
         
         # Standardize column names (handle both formats)
         df.columns = df.columns.str.upper().str.replace(' ', '_')
@@ -547,5 +608,6 @@ if __name__ == '__main__':
     print("\n🌐 Open index.html in browser or visit http://127.0.0.1:5000")
     print("="*60 + "\n")
     
-    # Run Flask server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Run Flask server - NEVER use debug=True in production (doubles memory with reloader)
+    is_production = os.environ.get('RENDER') or os.environ.get('PORT')
+    app.run(host='0.0.0.0', port=5000, debug=not is_production)
