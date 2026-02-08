@@ -36,9 +36,20 @@ class LogTransformer(BaseEstimator, TransformerMixin):
         return input_features if input_features is not None else self.columns
 
 app = Flask(__name__, static_folder='.')
-# Configure max content length (50MB)
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+# Configure max content length (500MB to support large parquet/CSV files)
+app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
+
+# Handle 413 Request Entity Too Large gracefully (return JSON instead of HTML)
+from werkzeug.exceptions import RequestEntityTooLarge
+
+@app.errorhandler(413)
+@app.errorhandler(RequestEntityTooLarge)
+def handle_file_too_large(e):
+    return jsonify({
+        "error": "File too large. Maximum allowed size is 500MB.",
+        "max_size_mb": 500
+    }), 413
 
 # Log all incoming requests
 @app.before_request
@@ -302,7 +313,14 @@ def predict():
         print("📋 Checking for file in request.files...")
         sys.stdout.flush()
         
-        if 'file' not in request.files:
+        try:
+            has_file = 'file' in request.files
+        except RequestEntityTooLarge:
+            print("❌ File too large for server to process")
+            sys.stdout.flush()
+            return jsonify({"error": "File too large. Maximum allowed size is 500MB. Try reducing the file or splitting into smaller files."}), 413
+        
+        if not has_file:
             print(f"❌ No 'file' in request.files. Keys: {list(request.files.keys())}")
             sys.stdout.flush()
             return jsonify({"error": "No file uploaded. Send CSV with 'file' field."}), 400
@@ -457,6 +475,8 @@ def predict():
             "predictions": results
         })
         
+    except RequestEntityTooLarge:
+        return jsonify({"error": "File too large. Maximum allowed size is 500MB."}), 413
     except Exception as e:
         import traceback
         traceback.print_exc()

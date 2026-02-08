@@ -1763,6 +1763,28 @@
                 });
                 
                 console.log('Response received:', response.status, response.statusText);
+                
+                // Handle non-OK responses (413, 500, etc.)
+                if (!response.ok) {
+                    let errorMsg = `Server error (${response.status})`;
+                    try {
+                        const errResult = await response.json();
+                        errorMsg = errResult.error || errorMsg;
+                    } catch (parseErr) {
+                        // Response wasn't JSON (e.g. raw 413 from proxy/server)
+                        try {
+                            const textBody = await response.text();
+                            if (textBody) errorMsg = textBody.substring(0, 200);
+                        } catch (_) {}
+                    }
+                    if (response.status === 413) {
+                        errorMsg = 'File too large. Try reducing file size or splitting into smaller files.';
+                    }
+                    setStatus('csvStatus', '❌ ' + errorMsg, 'error');
+                    showToast(errorMsg, 'error');
+                    return;
+                }
+                
                 const result = await response.json();
                 console.log('Result:', result);
                 
