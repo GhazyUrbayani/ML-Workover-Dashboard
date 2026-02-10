@@ -2000,8 +2000,11 @@
                 confusionChart.options.scales.x.max = Math.ceil(maxCM * 1.2);
                 confusionChart.update();
             } else {
-                // No confusion matrix data — keep existing chart as-is
-                console.log('No confusionMatrix in response, keeping existing values');
+                // No confusion matrix data — clear chart to zeros
+                console.log('No confusionMatrix in response, clearing chart');
+                confusionChart.data.datasets[0].data = [0, 0, 0, 0];
+                confusionChart.options.scales.x.max = 1;
+                confusionChart.update();
             }
             
             // Cost
@@ -2033,8 +2036,14 @@
                     }
                 });
             } else {
-                // No hetero data in response — keep existing values as-is
-                console.log('No heteroIndex in response, keeping existing values');
+                // No hetero data in response — clear to default empty state
+                console.log('No heteroIndex in response, clearing values');
+                for (const q of [1, 2, 3, 4]) {
+                    const wellsEl = document.getElementById('q' + q + 'Wells');
+                    const successEl = document.getElementById('q' + q + 'Success');
+                    if (wellsEl) wellsEl.textContent = '0 wells';
+                    if (successEl) successEl.textContent = '- Success';
+                }
             }
             
             // Production — only update if data actually provides productionData
@@ -2070,8 +2079,13 @@
                     document.getElementById('prodUplift').textContent = '-';
                 }
             } else {
-                // No production data in response — keep existing chart/values as-is
-                console.log('No productionData in response, keeping existing values');
+                // No production data in response — clear chart and show dashes
+                console.log('No productionData in response, clearing chart');
+                productionChart.data.datasets[0].data = [];
+                productionChart.update();
+                document.getElementById('prodBefore').textContent = '-';
+                document.getElementById('prodAfter').textContent = '-';
+                document.getElementById('prodUplift').textContent = '-';
             }
             
             console.log('=== DASHBOARD UPDATE COMPLETE ===');

@@ -342,7 +342,9 @@ def process_timeseries_data(df):
     if 'INTERVENTION_FLAG' in df.columns and 'OIL_PROD' in df.columns:
         try:
             intv_wells = df.loc[df['INTERVENTION_FLAG'] == 1, 'WELL_NAME'].unique()
-            if len(intv_wells) >= 3:
+            print(f"   📈 Wells with interventions: {len(intv_wells)}")
+            sys.stdout.flush()
+            if len(intv_wells) >= 1:
                 sample_wells = intv_wells[:min(30, len(intv_wells))]
                 avg_before_list = []
                 avg_after_list = []
@@ -354,10 +356,13 @@ def process_timeseries_data(df):
                     first_intv_iloc = wd.index.get_loc(wd[intv_mask].index[0])
                     before_prod = wd.iloc[:first_intv_iloc]['OIL_PROD']
                     after_prod = wd.iloc[first_intv_iloc:]['OIL_PROD']
-                    if len(before_prod) >= 30:
+                    # Relaxed threshold: at least 5 data points (was 30)
+                    if len(before_prod) >= 5:
                         avg_before_list.append(float(before_prod.tail(360).mean()))
-                    if len(after_prod) >= 30:
+                    if len(after_prod) >= 5:
                         avg_after_list.append(float(after_prod.head(360).mean()))
+                print(f"   📈 Valid before/after samples: {len(avg_before_list)}/{len(avg_after_list)}")
+                sys.stdout.flush()
                 if avg_before_list and avg_after_list:
                     avg_b = np.mean(avg_before_list)
                     avg_a = np.mean(avg_after_list)
@@ -371,8 +376,14 @@ def process_timeseries_data(df):
                         'afterIntervention': [round(float(x), 1) for x in after_curve],
                     }
                     print(f"   📈 Production lifecycle: avg before={avg_b:.0f}, after={avg_a:.0f} BOPD")
+                else:
+                    print(f"   ⚠️ Not enough valid before/after data for lifecycle curve")
+            else:
+                print(f"   ⚠️ No wells with INTERVENTION_FLAG=1 found")
         except Exception as e:
             print(f"   ⚠️ Production lifecycle extraction skipped: {e}")
+            import traceback
+            traceback.print_exc()
 
     # Free the large time-series DataFrame immediately
     del df
@@ -885,32 +896,61 @@ def predict():
         
         # ── Compute model metrics if ground truth is available ──
         model_metrics = None
-        if 'INTERVENTION_SUCCESS' in df.columns:
+        # Check multiple possible column names for ground truth
+        gt_col = None
+        for col_name in ['INTERVENTION_SUCCESS', 'INTERVENTIONSUCCESS', 'SUCCESS']:
+            if col_name in df.columns:
+                gt_col = col_name
+                break
+        
+        if gt_col:
             try:
                 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score, confusion_matrix as sk_cm
-                y_true = df['INTERVENTION_SUCCESS'].values.astype(int)
-                # Only compute if we have both classes
-                if len(set(y_true)) >= 2:
-                    acc = accuracy_score(y_true, y_pred)
-                    prec = precision_score(y_true, y_pred, zero_division=0)
-                    rec = recall_score(y_true, y_pred, zero_division=0)
-                    roc = roc_auc_score(y_true, y_prob)
-                    cm = sk_cm(y_true, y_pred)
-                    model_metrics = {
-                        'rocAuc': round(float(roc), 4),
-                        'accuracy': round(float(acc), 4),
-                        'precision': round(float(prec), 4),
-                        'recall': round(float(rec), 4),
-                        'confusionMatrix': {
-                            'tn': int(cm[0][0]), 'fp': int(cm[0][1]),
-                            'fn': int(cm[1][0]), 'tp': int(cm[1][1]),
+                gt_values = df[gt_col].values
+                # Handle NaN: drop wells without ground truth
+                valid_mask = pd.notna(gt_values)
+                n_valid = valid_mask.sum()
+                n_total = len(gt_values)
+                print(f"📊 Ground truth '{gt_col}': {n_valid}/{n_total} wells have labels")
+                sys.stdout.flush()
+                
+                if n_valid >= 2:
+                    y_true = gt_values[valid_mask].astype(float).astype(int)
+                    y_pred_valid = y_pred[valid_mask]
+                    y_prob_valid = y_prob[valid_mask]
+                    
+                    # Only compute if we have both classes
+                    unique_classes = set(y_true)
+                    if len(unique_classes) >= 2:
+                        acc = accuracy_score(y_true, y_pred_valid)
+                        prec = precision_score(y_true, y_pred_valid, zero_division=0)
+                        rec = recall_score(y_true, y_pred_valid, zero_division=0)
+                        roc = roc_auc_score(y_true, y_prob_valid)
+                        cm = sk_cm(y_true, y_pred_valid)
+                        model_metrics = {
+                            'rocAuc': round(float(roc), 4),
+                            'accuracy': round(float(acc), 4),
+                            'precision': round(float(prec), 4),
+                            'recall': round(float(rec), 4),
+                            'confusionMatrix': {
+                                'tn': int(cm[0][0]), 'fp': int(cm[0][1]),
+                                'fn': int(cm[1][0]), 'tp': int(cm[1][1]),
+                            }
                         }
-                    }
-                    print(f"📊 Model metrics: AUC={roc:.3f} Acc={acc:.3f} P={prec:.3f} R={rec:.3f}")
+                        print(f"📊 Model metrics: AUC={roc:.3f} Acc={acc:.3f} P={prec:.3f} R={rec:.3f}")
+                        print(f"   CM: TN={cm[0][0]} FP={cm[0][1]} FN={cm[1][0]} TP={cm[1][1]}")
+                    else:
+                        print(f"⚠️ Only one class in ground truth ({unique_classes}), skipping metrics")
                 else:
-                    print(f"⚠️ Only one class in ground truth ({set(y_true)}), skipping metrics")
+                    print(f"⚠️ Too few valid ground truth labels ({n_valid}), skipping metrics")
             except Exception as e:
+                import traceback
                 print(f"⚠️ Could not compute model metrics: {e}")
+                traceback.print_exc()
+        else:
+            print(f"ℹ️ No ground truth column found in data. Columns: {list(df.columns)}")
+        
+        sys.stdout.flush()
         
         del y_prob, y_pred
         gc.collect()
