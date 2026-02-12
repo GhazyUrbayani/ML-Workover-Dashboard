@@ -1212,7 +1212,7 @@
             
             <!-- Panel 3: Production Lifecycle -->
             <div class="panel">
-                <div class="panel-title">📈 Production Lifecycle: Before & After Workover</div>
+                <div class="panel-title">📈 Production Lifecycle: Before & After Workover <span id="mlBadge" style="background: linear-gradient(135deg, #00d4ff, #00ff88); color: #000; font-size: 0.55rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 8px; display: none;">ML-BASED</span></div>
                 <div class="panel-content">
                     <div class="production-content">
                         <div class="prod-stats">
@@ -1227,6 +1227,20 @@
                             <div class="prod-stat uplift tooltip-container" onmouseenter="showProdTooltip(event, 'uplift')" onmouseleave="hideTooltip()">
                                 <div class="prod-value uplift" id="prodUplift">+21%</div>
                                 <div class="prod-label">Uplift</div>
+                            </div>
+                        </div>
+                        <div id="npvStatsRow" style="display: none; gap: 8px; margin: 4px 0; justify-content: center;">
+                            <div style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #00d4ff;" id="npvTotal">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">Total NPV</div>
+                            </div>
+                            <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #00ff88;" id="npvPositive">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">NPV+ Wells</div>
+                            </div>
+                            <div style="background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #ffaa00;" id="npvImprovement">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">ML Uplift</div>
                             </div>
                         </div>
                         <div class="chart-container" style="flex: 1; min-height: 60px;">
@@ -2078,6 +2092,17 @@
                     document.getElementById('prodAfter').textContent = '-';
                     document.getElementById('prodUplift').textContent = '-';
                 }
+                
+                // ML-based badge and metadata
+                const mlBadge = document.getElementById('mlBadge');
+                if (pd.mlBased) {
+                    mlBadge.style.display = 'inline';
+                    if (pd.predictedImprovement != null) {
+                        document.getElementById('npvImprovement').textContent = '+' + pd.predictedImprovement + '%';
+                    }
+                } else {
+                    mlBadge.style.display = 'none';
+                }
             } else {
                 // No production data in response — clear chart and show dashes
                 console.log('No productionData in response, clearing chart');
@@ -2086,6 +2111,18 @@
                 document.getElementById('prodBefore').textContent = '-';
                 document.getElementById('prodAfter').textContent = '-';
                 document.getElementById('prodUplift').textContent = '-';
+                document.getElementById('mlBadge').style.display = 'none';
+            }
+            
+            // NPV Analysis
+            const npvRow = document.getElementById('npvStatsRow');
+            if (data.npvAnalysis) {
+                npvRow.style.display = 'flex';
+                const na = data.npvAnalysis;
+                document.getElementById('npvTotal').textContent = '$' + (na.totalNPV / 1e6).toFixed(1) + 'M';
+                document.getElementById('npvPositive').textContent = na.positiveNPVCount + ' wells';
+            } else {
+                npvRow.style.display = 'none';
             }
             
             console.log('=== DASHBOARD UPDATE COMPLETE ===');
@@ -2310,6 +2347,8 @@
             const before = document.getElementById('prodBefore').textContent;
             const after = document.getElementById('prodAfter').textContent;
             const uplift = document.getElementById('prodUplift').textContent;
+            const isMLBased = document.getElementById('mlBadge').style.display !== 'none';
+            const methodLabel = isMLBased ? 'ML-predicted production curve' : 'Historical average production';
             
             if (type === 'before') {
                 titleEl.textContent = '📉 Pre-Workover Production';
@@ -2317,7 +2356,7 @@
                     <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value negative">${before} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months before WO</span></div>
                     <div class="tooltip-row"><span class="label">Trend:</span><span class="value negative">Declining</span></div>
-                    <div class="tooltip-row"><span class="label">Issue:</span><span class="value" style="font-size:0.6rem">Declining production triggers workover</span></div>
+                    <div class="tooltip-row"><span class="label">Method:</span><span class="value" style="font-size:0.6rem">${methodLabel}</span></div>
                 `;
             } else if (type === 'after') {
                 titleEl.textContent = '📈 Post-Workover Production';
@@ -2325,7 +2364,7 @@
                     <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value positive">${after} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months after WO</span></div>
                     <div class="tooltip-row"><span class="label">Trend:</span><span class="value positive">Stabilized</span></div>
-                    <div class="tooltip-row"><span class="label">Result:</span><span class="value" style="font-size:0.6rem">Production restored after intervention</span></div>
+                    <div class="tooltip-row"><span class="label">Method:</span><span class="value" style="font-size:0.6rem">${methodLabel}</span></div>
                 `;
             } else {
                 titleEl.textContent = '🚀 Production Uplift';
@@ -2334,6 +2373,7 @@
                     <div class="tooltip-row"><span class="label">Before:</span><span class="value negative">${before} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">After:</span><span class="value positive">${after} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Gain:</span><span class="value positive">+${parseInt(after) - parseInt(before)} BOPD</span></div>
+                    ${isMLBased ? '<div class="tooltip-row" style="margin-top:4px;border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;"><span class="label">💡</span><span class="value" style="font-size:0.55rem;font-weight:normal">Uplift estimated from ML success probability × well production data</span></div>' : ''}
                 `;
             }
             

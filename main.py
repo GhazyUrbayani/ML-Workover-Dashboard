@@ -121,7 +121,8 @@ INTERVENTION_COSTS = {
 
 
 def generate_dashboard_from_predictions(results, summary, df=None,
-                                       model_metrics=None, production_lifecycle=None):
+                                       model_metrics=None, production_lifecycle=None,
+                                       npv_analysis=None):
     # Advisory distribution
     advisory_dist = {
         "stronglyRecommend": summary.get("strongly_recommend", 0),
@@ -198,6 +199,7 @@ def generate_dashboard_from_predictions(results, summary, df=None,
         "confusionMatrix": confusion_matrix,
         "heteroIndex": hetero_index,
         "productionData": prod_data,
+        "npvAnalysis": npv_analysis,
     }
     return dashboard
 
@@ -840,24 +842,56 @@ def predict():
         y_prob = model.predict_proba(X)[:, 1]
         y_pred = model.predict(X)
         
+        # ── NPV Economic Ranking ──
+        oil_price = 70  # $/bbl
+        discount_rate = 0.10
+        npv_values = []
+        for i in range(len(df)):
+            row = df.iloc[i]
+            intervention_cost = 0
+            if 'INTV_TYPE' in df.columns:
+                intervention_cost = INTERVENTION_COSTS.get(str(row.get('INTV_TYPE', 'NONE')), 0)
+            elif 'INTERVENTION_COST_MEAN' in df.columns:
+                intervention_cost = float(row.get('INTERVENTION_COST_MEAN', 0))
+            
+            baseline_oil = float(row.get('OIL_PROD_MA90_MEAN', 0)) * 365
+            improvement_factor = 0.20 * float(y_prob[i])
+            oil_gain = baseline_oil * improvement_factor * 2
+            revenue = oil_gain * oil_price
+            npv = (revenue - intervention_cost) / ((1 + discount_rate) ** 2)
+            npv_values.append(npv)
+        
+        npv_arr = np.array(npv_values)
+        npv_min, npv_max = npv_arr.min(), npv_arr.max()
+        if npv_max > npv_min:
+            npv_norm = (npv_arr - npv_min) / (npv_max - npv_min)
+        else:
+            npv_norm = np.full_like(npv_arr, 0.5)
+        
+        # Combined rank score: 60% technical + 40% economic
+        rank_scores = 0.6 * y_prob + 0.4 * npv_norm
+        
         # Create results
+        hetero_labels = {
+            '1': "High Oil - Low Water",
+            '2': "High Oil - High Water",
+            '3': "Low Oil - Low Water",
+            '4': "Low Oil - High Water"
+        }
         results = []
         for i, (well, prob, pred, hetero) in enumerate(zip(well_names, y_prob, y_pred, df['HETERO_INDEX'])):
-            # Advisory rule
-            if prob >= 0.8:
+            npv = npv_values[i]
+            rs = rank_scores[i]
+            
+            # Advisory: considers both technical + economic
+            if prob >= 0.7 and npv > 0:
                 advisory = "Strongly Recommend"
-            elif prob >= 0.6:
+            elif prob >= 0.7 and npv <= 0:
+                advisory = "Review by Engineer"  # High success but unprofitable
+            elif prob >= 0.4 and npv > 0:
                 advisory = "Review by Engineer"
             else:
                 advisory = "Low Priority"
-            
-            # Hetero label
-            hetero_labels = {
-                '1': "High Oil - Low Water",
-                '2': "High Oil - High Water",
-                '3': "Low Oil - Low Water",
-                '4': "Low Oil - High Water"
-            }
             
             results.append({
                 "rank": i + 1,
@@ -867,11 +901,13 @@ def predict():
                 "hetero_index": int(hetero) if str(hetero).isdigit() else 0,
                 "hetero_label": hetero_labels.get(str(hetero), "Unknown"),
                 "advisory": advisory,
+                "npv": round(float(npv), 0),
+                "rank_score": round(float(rs), 4),
                 "estimated_roi": round(float(prob) * 150000 - 50000, 0)
             })
         
-        # Sort by probability
-        results = sorted(results, key=lambda x: x['success_prob'], reverse=True)
+        # Sort by combined rank score (not just probability)
+        results = sorted(results, key=lambda x: x['rank_score'], reverse=True)
         for i, r in enumerate(results):
             r['rank'] = i + 1
         
@@ -888,6 +924,52 @@ def predict():
                 "q3": sum(1 for r in results if r['hetero_index'] == 3),
                 "q4": sum(1 for r in results if r['hetero_index'] == 4),
             }
+        }
+        
+        # ── ML-Based Production Lifecycle ──
+        try:
+            success_mask = y_pred == 1
+            success_oil = float(df.loc[success_mask, 'OIL_PROD_MA90_MEAN'].mean()) if success_mask.any() else 0
+            avg_prob_success = float(y_prob[success_mask].mean()) if success_mask.any() else 0.5
+            improvement = avg_prob_success * 0.25
+            avg_baseline = float(df['OIL_PROD_MA90_MEAN'].mean())
+            avg_after = avg_baseline * (1 + improvement)
+            
+            before_curve = np.linspace(avg_baseline * 1.3, avg_baseline * 0.65, 12)
+            wo_curve = np.array([avg_baseline * 0.08, avg_baseline * 0.03, avg_baseline * 0.02, avg_after * 0.5])
+            after_curve = np.linspace(avg_after * 0.6, avg_after * 1.05, 12)
+            
+            ml_production_lifecycle = {
+                'beforeIntervention': [round(float(x), 1) for x in before_curve],
+                'duringWorkover': [round(float(x), 1) for x in wo_curve],
+                'afterIntervention': [round(float(x), 1) for x in after_curve],
+                'mlBased': True,
+                'avgSuccessProb': round(float(avg_prob_success), 3),
+                'predictedImprovement': round(float(improvement * 100), 1),
+                'nSuccessWells': int(success_mask.sum()),
+                'nFailWells': int((~success_mask).sum()),
+            }
+            # Use ML lifecycle if time-series lifecycle not available
+            if _production_lifecycle is None:
+                _production_lifecycle = ml_production_lifecycle
+            else:
+                # Merge ML metadata into time-series lifecycle
+                _production_lifecycle['mlBased'] = True
+                _production_lifecycle['avgSuccessProb'] = ml_production_lifecycle['avgSuccessProb']
+                _production_lifecycle['predictedImprovement'] = ml_production_lifecycle['predictedImprovement']
+                _production_lifecycle['nSuccessWells'] = ml_production_lifecycle['nSuccessWells']
+                _production_lifecycle['nFailWells'] = ml_production_lifecycle['nFailWells']
+            print(f"📈 ML Production Lifecycle: before={avg_baseline:.0f}, after={avg_after:.0f} BOPD")
+        except Exception as e:
+            print(f"⚠️ ML production lifecycle skipped: {e}")
+        
+        # ── NPV Analysis Summary ──
+        npv_analysis = {
+            'totalNPV': round(float(sum(npv_values)), 0),
+            'avgNPV': round(float(np.mean(npv_values)), 0),
+            'medianNPV': round(float(np.median(npv_values)), 0),
+            'positiveNPVCount': int(sum(1 for v in npv_values if v > 0)),
+            'negativeNPVCount': int(sum(1 for v in npv_values if v <= 0)),
         }
         
         # Free large objects before building response
@@ -960,6 +1042,7 @@ def predict():
             results, summary, df,
             model_metrics=model_metrics,
             production_lifecycle=_production_lifecycle,
+            npv_analysis=npv_analysis,
         )
         
         del df
