@@ -1057,7 +1057,6 @@
                     <h3 class="csv-title">📤 Data Prediction</h3>
                     <input type="file" id="csvFile" accept=".csv,.parquet">
                     <button class="btn btn-warning" onclick="runPrediction()">🚀 Predict</button>
-                    <button class="btn btn-primary" onclick="loadFromAPI()">🔄 Load API</button>
                     <button class="btn btn-export" onclick="exportDashboardJSON()">💾 Export</button>
                     <span class="status-msg" id="csvStatus"></span>
                     <div class="file-info">Supports: CSV, Parquet (time-series or well-level)</div>
@@ -2104,14 +2103,8 @@
                     mlBadge.style.display = 'none';
                 }
             } else {
-                // No production data in response — clear chart and show dashes
-                console.log('No productionData in response, clearing chart');
-                productionChart.data.datasets[0].data = [];
-                productionChart.update();
-                document.getElementById('prodBefore').textContent = '-';
-                document.getElementById('prodAfter').textContent = '-';
-                document.getElementById('prodUplift').textContent = '-';
-                document.getElementById('mlBadge').style.display = 'none';
+                // No production data in response — keep existing chart defaults
+                console.log('No productionData in response, keeping current chart data');
             }
             
             // NPV Analysis
