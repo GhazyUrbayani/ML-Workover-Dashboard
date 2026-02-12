@@ -311,7 +311,7 @@ def process_timeseries_data(df):
         'SHUT_IN': ('N_SHUT_IN', 'sum'),
         'INTERVENTION_FLAG': ('N_INTERVENTION', 'sum'),
         'INTERVENTION_COST': ('INTERVENTION_COST_MEAN', 'mean'),
-        'INTERVENTION_SUCCESS': ('INTERVENTION_SUCCESS', 'max'),
+        'INTERVENTION_SUCCESS': ('INTERVENTION_SUCCESS', 'last'),
         'OIL_PROD_MA7': ('OIL_PROD_MA7_MEAN', 'mean'),
         'OIL_PROD_MA90': ('OIL_PROD_MA90_MEAN', 'mean'),
         'WATER_CUT_MA7': ('WATER_CUT_MA7_MEAN', 'mean'),
@@ -914,6 +914,7 @@ def predict():
         # Calculate summary stats
         summary = {
             "total_wells": len(results),
+            "test_wells": len(results),
             "strongly_recommend": sum(1 for r in results if r['advisory'] == "Strongly Recommend"),
             "review_engineer": sum(1 for r in results if r['advisory'] == "Review by Engineer"),
             "low_priority": sum(1 for r in results if r['advisory'] == "Low Priority"),
@@ -1031,6 +1032,25 @@ def predict():
                 traceback.print_exc()
         else:
             print(f"ℹ️ No ground truth column found in data. Columns: {list(df.columns)}")
+        
+        # Fallback: if model_metrics couldn't be computed, use pre-trained metrics from dashboard_data.json
+        if model_metrics is None and dashboard_data:
+            print("📊 Falling back to pre-trained model metrics from dashboard_data.json")
+            mi = dashboard_data.get('modelInfo', {})
+            cm_data = dashboard_data.get('confusionMatrix', {})
+            if mi:
+                model_metrics = {
+                    'rocAuc': mi.get('rocAuc'),
+                    'accuracy': mi.get('accuracy'),
+                    'precision': mi.get('precision'),
+                    'recall': mi.get('recall'),
+                    'confusionMatrix': cm_data if cm_data else None,
+                }
+                # Use pre-trained test wells count if available
+                if mi.get('nTestWells'):
+                    summary['test_wells'] = mi['nTestWells']
+                print(f"   ✅ Using pre-trained metrics: AUC={mi.get('rocAuc')} Acc={mi.get('accuracy')}")
+            sys.stdout.flush()
         
         sys.stdout.flush()
         
