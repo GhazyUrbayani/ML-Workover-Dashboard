@@ -1919,14 +1919,14 @@
                 const ca = data.costAnalysis || {};
                 kpis = {
                     totalWells: mi.nWells || null,
-                    testWells: mi.nTestWells || (mi.nWells ? Math.round(mi.nWells * 0.2) : null),
+                    testWells: mi.nTestWells != null ? mi.nTestWells : (mi.nWells ? Math.round(mi.nWells * 0.2) : null),
                     rocAuc: mi.rocAuc != null ? mi.rocAuc : null,
                     accuracy: mi.accuracy != null ? mi.accuracy : null,
                     precision: mi.precision != null ? mi.precision : null,
                     recall: mi.recall != null ? mi.recall : null,
-                    totalCostBaseline: ca.totalCostBaseline || null,
-                    totalCostOptimized: ca.totalCostOptimized || null,
-                    costSaving: ca.costSaving || null,
+                    totalCostBaseline: ca.totalCostBaseline != null ? ca.totalCostBaseline : null,
+                    totalCostOptimized: ca.totalCostOptimized != null ? ca.totalCostOptimized : null,
+                    costSaving: ca.costSaving != null ? ca.costSaving : null,
                     stronglyRecommend: ca.stronglyRecommend,
                     reviewEngineer: ca.reviewEngineer,
                     lowPriority: ca.lowPriority,

@@ -182,7 +182,7 @@ def generate_dashboard_from_predictions(results, summary, df=None,
     dashboard = {
         "kpis": {
             "totalWells": summary.get("total_wells", len(results)),
-            "testWells": summary.get("total_wells", len(results)),
+            "testWells": summary.get("test_wells", None),
             "rocAuc": roc_auc,
             "accuracy": accuracy,
             "precision": precision,
