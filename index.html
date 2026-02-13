@@ -712,6 +712,149 @@
         
         .toast.success { background: rgba(0,255,136,0.9); color: #000; display: block; }
         .toast.error { background: rgba(255,68,68,0.9); color: #fff; display: block; }
+
+        /* Well List Modal */
+        .well-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .well-modal-overlay.show { display: flex; }
+        .well-modal {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 12px;
+            width: 480px;
+            max-width: 90vw;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,212,255,0.1);
+            animation: modalSlideIn 0.25s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .well-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .well-modal-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .well-modal-header .q-badge {
+            display: inline-block;
+            width: 24px; height: 24px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+        .well-modal-header .q-badge.q1 { background: rgba(0,255,136,0.3); color: #00ff88; }
+        .well-modal-header .q-badge.q2 { background: rgba(0,212,255,0.3); color: #00d4ff; }
+        .well-modal-header .q-badge.q3 { background: rgba(255,170,0,0.3); color: #ffaa00; }
+        .well-modal-header .q-badge.q4 { background: rgba(255,107,107,0.3); color: #ff6b6b; }
+        .well-modal-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #aaa;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .well-modal-close:hover {
+            background: rgba(255,107,107,0.3);
+            color: #ff6b6b;
+        }
+        .well-modal-stats {
+            padding: 12px 20px;
+            display: flex;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .well-modal-stat {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .well-modal-stat span {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .well-modal-search {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .well-modal-search input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .well-modal-search input:focus {
+            border-color: rgba(0,212,255,0.5);
+        }
+        .well-modal-search input::placeholder { color: #555; }
+        .well-modal-body {
+            padding: 10px 20px 16px;
+            overflow-y: auto;
+            flex: 1;
+            max-height: 400px;
+        }
+        .well-modal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .well-modal-item {
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s;
+        }
+        .well-modal-item:hover {
+            background: rgba(0,212,255,0.1);
+            color: #fff;
+        }
+        .well-modal-item .well-num {
+            color: #555;
+            font-size: 0.65rem;
+            min-width: 22px;
+        }
+        .well-modal-empty {
+            text-align: center;
+            color: #555;
+            padding: 20px;
+            font-size: 0.8rem;
+        }
+        .quadrant-grid-full .quadrant { cursor: pointer; }
         
         /* FILTER BAR (Power BI Slicer Style) */
         .filter-bar {
@@ -1264,26 +1407,26 @@
                             <div class="quadrant-main-full">
                                 <div class="quadrant-grid-full">
                                     <!-- Row 1: High Water (top) -->
-                                    <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()" onclick="showWellListModal(1)">
                                         <div class="q-index">1</div>
                                         <div class="q-label">Low Oil & High Water</div>
                                         <div class="q-wells" id="q1Wells">89 wells</div>
                                         <div class="q-success" id="q1Success">35.0% Success</div>
                                     </div>
-                                    <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()" onclick="showWellListModal(3)">
                                         <div class="q-index">3</div>
                                         <div class="q-label">High Oil & High Water</div>
                                         <div class="q-wells" id="q3Wells">223 wells</div>
                                         <div class="q-success" id="q3Success">48.0% Success</div>
                                     </div>
                                     <!-- Row 2: Low Water (bottom) -->
-                                    <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()" onclick="showWellListModal(2)">
                                         <div class="q-index">2</div>
                                         <div class="q-label">Low Oil & Low Water</div>
                                         <div class="q-wells" id="q2Wells">224 wells</div>
                                         <div class="q-success" id="q2Success">52.0% Success</div>
                                     </div>
-                                    <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()" onclick="showWellListModal(4)">
                                         <div class="q-index">4</div>
                                         <div class="q-label">High Oil & Low Water</div>
                                         <div class="q-wells" id="q4Wells">89 wells</div>
@@ -1324,6 +1467,27 @@
     
     <!-- Toast -->
     <div class="toast" id="toast"></div>
+
+    <!-- Well List Modal -->
+    <div class="well-modal-overlay" id="wellModalOverlay" onclick="if(event.target===this) closeWellModal()">
+        <div class="well-modal">
+            <div class="well-modal-header">
+                <h3><span class="q-badge" id="wellModalBadge">1</span> <span id="wellModalTitle">Quadrant 1</span></h3>
+                <button class="well-modal-close" onclick="closeWellModal()">&times;</button>
+            </div>
+            <div class="well-modal-stats">
+                <div class="well-modal-stat">Total: <span id="wellModalCount">0</span> wells</div>
+                <div class="well-modal-stat">Success Rate: <span id="wellModalSuccess">-</span></div>
+            </div>
+            <div class="well-modal-search">
+                <input type="text" id="wellModalSearchInput" placeholder="🔍 Search well name..." oninput="filterWellList()">
+            </div>
+            <div class="well-modal-body">
+                <div class="well-modal-list" id="wellModalList"></div>
+                <div class="well-modal-empty" id="wellModalEmpty" style="display:none;">No wells found</div>
+            </div>
+        </div>
+    </div>
     
     <!-- Global Tooltip -->
     <div class="custom-tooltip" id="globalTooltip">
@@ -1686,6 +1850,14 @@
                         normalizedData.productionData = data.productionData;
                     }
                     
+                    if (data.topWells) {
+                        normalizedData.topWells = data.topWells;
+                    }
+                    
+                    if (data.wellScatter) {
+                        normalizedData.wellScatter = data.wellScatter;
+                    }
+                    
                     // If original format, use as-is
                     if (hasKpis || hasDirectMetrics) {
                         normalizedData = data;
@@ -1852,6 +2024,10 @@
                     // Update entire dashboard from prediction response
                     if (result.dashboard_data) {
                         console.log('📊 Updating dashboard from prediction response');
+                        // Attach predictions to dashboard_data so well names can be extracted
+                        if (result.predictions) {
+                            result.dashboard_data.predictions = result.predictions;
+                        }
                         updateDashboard(result.dashboard_data);
                     } else {
                         // Fallback: update only what we have
@@ -2114,7 +2290,184 @@
             
             // Update tooltip data from loaded JSON
             updateTooltipData(data);
+            
+            // Store well names per quadrant for the popup
+            storeWellNamesPerQuadrant(data, heteroIndex);
         }
+        
+        // ========== WELL LIST MODAL ==========
+        let quadrantWellNames = { 1: [], 2: [], 3: [], 4: [] };
+        
+        const quadrantLabels = {
+            1: 'Low Oil & High Water',
+            2: 'Low Oil & Low Water',
+            3: 'High Oil & High Water',
+            4: 'High Oil & Low Water'
+        };
+        
+        // Map HETERO_LABEL from JSON/CSV to quadrant index used in the dashboard
+        const heteroLabelToQuadrant = {
+            'Low Oil - High Water': 1,
+            'Low Oil - Low Water': 2,
+            'High Oil - High Water': 3,
+            'High Oil - Low Water': 4
+        };
+        
+        function storeWellNamesPerQuadrant(data, heteroIndex) {
+            // Reset
+            quadrantWellNames = { 1: [], 2: [], 3: [], 4: [] };
+            
+            // Source 1: heteroIndex array with well_names (from API prediction)
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                heteroIndex.forEach(h => {
+                    const qIdx = h.index || h.HETERO_INDEX;
+                    if (qIdx && h.well_names && Array.isArray(h.well_names)) {
+                        quadrantWellNames[qIdx] = h.well_names.slice().sort();
+                    }
+                });
+            }
+            
+            // Source 2: topWells array (from dashboard_data.json)
+            if (data.topWells && Array.isArray(data.topWells)) {
+                // Only use topWells if we don't already have well_names from heteroIndex
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.topWells.forEach(w => {
+                        const label = w.HETERO_LABEL || w.hetero_label;
+                        const qIdx = heteroLabelToQuadrant[label];
+                        if (qIdx) {
+                            if (!quadrantWellNames[qIdx].includes(w.WELL_NAME || w.well_name)) {
+                                quadrantWellNames[qIdx].push(w.WELL_NAME || w.well_name);
+                            }
+                        }
+                    });
+                    // Sort each
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            // Source 3: predictions array (from API prediction response stored in raw data)
+            if (data.predictions && Array.isArray(data.predictions)) {
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.predictions.forEach(p => {
+                        const qIdx = p.hetero_index;
+                        if (qIdx && quadrantWellNames[qIdx]) {
+                            const name = p.well_name || p.WELL_NAME;
+                            if (name && !quadrantWellNames[qIdx].includes(name)) {
+                                quadrantWellNames[qIdx].push(name);
+                            }
+                        }
+                    });
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            // Source 4: wellScatter array (from dashboard_data.json with full well list)
+            if (data.wellScatter && Array.isArray(data.wellScatter)) {
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.wellScatter.forEach(w => {
+                        const qIdx = w.HETERO_INDEX || w.hetero_index;
+                        if (qIdx && quadrantWellNames[qIdx]) {
+                            const name = w.WELL_NAME || w.well_name;
+                            if (name && !quadrantWellNames[qIdx].includes(name)) {
+                                quadrantWellNames[qIdx].push(name);
+                            }
+                        }
+                    });
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            console.log('Well names per quadrant stored:', quadrantWellNames);
+        }
+        
+        let currentModalQuadrant = null;
+        
+        function showWellListModal(quadrantId) {
+            currentModalQuadrant = quadrantId;
+            const wells = quadrantWellNames[quadrantId] || [];
+            const label = quadrantLabels[quadrantId] || 'Unknown';
+            
+            // Badge
+            const badge = document.getElementById('wellModalBadge');
+            badge.textContent = quadrantId;
+            badge.className = 'q-badge q' + quadrantId;
+            
+            // Title
+            document.getElementById('wellModalTitle').textContent = label;
+            
+            // Stats
+            document.getElementById('wellModalCount').textContent = wells.length;
+            const successEl = document.getElementById('q' + quadrantId + 'Success');
+            document.getElementById('wellModalSuccess').textContent = successEl ? successEl.textContent : '-';
+            
+            // Clear search
+            document.getElementById('wellModalSearchInput').value = '';
+            
+            // Render list
+            renderWellList(wells);
+            
+            // Show modal
+            document.getElementById('wellModalOverlay').classList.add('show');
+            
+            // Hide tooltip
+            hideTooltip();
+        }
+        
+        function renderWellList(wells) {
+            const listEl = document.getElementById('wellModalList');
+            const emptyEl = document.getElementById('wellModalEmpty');
+            
+            if (wells.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'No well data available for this quadrant';
+                return;
+            }
+            
+            emptyEl.style.display = 'none';
+            listEl.innerHTML = wells.map((name, i) => 
+                `<div class="well-modal-item"><span class="well-num">${i + 1}.</span> ${name}</div>`
+            ).join('');
+        }
+        
+        function filterWellList() {
+            const query = document.getElementById('wellModalSearchInput').value.toLowerCase().trim();
+            const wells = quadrantWellNames[currentModalQuadrant] || [];
+            const filtered = query ? wells.filter(w => w.toLowerCase().includes(query)) : wells;
+            
+            const listEl = document.getElementById('wellModalList');
+            const emptyEl = document.getElementById('wellModalEmpty');
+            
+            if (filtered.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = query ? 'No matching wells found' : 'No well data available';
+            } else {
+                emptyEl.style.display = 'none';
+                listEl.innerHTML = filtered.map((name, i) => 
+                    `<div class="well-modal-item"><span class="well-num">${i + 1}.</span> ${name}</div>`
+                ).join('');
+            }
+        }
+        
+        function closeWellModal() {
+            document.getElementById('wellModalOverlay').classList.remove('show');
+            currentModalQuadrant = null;
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeWellModal();
+        });
         
         // ========== TOOLTIP FUNCTIONS (Power BI Style) ==========
         let tooltipData = {

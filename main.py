@@ -130,6 +130,7 @@ def generate_dashboard_from_predictions(results, summary, df=None,
             "index": q,
             "count": count,
             "success_rate": round(success_rate, 4) if success_rate is not None else None,
+            "well_names": [w["well_name"] for w in wells_in_q],
         })
 
     # Cost estimation from INTV_TYPE if available
