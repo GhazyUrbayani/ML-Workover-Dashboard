@@ -1877,7 +1877,7 @@
                     if (normalizedData.confusionMatrix) {
                         console.log('Confusion Matrix found:', normalizedData.confusionMatrix);
                     }
-                    
+
                     updateDashboard(normalizedData);
                     setStatus('jsonStatus', '✅ JSON loaded', 'success');
                     showToast('Dashboard data loaded from JSON!', 'success');
@@ -2132,6 +2132,7 @@
                     count: h.count,
                     success_rate: h.success_rate,
                     label: h.label,
+                    well_names: h.well_names || [],
                 }));
             }
             

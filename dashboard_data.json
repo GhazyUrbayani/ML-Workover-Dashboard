@@ -1,12 +1,12 @@
 {
   "modelInfo": {
-    "rocAuc": 0.7800,
+    "rocAuc": 0.78,
     "nWells": 625,
     "nFeatures": 31,
-    "accuracy": 0.7280,
+    "accuracy": 0.728,
     "precision": 0.7339,
     "recall": 0.7222,
-    "f1Score": 0.7280,
+    "f1Score": 0.728,
     "nTestWells": 125
   },
   "costAnalysis": {
@@ -33,16 +33,16 @@
       0.26,
       0.33,
       0.41,
-      0.50,
-      0.60,
-      0.70,
-      0.80,
-      0.90,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.9,
       1.0
     ],
     "tpr": [
       0.0,
-      0.10,
+      0.1,
       0.28,
       0.43,
       0.55,
@@ -50,7 +50,7 @@
       0.72,
       0.79,
       0.85,
-      0.90,
+      0.9,
       0.94,
       0.97,
       0.99,
@@ -65,7 +65,17 @@
       "avg_cum_water": 326767.88,
       "avg_cost": 82728,
       "success_rate": 0.35,
-      "label": "Low Oil - High Water"
+      "label": "Low Oil - High Water",
+      "well_names": [
+        "WELL_164",
+        "WELL_225",
+        "WELL_244",
+        "WELL_255",
+        "WELL_264",
+        "WELL_65",
+        "WELL_78",
+        "WELL_81"
+      ]
     },
     {
       "HETERO_INDEX": 2,
@@ -74,7 +84,29 @@
       "avg_cum_water": 10872572.97,
       "avg_cost": 82728,
       "success_rate": 0.52,
-      "label": "Low Oil - Low Water"
+      "label": "Low Oil - Low Water",
+      "well_names": [
+        "WELL_10",
+        "WELL_117",
+        "WELL_129",
+        "WELL_16",
+        "WELL_182",
+        "WELL_19",
+        "WELL_199",
+        "WELL_216",
+        "WELL_222",
+        "WELL_24",
+        "WELL_261",
+        "WELL_263",
+        "WELL_279",
+        "WELL_290",
+        "WELL_49",
+        "WELL_56",
+        "WELL_61",
+        "WELL_63",
+        "WELL_83",
+        "WELL_99"
+      ]
     },
     {
       "HETERO_INDEX": 3,
@@ -83,7 +115,29 @@
       "avg_cum_water": 137647.16,
       "avg_cost": 82728,
       "success_rate": 0.48,
-      "label": "High Oil - High Water"
+      "label": "High Oil - High Water",
+      "well_names": [
+        "WELL_109",
+        "WELL_128",
+        "WELL_131",
+        "WELL_155",
+        "WELL_158",
+        "WELL_160",
+        "WELL_162",
+        "WELL_171",
+        "WELL_183",
+        "WELL_22",
+        "WELL_234",
+        "WELL_250",
+        "WELL_284",
+        "WELL_287",
+        "WELL_34",
+        "WELL_43",
+        "WELL_55",
+        "WELL_67",
+        "WELL_87",
+        "WELL_88"
+      ]
     },
     {
       "HETERO_INDEX": 4,
@@ -92,7 +146,21 @@
       "avg_cum_water": 5136776.54,
       "avg_cost": 82728,
       "success_rate": 0.65,
-      "label": "High Oil - Low Water"
+      "label": "High Oil - Low Water",
+      "well_names": [
+        "WELL_181",
+        "WELL_2",
+        "WELL_254",
+        "WELL_256",
+        "WELL_268",
+        "WELL_283",
+        "WELL_286",
+        "WELL_293",
+        "WELL_295",
+        "WELL_41",
+        "WELL_58",
+        "WELL_89"
+      ]
     }
   ],
   "quadrantTooltips": {
@@ -160,7 +228,7 @@
       "WELL_NAME": "WELL_404",
       "SUCCESS_PROB": 0.8496,
       "NPV": 13508110,
-      "RANK_SCORE": 0.875360,
+      "RANK_SCORE": 0.87536,
       "HETERO_LABEL": "High Oil - High Water",
       "ADVISORY": "Strongly Recommend",
       "RANK": 3
@@ -203,7 +271,7 @@
     },
     {
       "WELL_NAME": "WELL_27",
-      "SUCCESS_PROB": 0.9180,
+      "SUCCESS_PROB": 0.918,
       "NPV": 7418247,
       "RANK_SCORE": 0.753265,
       "HETERO_LABEL": "High Oil - High Water",
@@ -221,7 +289,7 @@
     },
     {
       "WELL_NAME": "WELL_61",
-      "SUCCESS_PROB": 0.9650,
+      "SUCCESS_PROB": 0.965,
       "NPV": 5704252,
       "RANK_SCORE": 0.735557,
       "HETERO_LABEL": "High Oil - Low Water",
@@ -230,9 +298,40 @@
     }
   ],
   "productionData": {
-    "beforeIntervention": [756, 734, 712, 690, 668, 646, 622, 598, 574, 548, 520, 480],
-    "duringWorkover": [80, 30, 20, 350],
-    "afterIntervention": [600, 720, 750, 770, 775, 778, 780, 782, 784, 785, 786, 786],
+    "beforeIntervention": [
+      756,
+      734,
+      712,
+      690,
+      668,
+      646,
+      622,
+      598,
+      574,
+      548,
+      520,
+      480
+    ],
+    "duringWorkover": [
+      80,
+      30,
+      20,
+      350
+    ],
+    "afterIntervention": [
+      600,
+      720,
+      750,
+      770,
+      775,
+      778,
+      780,
+      782,
+      784,
+      785,
+      786,
+      786
+    ],
     "mlBased": true,
     "predictedImprovement": 20.6
   },
