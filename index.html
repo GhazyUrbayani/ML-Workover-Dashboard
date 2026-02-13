@@ -1040,7 +1040,7 @@
             <div class="header-badges">
                 <span class="badge">📊 Model: LightGBM</span>
                 <span class="badge" id="badge-roc">🎯 ROC-AUC: ⏳</span>
-                <span class="badge" id="badge-wells">🏭 Wells: 300</span>
+                <span class="badge" id="badge-wells">🏭 Wells: 625</span>
             </div>
         </div>
         
@@ -1116,26 +1116,26 @@
                         <div class="activity-left">
                             <div class="activity-stats">
                                 <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'totalWells')" onmouseleave="hideTooltip()">
-                                    <div class="stat-value" id="totalWells">300</div>
+                                    <div class="stat-value" id="totalWells">625</div>
                                     <div class="stat-label">Total Wells</div>
                                 </div>
                                 <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'testWells')" onmouseleave="hideTooltip()">
-                                    <div class="stat-value" id="testWells">60</div>
+                                    <div class="stat-value" id="testWells">125</div>
                                     <div class="stat-label">Test Wells</div>
                                 </div>
                             </div>
                             <div class="cost-section">
                                 <div class="cost-card baseline-card tooltip-container" onmouseenter="showCostTooltip(event, 'baseline')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value baseline" id="costBaseline">$26.0M</div>
+                                    <div class="cost-value baseline" id="costBaseline">$51.7M</div>
                                     <div class="cost-label">Baseline</div>
                                 </div>
                                 <div class="cost-card optimized-card tooltip-container" onmouseenter="showCostTooltip(event, 'optimized')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value optimized" id="costOptimized">$15.4M</div>
+                                    <div class="cost-value optimized" id="costOptimized">$30.8M</div>
                                     <div class="cost-label">ML-Optimized</div>
                                 </div>
                                 <div class="cost-card saving tooltip-container" onmouseenter="showCostTooltip(event, 'saving')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value saving" id="costSaving">$10.6M</div>
-                                    <div class="cost-label" id="savingLabel">💵 Savings (40.9%)</div>
+                                    <div class="cost-value saving" id="costSaving">$20.9M</div>
+                                    <div class="cost-label" id="savingLabel">💵 Savings (40.4%)</div>
                                 </div>
                             </div>
                         </div>
@@ -1147,17 +1147,17 @@
                                 <div class="legend-item">
                                     <div class="legend-dot recommend"></div>
                                     <span class="legend-label">Strongly Recommend</span>
-                                    <span class="legend-count" id="legendRecommend">45</span>
+                                    <span class="legend-count" id="legendRecommend">51</span>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-dot review"></div>
                                     <span class="legend-label">Review Engineer</span>
-                                    <span class="legend-count" id="legendReview">10</span>
+                                    <span class="legend-count" id="legendReview">19</span>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-dot low"></div>
                                     <span class="legend-label">Low Priority</span>
-                                    <span class="legend-count" id="legendLow">5</span>
+                                    <span class="legend-count" id="legendLow">55</span>
                                 </div>
                             </div>
                         </div>
@@ -1216,15 +1216,15 @@
                     <div class="production-content">
                         <div class="prod-stats">
                             <div class="prod-stat before tooltip-container" onmouseenter="showProdTooltip(event, 'before')" onmouseleave="hideTooltip()">
-                                <div class="prod-value before" id="prodBefore">2850</div>
+                                <div class="prod-value before" id="prodBefore">629</div>
                                 <div class="prod-label">Avg Before (BOPD)</div>
                             </div>
                             <div class="prod-stat after tooltip-container" onmouseenter="showProdTooltip(event, 'after')" onmouseleave="hideTooltip()">
-                                <div class="prod-value after" id="prodAfter">3450</div>
+                                <div class="prod-value after" id="prodAfter">758</div>
                                 <div class="prod-label">Avg After (BOPD)</div>
                             </div>
                             <div class="prod-stat uplift tooltip-container" onmouseenter="showProdTooltip(event, 'uplift')" onmouseleave="hideTooltip()">
-                                <div class="prod-value uplift" id="prodUplift">+21%</div>
+                                <div class="prod-value uplift" id="prodUplift">+20.6%</div>
                                 <div class="prod-label">Uplift</div>
                             </div>
                         </div>
@@ -1267,27 +1267,27 @@
                                     <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()">
                                         <div class="q-index">1</div>
                                         <div class="q-label">Low Oil & High Water</div>
-                                        <div class="q-wells" id="q1Wells">37 wells</div>
-                                        <div class="q-success" id="q1Success">73% Success</div>
+                                        <div class="q-wells" id="q1Wells">89 wells</div>
+                                        <div class="q-success" id="q1Success">35.0% Success</div>
                                     </div>
                                     <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()">
                                         <div class="q-index">3</div>
                                         <div class="q-label">High Oil & High Water</div>
-                                        <div class="q-wells" id="q3Wells">113 wells</div>
-                                        <div class="q-success" id="q3Success">79% Success</div>
+                                        <div class="q-wells" id="q3Wells">223 wells</div>
+                                        <div class="q-success" id="q3Success">48.0% Success</div>
                                     </div>
                                     <!-- Row 2: Low Water (bottom) -->
                                     <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()">
                                         <div class="q-index">2</div>
                                         <div class="q-label">Low Oil & Low Water</div>
-                                        <div class="q-wells" id="q2Wells">113 wells</div>
-                                        <div class="q-success" id="q2Success">77% Success</div>
+                                        <div class="q-wells" id="q2Wells">224 wells</div>
+                                        <div class="q-success" id="q2Success">52.0% Success</div>
                                     </div>
                                     <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()">
                                         <div class="q-index">4</div>
                                         <div class="q-label">High Oil & Low Water</div>
-                                        <div class="q-wells" id="q4Wells">37 wells</div>
-                                        <div class="q-success" id="q4Success">81% Success</div>
+                                        <div class="q-wells" id="q4Wells">89 wells</div>
+                                        <div class="q-success" id="q4Success">65.0% Success</div>
                                     </div>
                                 </div>
                                 <div class="axis-x-label">Net HI Oil Production →</div>
@@ -1376,15 +1376,15 @@
         function exportDashboardJSON() {
             const exportData = {
                 kpis: {
-                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 300,
-                    testWells: parseInt(document.getElementById('testWells').textContent) || 60,
-                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.819,
-                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.783,
-                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.767,
-                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.767,
-                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 25990000,
-                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 15355000,
-                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 10635000,
+                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 625,
+                    testWells: parseInt(document.getElementById('testWells').textContent) || 125,
+                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.761,
+                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.704,
+                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.710,
+                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.698,
+                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 51705000,
+                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 30820000,
+                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 20885000,
                     stronglyRecommend: activityChart.data.datasets[0].data[0],
                     reviewEngineer: activityChart.data.datasets[0].data[1],
                     lowPriority: activityChart.data.datasets[0].data[2]
@@ -1438,7 +1438,7 @@
                 data: {
                     labels: ['Strongly Recommend', 'Review by Engineer', 'Low Priority'],
                     datasets: [{
-                        data: [45, 10, 5],
+                        data: [51, 19, 55],
                         backgroundColor: ['#00ff88', '#ffaa00', '#ff6b6b'],
                         borderWidth: 2,
                         borderColor: '#1a1a2e'
@@ -1516,7 +1516,7 @@
                 data: {
                     labels: ['TN', 'FP', 'FN', 'TP'],
                     datasets: [{
-                        data: [24, 6, 7, 23],
+                        data: [44, 18, 19, 44],
                         backgroundColor: ['#00cc88', '#ffaa00', '#ff6b6b', '#00ff88'],
                         borderRadius: 2,
                         barThickness: 12
@@ -1547,7 +1547,7 @@
                         x: { 
                             grid: { color: 'rgba(255,255,255,0.1)' }, 
                             ticks: { color: '#888', font: { size: 8 } },
-                            max: 30
+                            max: 55
                         },
                         y: { grid: { display: false }, ticks: { color: '#fff', font: { size: 8, weight: 'bold' } } }
                     }
@@ -1582,7 +1582,7 @@
                     labels: Array.from({length: 28}, (_, i) => i < 12 ? `M-${12-i}` : i < 16 ? 'WO' : `M+${i-15}`),
                     datasets: [{
                         label: 'Oil Production (BOPD)',
-                        data: [1000,920,850,785,725,670,620,575,532,492,455,420,50,20,10,650,780,820,845,860,870,875,878,880,881,882,883,885],
+                        data: [756,734,712,690,668,646,622,598,574,548,520,480,80,30,20,350,600,720,750,770,775,778,780,782,784,785,786,786],
                         borderColor: '#00d4ff',
                         backgroundColor: 'rgba(0,212,255,0.1)',
                         fill: true,
