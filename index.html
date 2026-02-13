@@ -1740,15 +1740,7 @@
                 return;
             }
             
-            // Warn about large files (Render free tier has 512MB RAM)
-            if (fileSizeMB > 120) {
-                setStatus('csvStatus', '❌ File too large (' + fileSizeMB.toFixed(0) + 'MB)', 'error');
-                showToast('File is ' + fileSizeMB.toFixed(0) + 'MB — server limit is 150MB. Please reduce rows/columns.', 'error');
-                return;
-            }
-            if (fileSizeMB > 60) {
-                console.warn('Large file warning:', fileSizeMB.toFixed(1), 'MB — may be slow on free tier');
-            }
+            // No file size limit
             
             setStatus('csvStatus', '⏳ Waking up server...', 'loading');
             

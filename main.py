@@ -42,21 +42,8 @@ import __main__
 __main__.LogTransformer = LogTransformer
 
 app = Flask(__name__, static_folder='.')
-# Configure max content length (150MB - Render free tier has 512MB RAM)
-# Column-pruned parquet reads keep memory manageable
-app.config['MAX_CONTENT_LENGTH'] = 150 * 1024 * 1024
+# No file size limit
 CORS(app, resources={r"/api/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
-
-# Handle 413 Request Entity Too Large gracefully (return JSON instead of HTML)
-from werkzeug.exceptions import RequestEntityTooLarge
-
-@app.errorhandler(413)
-@app.errorhandler(RequestEntityTooLarge)
-def handle_file_too_large(e):
-    return jsonify({
-        "error": "File too large. Maximum allowed size is 150MB. For larger datasets, please reduce columns or sample rows before uploading.",
-        "max_size_mb": 150
-    }), 413
 
 # Log all incoming requests
 @app.before_request
@@ -642,11 +629,6 @@ def predict():
         
         print(f"📄 File received: {file.filename}")
         
-        # Early check: reject very large uploads that will OOM on free tier
-        content_length = request.content_length
-        if content_length and content_length > 150 * 1024 * 1024:
-            return jsonify({"error": f"File too large ({content_length // (1024*1024)}MB). Maximum 150MB. Please reduce rows/columns before uploading."}), 413
-        
         # Save uploaded file to disk (temp file)
         tmp_path = None
         try:
@@ -727,17 +709,7 @@ def predict():
         print(f"💾 DataFrame memory: {mem_mb:.1f} MB")
         sys.stdout.flush()
 
-        # Safety check: reject if DataFrame already too large for processing
-        # Feature engineering can 3-4x memory usage
-        if mem_mb > 150:
-            del df
-            gc.collect()
-            return jsonify({
-                "error": f"Dataset too large for server memory ({mem_mb:.0f}MB in RAM). "
-                         f"Render free tier has 512MB total. "
-                         f"Please reduce rows (sample) or columns before uploading.",
-                "mem_mb": round(mem_mb, 1)
-            }), 413
+        # No memory size limit enforced
         
         # Immediately downcast floats to float32 to save ~50% memory
         float_cols = df.select_dtypes(include=['float64']).columns
