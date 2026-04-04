@@ -141,8 +141,8 @@ python app.py
 ---
 
 ## 📁 Project Structure
-├── index.html # Full dashboard UI (HTML + JS + CSS)
-├── vercel.json # Vercel deployment config
+├── index.html # Full dashboard UI (HTML + JS + CSS) <br>
+├── vercel.json # Vercel deployment config <br>
 └── .gitignore
 
 
