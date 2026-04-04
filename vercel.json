@@ -2,14 +2,40 @@
   "version": 2,
   "builds": [
     {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
       "src": "index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dashboard_data.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "workover_model_pipeline.joblib",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/dashboard_data.json",
+      "dest": "/dashboard_data.json"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.py": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  }
 }

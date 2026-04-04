@@ -1,0 +1,84 @@
+{
+  "intv_config": {
+    "REPERFORATION": {
+      "success_rate": 0.82,
+      "cost_range": [50000, 150000],
+      "duration_days": [3, 6],
+      "improvement_range": [1.3, 2.0]
+    },
+    "WATER_SHUTOFF": {
+      "success_rate": 0.65,
+      "cost_range": [80000, 200000],
+      "duration_days": [2, 5],
+      "improvement_range": [1.2, 1.6]
+    },
+    "STIMULATION": {
+      "success_rate": 0.78,
+      "cost_range": [100000, 300000],
+      "duration_days": [3, 6],
+      "improvement_range": [1.4, 2.2]
+    },
+    "ARTIFICIAL_LIFT": {
+      "success_rate": 0.88,
+      "cost_range": [150000, 400000],
+      "duration_days": [4, 7],
+      "improvement_range": [1.2, 1.5]
+    },
+    "SQUEEZE_CEMENTING": {
+      "success_rate": 0.34,
+      "cost_range": [12000, 17000],
+      "duration_days": [1, 2],
+      "improvement_range": [1.1, 1.2]
+    }
+  },
+  "problem_to_intv": {
+    "PERFO_DAMAGE": "STIMULATION",
+    "FORMATION_DAMAGE": "STIMULATION",
+    "LOW_DELIV_PRESS": "ARTIFICIAL_LIFT",
+    "WATER_CONING": "WATER_SHUTOFF",
+    "NON_ECONOMIC_WC": "REPERFORATION",
+    "BEHIND_CASING_LEAK": "SQUEEZE_CEMENTING",
+    "NONE": "NONE"
+  },
+  "rock_types": {
+    "1": {
+      "name": "CS",
+      "por_range": [0.25, 0.35],
+      "perm_range": [500, 2000],
+      "vsh_range": [0, 0.15],
+      "sw_range": [0.15, 0.25],
+      "res_proba": 0.2
+    },
+    "2": {
+      "name": "SS",
+      "por_range": [0.1, 0.25],
+      "perm_range": [20, 500],
+      "vsh_range": [0.15, 0.45],
+      "sw_range": [0.2, 0.55],
+      "res_proba": 0.5
+    },
+    "3": {
+      "name": "SHALE",
+      "por_range": [0.02, 0.1],
+      "perm_range": [0.01, 5],
+      "vsh_range": [0.7, 1],
+      "sw_range": [0.7, 0.9],
+      "res_proba": 0
+    },
+    "4": {
+      "name": "LS",
+      "por_range": [0.05, 0.2],
+      "perm_range": [1, 10],
+      "vsh_range": [0.1, 0.3],
+      "sw_range": [0.2, 0.4],
+      "res_proba": 0.6
+    }
+  },
+  "payzone_cutoffs": {
+    "min_por": 0.12,
+    "max_vsh": 0.5,
+    "min_perm": 10,
+    "max_sw": 0.6,
+    "min_thickness": 5
+  }
+}

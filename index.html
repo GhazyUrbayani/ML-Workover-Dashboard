@@ -60,6 +60,56 @@
             border: 1px solid rgba(0,212,255,0.4);
         }
         
+        /* UPLOAD SECTION */
+        .upload-section {
+            background: linear-gradient(135deg, rgba(0,100,150,0.3), rgba(0,50,100,0.3));
+            padding: 5px 15px;
+            border-bottom: 2px solid rgba(0,212,255,0.3);
+            flex-shrink: 0;
+        }
+        
+        .upload-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .upload-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 5px 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upload-box h3 {
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        
+        .upload-box h3.json-title { color: #00ff88; }
+        .upload-box h3.csv-title { color: #ffaa00; }
+        
+        .upload-box .file-info {
+            font-size: 0.55rem;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .upload-box input[type="file"] {
+            width: 140px;
+            padding: 3px;
+            background: rgba(255,255,255,0.1);
+            border: 1px dashed rgba(255,255,255,0.3);
+            border-radius: 3px;
+            color: #ccc;
+            font-size: 0.6rem;
+        }
+        
         .btn {
             padding: 3px 8px;
             border: none;
@@ -522,9 +572,9 @@
         /* Q1: High Oil, Low Water - BEST (green) */
         .quadrant.q1 { background: linear-gradient(135deg, #1a4a3a, #0d3025); border: 1px solid #2a6a5a; }
         /* Q2: High Oil, High Water - Monitor (yellow) */
-        .quadrant.q2 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
+        .quadrant.q2 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
         /* Q3: Low Oil, Low Water - Needs stimulation (teal) */
-        .quadrant.q3 { background: linear-gradient(135deg, #0a3030, #052020); border: 1px solid #1a5050; }
+        .quadrant.q3 { background: linear-gradient(135deg, #4a3a20, #3a2a15); border: 1px solid #6a5a30; }
         /* Q4: Low Oil, High Water - WORST (red/warning) */
         .quadrant.q4 { background: linear-gradient(135deg, #4a1a2a, #3a1020); border: 1px solid #6a2a4a; }
         
@@ -662,6 +712,149 @@
         
         .toast.success { background: rgba(0,255,136,0.9); color: #000; display: block; }
         .toast.error { background: rgba(255,68,68,0.9); color: #fff; display: block; }
+
+        /* Well List Modal */
+        .well-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .well-modal-overlay.show { display: flex; }
+        .well-modal {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 12px;
+            width: 480px;
+            max-width: 90vw;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,212,255,0.1);
+            animation: modalSlideIn 0.25s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .well-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .well-modal-header h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .well-modal-header .q-badge {
+            display: inline-block;
+            width: 24px; height: 24px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 24px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 8px;
+        }
+        .well-modal-header .q-badge.q1 { background: rgba(0,255,136,0.3); color: #00ff88; }
+        .well-modal-header .q-badge.q2 { background: rgba(0,212,255,0.3); color: #00d4ff; }
+        .well-modal-header .q-badge.q3 { background: rgba(255,170,0,0.3); color: #ffaa00; }
+        .well-modal-header .q-badge.q4 { background: rgba(255,107,107,0.3); color: #ff6b6b; }
+        .well-modal-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #aaa;
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .well-modal-close:hover {
+            background: rgba(255,107,107,0.3);
+            color: #ff6b6b;
+        }
+        .well-modal-stats {
+            padding: 12px 20px;
+            display: flex;
+            gap: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .well-modal-stat {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .well-modal-stat span {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .well-modal-search {
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .well-modal-search input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #fff;
+            font-size: 0.8rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .well-modal-search input:focus {
+            border-color: rgba(0,212,255,0.5);
+        }
+        .well-modal-search input::placeholder { color: #555; }
+        .well-modal-body {
+            padding: 10px 20px 16px;
+            overflow-y: auto;
+            flex: 1;
+            max-height: 400px;
+        }
+        .well-modal-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .well-modal-item {
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s;
+        }
+        .well-modal-item:hover {
+            background: rgba(0,212,255,0.1);
+            color: #fff;
+        }
+        .well-modal-item .well-num {
+            color: #555;
+            font-size: 0.65rem;
+            min-width: 22px;
+        }
+        .well-modal-empty {
+            text-align: center;
+            color: #555;
+            padding: 20px;
+            font-size: 0.8rem;
+        }
+        .quadrant-grid-full .quadrant { cursor: pointer; }
         
         /* FILTER BAR (Power BI Slicer Style) */
         .filter-bar {
@@ -843,15 +1036,6 @@
             z-index: 10;
         }
         
-        /* Hover Hint Style */
-        .hover-hint {
-            font-size: 0.45rem;
-            color: #555;
-            font-style: italic;
-            text-align: center;
-            margin-top: 2px;
-        }
-        
         /* Activity Legend - Improved Layout */
         .activity-legend {
             display: flex;
@@ -998,8 +1182,28 @@
             <h1>🛢️ ML Workover Optimization Dashboard</h1>
             <div class="header-badges">
                 <span class="badge">📊 Model: LightGBM</span>
-                <span class="badge" id="badge-roc">🎯 ROC-AUC: 81.9%</span>
-                <span class="badge" id="badge-wells">🏭 Wells: 300</span>
+                <span class="badge" id="badge-roc">🎯 ROC-AUC: ⏳</span>
+                <span class="badge" id="badge-wells">🏭 Wells: 625</span>
+            </div>
+        </div>
+        
+        <!-- UPLOAD SECTION -->
+        <div class="upload-section">
+            <div class="upload-container">
+                <div class="upload-box">
+                    <h3 class="json-title">📊 Load Dashboard</h3>
+                    <input type="file" id="jsonFile" accept=".json">
+                    <button class="btn btn-secondary" onclick="loadJsonFile()">📂 Load File</button>
+                    <span class="status-msg" id="jsonStatus"></span>
+                </div>
+                <div class="upload-box">
+                    <h3 class="csv-title">📤 Data Prediction</h3>
+                    <input type="file" id="csvFile" accept=".csv,.parquet">
+                    <button class="btn btn-warning" onclick="runPrediction()">🚀 Predict</button>
+                    <button class="btn btn-export" onclick="exportDashboardJSON()">💾 Export</button>
+                    <span class="status-msg" id="csvStatus"></span>
+                    <div class="file-info">Supports: CSV, Parquet (time-series or well-level)</div>
+                </div>
             </div>
         </div>
         
@@ -1055,26 +1259,26 @@
                         <div class="activity-left">
                             <div class="activity-stats">
                                 <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'totalWells')" onmouseleave="hideTooltip()">
-                                    <div class="stat-value" id="totalWells">300</div>
+                                    <div class="stat-value" id="totalWells">625</div>
                                     <div class="stat-label">Total Wells</div>
                                 </div>
                                 <div class="stat-card tooltip-container" onmouseenter="showCardTooltip(event, 'testWells')" onmouseleave="hideTooltip()">
-                                    <div class="stat-value" id="testWells">60</div>
+                                    <div class="stat-value" id="testWells">125</div>
                                     <div class="stat-label">Test Wells</div>
                                 </div>
                             </div>
                             <div class="cost-section">
                                 <div class="cost-card baseline-card tooltip-container" onmouseenter="showCostTooltip(event, 'baseline')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value baseline" id="costBaseline">$26.0M</div>
+                                    <div class="cost-value baseline" id="costBaseline">$51.7M</div>
                                     <div class="cost-label">Baseline</div>
                                 </div>
                                 <div class="cost-card optimized-card tooltip-container" onmouseenter="showCostTooltip(event, 'optimized')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value optimized" id="costOptimized">$15.4M</div>
+                                    <div class="cost-value optimized" id="costOptimized">$30.8M</div>
                                     <div class="cost-label">ML-Optimized</div>
                                 </div>
                                 <div class="cost-card saving tooltip-container" onmouseenter="showCostTooltip(event, 'saving')" onmouseleave="hideTooltip()">
-                                    <div class="cost-value saving" id="costSaving">$10.6M</div>
-                                    <div class="cost-label" id="savingLabel">💵 Savings (40.9%)</div>
+                                    <div class="cost-value saving" id="costSaving">$20.9M</div>
+                                    <div class="cost-label" id="savingLabel">💵 Savings (40.4%)</div>
                                 </div>
                             </div>
                         </div>
@@ -1086,17 +1290,17 @@
                                 <div class="legend-item">
                                     <div class="legend-dot recommend"></div>
                                     <span class="legend-label">Strongly Recommend</span>
-                                    <span class="legend-count" id="legendRecommend">45</span>
+                                    <span class="legend-count" id="legendRecommend">51</span>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-dot review"></div>
                                     <span class="legend-label">Review Engineer</span>
-                                    <span class="legend-count" id="legendReview">10</span>
+                                    <span class="legend-count" id="legendReview">19</span>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-dot low"></div>
                                     <span class="legend-label">Low Priority</span>
-                                    <span class="legend-count" id="legendLow">5</span>
+                                    <span class="legend-count" id="legendLow">55</span>
                                 </div>
                             </div>
                         </div>
@@ -1112,26 +1316,26 @@
                         <div class="success-left">
                             <div class="metrics-grid-2x2">
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'accuracy')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="accuracy">78.3%</div>
+                                    <div class="metric-value-large" id="accuracy">⏳</div>
                                     <div class="metric-label-large">Accuracy</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'precision')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="precision">76.7%</div>
+                                    <div class="metric-value-large" id="precision">⏳</div>
                                     <div class="metric-label-large">Precision</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'recall')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="recall">76.7%</div>
+                                    <div class="metric-value-large" id="recall">⏳</div>
                                     <div class="metric-label-large">Recall</div>
                                 </div>
                                 <div class="metric-box-large tooltip-container" onmouseenter="showMetricTooltip(event, 'f1score')" onmouseleave="hideTooltip()">
-                                    <div class="metric-value-large" id="f1Score">76.7%</div>
+                                    <div class="metric-value-large" id="f1Score">⏳</div>
                                     <div class="metric-label-large">F1-Score</div>
                                 </div>
                             </div>
                         </div>
                         <div class="success-right">
                             <div class="roc-display tooltip-container" onmouseenter="showMetricTooltip(event, 'rocauc')" onmouseleave="hideTooltip()">
-                                <div class="roc-score" id="rocAuc">81.9%</div>
+                                <div class="roc-score" id="rocAuc">⏳</div>
                                 <div class="roc-label">ROC-AUC Score</div>
                             </div>
                             <div class="chart-container" style="flex: 1; min-height: 60px;">
@@ -1150,21 +1354,35 @@
             
             <!-- Panel 3: Production Lifecycle -->
             <div class="panel">
-                <div class="panel-title">📈 Production Lifecycle: Before & After Workover</div>
+                <div class="panel-title">📈 Production Lifecycle: Before & After Workover <span id="mlBadge" style="background: linear-gradient(135deg, #00d4ff, #00ff88); color: #000; font-size: 0.55rem; padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-left: 8px; display: none;">ML-BASED</span></div>
                 <div class="panel-content">
                     <div class="production-content">
                         <div class="prod-stats">
                             <div class="prod-stat before tooltip-container" onmouseenter="showProdTooltip(event, 'before')" onmouseleave="hideTooltip()">
-                                <div class="prod-value before" id="prodBefore">2850</div>
+                                <div class="prod-value before" id="prodBefore">629</div>
                                 <div class="prod-label">Avg Before (BOPD)</div>
                             </div>
                             <div class="prod-stat after tooltip-container" onmouseenter="showProdTooltip(event, 'after')" onmouseleave="hideTooltip()">
-                                <div class="prod-value after" id="prodAfter">3450</div>
+                                <div class="prod-value after" id="prodAfter">758</div>
                                 <div class="prod-label">Avg After (BOPD)</div>
                             </div>
                             <div class="prod-stat uplift tooltip-container" onmouseenter="showProdTooltip(event, 'uplift')" onmouseleave="hideTooltip()">
-                                <div class="prod-value uplift" id="prodUplift">+21%</div>
+                                <div class="prod-value uplift" id="prodUplift">+20.6%</div>
                                 <div class="prod-label">Uplift</div>
+                            </div>
+                        </div>
+                        <div id="npvStatsRow" style="display: none; gap: 8px; margin: 4px 0; justify-content: center;">
+                            <div style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #00d4ff;" id="npvTotal">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">Total NPV</div>
+                            </div>
+                            <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #00ff88;" id="npvPositive">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">NPV+ Wells</div>
+                            </div>
+                            <div style="background: rgba(255,170,0,0.1); border: 1px solid rgba(255,170,0,0.3); border-radius: 6px; padding: 4px 10px; text-align: center; flex: 1;">
+                                <div style="font-size: 0.8rem; font-weight: bold; color: #ffaa00;" id="npvImprovement">-</div>
+                                <div style="font-size: 0.5rem; color: #888;">ML Uplift</div>
                             </div>
                         </div>
                         <div class="chart-container" style="flex: 1; min-height: 60px;">
@@ -1175,7 +1393,6 @@
                             <div class="prod-legend-item"><span>WO</span> = Workover Period</div>
                             <div class="prod-legend-item"><span>M+n</span> = n Months After Workover</div>
                         </div>
-                        <div class="hover-hint">Hover stats for details</div>
                     </div>
                 </div>
             </div>
@@ -1190,30 +1407,30 @@
                             <div class="quadrant-main-full">
                                 <div class="quadrant-grid-full">
                                     <!-- Row 1: High Water (top) -->
-                                    <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q4 tooltip-container" onmouseenter="showQuadrantTooltip(event, 1)" onmouseleave="hideTooltip()" onclick="showWellListModal(1)">
                                         <div class="q-index">1</div>
                                         <div class="q-label">Low Oil & High Water</div>
-                                        <div class="q-wells" id="q1Wells">37 wells</div>
-                                        <div class="q-success" id="q1Success">73% Success</div>
+                                        <div class="q-wells" id="q1Wells">89 wells</div>
+                                        <div class="q-success" id="q1Success">35.0% Success</div>
                                     </div>
-                                    <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q2 tooltip-container" onmouseenter="showQuadrantTooltip(event, 3)" onmouseleave="hideTooltip()" onclick="showWellListModal(3)">
                                         <div class="q-index">3</div>
                                         <div class="q-label">High Oil & High Water</div>
-                                        <div class="q-wells" id="q3Wells">113 wells</div>
-                                        <div class="q-success" id="q3Success">79% Success</div>
+                                        <div class="q-wells" id="q3Wells">223 wells</div>
+                                        <div class="q-success" id="q3Success">48.0% Success</div>
                                     </div>
                                     <!-- Row 2: Low Water (bottom) -->
-                                    <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q3 tooltip-container" onmouseenter="showQuadrantTooltip(event, 2)" onmouseleave="hideTooltip()" onclick="showWellListModal(2)">
                                         <div class="q-index">2</div>
                                         <div class="q-label">Low Oil & Low Water</div>
-                                        <div class="q-wells" id="q2Wells">113 wells</div>
-                                        <div class="q-success" id="q2Success">77% Success</div>
+                                        <div class="q-wells" id="q2Wells">224 wells</div>
+                                        <div class="q-success" id="q2Success">52.0% Success</div>
                                     </div>
-                                    <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()">
+                                    <div class="quadrant q1 tooltip-container" onmouseenter="showQuadrantTooltip(event, 4)" onmouseleave="hideTooltip()" onclick="showWellListModal(4)">
                                         <div class="q-index">4</div>
                                         <div class="q-label">High Oil & Low Water</div>
-                                        <div class="q-wells" id="q4Wells">37 wells</div>
-                                        <div class="q-success" id="q4Success">81% Success</div>
+                                        <div class="q-wells" id="q4Wells">89 wells</div>
+                                        <div class="q-success" id="q4Success">65.0% Success</div>
                                     </div>
                                 </div>
                                 <div class="axis-x-label">Net HI Oil Production →</div>
@@ -1237,7 +1454,6 @@
                                 <div class="hi-legend-text">Best (High Oil, Low Water)</div>
                             </div>
                         </div>
-                        <div class="hover-hint">Hover quadrants for detailed analysis</div>
                     </div>
                 </div>
             </div>
@@ -1251,6 +1467,27 @@
     
     <!-- Toast -->
     <div class="toast" id="toast"></div>
+
+    <!-- Well List Modal -->
+    <div class="well-modal-overlay" id="wellModalOverlay" onclick="if(event.target===this) closeWellModal()">
+        <div class="well-modal">
+            <div class="well-modal-header">
+                <h3><span class="q-badge" id="wellModalBadge">1</span> <span id="wellModalTitle">Quadrant 1</span></h3>
+                <button class="well-modal-close" onclick="closeWellModal()">&times;</button>
+            </div>
+            <div class="well-modal-stats">
+                <div class="well-modal-stat">Total: <span id="wellModalCount">0</span> wells</div>
+                <div class="well-modal-stat">Success Rate: <span id="wellModalSuccess">-</span></div>
+            </div>
+            <div class="well-modal-search">
+                <input type="text" id="wellModalSearchInput" placeholder="🔍 Search well name..." oninput="filterWellList()">
+            </div>
+            <div class="well-modal-body">
+                <div class="well-modal-list" id="wellModalList"></div>
+                <div class="well-modal-empty" id="wellModalEmpty" style="display:none;">No wells found</div>
+            </div>
+        </div>
+    </div>
     
     <!-- Global Tooltip -->
     <div class="custom-tooltip" id="globalTooltip">
@@ -1303,15 +1540,15 @@
         function exportDashboardJSON() {
             const exportData = {
                 kpis: {
-                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 300,
-                    testWells: parseInt(document.getElementById('testWells').textContent) || 60,
-                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.819,
-                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.783,
-                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.767,
-                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.767,
-                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 25990000,
-                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 15355000,
-                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 10635000,
+                    totalWells: parseInt(document.getElementById('totalWells').textContent) || 625,
+                    testWells: parseInt(document.getElementById('testWells').textContent) || 125,
+                    rocAuc: parseFloat(document.getElementById('rocAuc').textContent) / 100 || 0.761,
+                    accuracy: parseFloat(document.getElementById('accuracy').textContent) / 100 || 0.704,
+                    precision: parseFloat(document.getElementById('precision').textContent) / 100 || 0.710,
+                    recall: parseFloat(document.getElementById('recall').textContent) / 100 || 0.698,
+                    totalCostBaseline: parseFloat(document.getElementById('costBaseline').textContent.replace(/[$M]/g, '')) * 1000000 || 51705000,
+                    totalCostOptimized: parseFloat(document.getElementById('costOptimized').textContent.replace(/[$M]/g, '')) * 1000000 || 30820000,
+                    costSaving: parseFloat(document.getElementById('costSaving').textContent.replace(/[$M]/g, '')) * 1000000 || 20885000,
                     stronglyRecommend: activityChart.data.datasets[0].data[0],
                     reviewEngineer: activityChart.data.datasets[0].data[1],
                     lowPriority: activityChart.data.datasets[0].data[2]
@@ -1365,7 +1602,7 @@
                 data: {
                     labels: ['Strongly Recommend', 'Review by Engineer', 'Low Priority'],
                     datasets: [{
-                        data: [45, 10, 5],
+                        data: [51, 19, 55],
                         backgroundColor: ['#00ff88', '#ffaa00', '#ff6b6b'],
                         borderWidth: 2,
                         borderColor: '#1a1a2e'
@@ -1443,7 +1680,7 @@
                 data: {
                     labels: ['TN', 'FP', 'FN', 'TP'],
                     datasets: [{
-                        data: [24, 6, 7, 23],
+                        data: [44, 18, 19, 44],
                         backgroundColor: ['#00cc88', '#ffaa00', '#ff6b6b', '#00ff88'],
                         borderRadius: 2,
                         barThickness: 12
@@ -1474,7 +1711,7 @@
                         x: { 
                             grid: { color: 'rgba(255,255,255,0.1)' }, 
                             ticks: { color: '#888', font: { size: 8 } },
-                            max: 30
+                            max: 55
                         },
                         y: { grid: { display: false }, ticks: { color: '#fff', font: { size: 8, weight: 'bold' } } }
                     }
@@ -1509,7 +1746,7 @@
                     labels: Array.from({length: 28}, (_, i) => i < 12 ? `M-${12-i}` : i < 16 ? 'WO' : `M+${i-15}`),
                     datasets: [{
                         label: 'Oil Production (BOPD)',
-                        data: [1000,920,850,785,725,670,620,575,532,492,455,420,50,20,10,650,780,820,845,860,870,875,878,880,881,882,883,885],
+                        data: [756,734,712,690,668,646,622,598,574,548,520,480,80,30,20,350,600,720,750,770,775,778,780,782,784,785,786,786],
                         borderColor: '#00d4ff',
                         backgroundColor: 'rgba(0,212,255,0.1)',
                         fill: true,
@@ -1582,12 +1819,12 @@
                     
                     if (hasModelInfo) {
                         normalizedData.kpis = {
-                            rocAuc: data.modelInfo.rocAuc,
-                            totalWells: data.modelInfo.nWells || 300,
-                            testWells: 60,
-                            accuracy: data.modelInfo.accuracy || 0.783,
-                            precision: data.modelInfo.precision || 0.767,
-                            recall: data.modelInfo.recall || 0.767
+                            rocAuc: data.modelInfo.rocAuc || null,
+                            totalWells: data.modelInfo.nWells || null,
+                            testWells: data.modelInfo.nWells ? Math.round(data.modelInfo.nWells * 0.2) : null,
+                            accuracy: data.modelInfo.accuracy || null,
+                            precision: data.modelInfo.precision || null,
+                            recall: data.modelInfo.recall || null
                         };
                     }
                     
@@ -1613,6 +1850,14 @@
                         normalizedData.productionData = data.productionData;
                     }
                     
+                    if (data.topWells) {
+                        normalizedData.topWells = data.topWells;
+                    }
+                    
+                    if (data.wellScatter) {
+                        normalizedData.wellScatter = data.wellScatter;
+                    }
+                    
                     // If original format, use as-is
                     if (hasKpis || hasDirectMetrics) {
                         normalizedData = data;
@@ -1632,7 +1877,7 @@
                     if (normalizedData.confusionMatrix) {
                         console.log('Confusion Matrix found:', normalizedData.confusionMatrix);
                     }
-                    
+
                     updateDashboard(normalizedData);
                     setStatus('jsonStatus', '✅ JSON loaded', 'success');
                     showToast('Dashboard data loaded from JSON!', 'success');
@@ -1660,11 +1905,14 @@
             
             // Validate file extension
             const fileName = fileInput.files[0].name.toLowerCase();
+            const fileSizeMB = fileInput.files[0].size / (1024 * 1024);
             if (!fileName.endsWith('.csv') && !fileName.endsWith('.parquet')) {
                 setStatus('csvStatus', '❌ Use CSV or Parquet', 'error');
                 showToast('Please upload a CSV or Parquet file', 'error');
                 return;
             }
+            
+            // No file size limit
             
             setStatus('csvStatus', '⏳ Waking up server...', 'loading');
             
@@ -1712,13 +1960,58 @@
                 console.log('File:', fileName, 'Type:', fileType, 'Size:', fileInput.files[0].size, 'bytes');
                 console.log('Sending to: /api/predict');
                 
+                // Use AbortController for timeout (5 minutes)
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 300000);
+                
                 const response = await fetch('/api/predict', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    signal: controller.signal
                 });
+                clearTimeout(timeoutId);
                 
                 console.log('Response received:', response.status, response.statusText);
-                const result = await response.json();
+                
+                // Read response body as text first to avoid JSON parse errors on empty/truncated body
+                const responseText = await response.text();
+                console.log('Response body length:', responseText.length);
+                
+                // Handle non-OK responses (413, 500, etc.)
+                if (!response.ok) {
+                    let errorMsg = `Server error (${response.status})`;
+                    try {
+                        const errResult = JSON.parse(responseText);
+                        errorMsg = errResult.error || errorMsg;
+                    } catch (parseErr) {
+                        if (responseText) errorMsg = responseText.substring(0, 200);
+                    }
+                    if (response.status === 413) {
+                        errorMsg = 'File too large. Try reducing file size or splitting into smaller files.';
+                    }
+                    setStatus('csvStatus', '❌ ' + errorMsg, 'error');
+                    showToast(errorMsg, 'error');
+                    return;
+                }
+                
+                // Guard against empty/truncated response body (server OOM or connection drop)
+                if (!responseText || responseText.trim().length === 0) {
+                    const emptyMsg = 'Server returned empty response. The file may be too large for the server\'s memory. Try a smaller file.';
+                    setStatus('csvStatus', '❌ ' + emptyMsg, 'error');
+                    showToast(emptyMsg, 'error');
+                    return;
+                }
+                
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (jsonErr) {
+                    const parseMsg = 'Server returned invalid response (possibly ran out of memory). Try a smaller file or fewer rows.';
+                    console.error('JSON parse error:', jsonErr, 'Body preview:', responseText.substring(0, 500));
+                    setStatus('csvStatus', '❌ ' + parseMsg, 'error');
+                    showToast(parseMsg, 'error');
+                    return;
+                }
                 console.log('Result:', result);
                 
                 if (result.error) {
@@ -1726,15 +2019,32 @@
                     showToast(result.error, 'error');
                 } else {
                     setStatus('csvStatus', '✅ ' + result.summary.total_wells + ' wells', 'success');
-                    showToast('Prediction complete!', 'success');
-                    if (result.summary) {
-                        document.getElementById('testWells').textContent = result.summary.total_wells;
-                        activityChart.data.datasets[0].data = [
-                            result.summary.strongly_recommend,
-                            result.summary.review_engineer,
-                            result.summary.low_priority
-                        ];
-                        activityChart.update();
+                    showToast('Prediction complete! Dashboard updated.', 'success');
+                    
+                    // Update entire dashboard from prediction response
+                    if (result.dashboard_data) {
+                        console.log('📊 Updating dashboard from prediction response');
+                        // Attach predictions to dashboard_data so well names can be extracted
+                        if (result.predictions) {
+                            result.dashboard_data.predictions = result.predictions;
+                        }
+                        updateDashboard(result.dashboard_data);
+                    } else {
+                        // Fallback: update only what we have
+                        if (result.summary) {
+                            document.getElementById('testWells').textContent = result.summary.total_wells;
+                            document.getElementById('totalWells').textContent = result.summary.total_wells;
+                            document.getElementById('badge-wells').textContent = '🏭 Wells: ' + result.summary.total_wells;
+                            activityChart.data.datasets[0].data = [
+                                result.summary.strongly_recommend,
+                                result.summary.review_engineer,
+                                result.summary.low_priority
+                            ];
+                            activityChart.update();
+                            document.getElementById('legendRecommend').textContent = result.summary.strongly_recommend;
+                            document.getElementById('legendReview').textContent = result.summary.review_engineer;
+                            document.getElementById('legendLow').textContent = result.summary.low_priority;
+                        }
                     }
                 }
             } catch (error) {
@@ -1743,8 +2053,14 @@
                 console.error('Error message:', error.message);
                 console.error('Full error:', error);
                 
-                setStatus('csvStatus', '❌ ' + error.message, 'error');
-                showToast('Prediction failed: ' + error.message, 'error');
+                let userMsg = error.message;
+                if (error.name === 'AbortError') {
+                    userMsg = 'Request timed out (5 min). The file may be too large. Try splitting into smaller files.';
+                } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    userMsg = 'Connection lost. Server may have run out of memory processing large file. Try a smaller file.';
+                }
+                setStatus('csvStatus', '❌ ' + userMsg, 'error');
+                showToast('Prediction failed: ' + userMsg, 'error');
             }
         }
         
@@ -1752,138 +2068,168 @@
             console.log('=== UPDATING DASHBOARD ===');
             console.log('Input data:', data);
             
-            const kpis = data.kpis || data;
+            // Helper: format value or return "-" if null/undefined
+            function valOrDash(v, formatter) {
+                if (v === null || v === undefined || v === '-' || (typeof v === 'number' && isNaN(v))) return '-';
+                return formatter ? formatter(v) : v;
+            }
+            function pct(v) { return (v * 100).toFixed(1) + '%'; }
+            function money(v) { return '$' + (v / 1000000).toFixed(1) + 'M'; }
+            
+            // ---- Normalize: support both dashboard_data.json format and prediction format ----
+            let kpis;
+            if (data.kpis) {
+                // Prediction response format — already has kpis object
+                kpis = data.kpis;
+            } else if (data.modelInfo || data.costAnalysis) {
+                // dashboard_data.json format — build kpis from parts
+                const mi = data.modelInfo || {};
+                const ca = data.costAnalysis || {};
+                kpis = {
+                    totalWells: mi.nWells || null,
+                    testWells: mi.nTestWells != null ? mi.nTestWells : (mi.nWells ? Math.round(mi.nWells * 0.2) : null),
+                    rocAuc: mi.rocAuc != null ? mi.rocAuc : null,
+                    accuracy: mi.accuracy != null ? mi.accuracy : null,
+                    precision: mi.precision != null ? mi.precision : null,
+                    recall: mi.recall != null ? mi.recall : null,
+                    totalCostBaseline: ca.totalCostBaseline != null ? ca.totalCostBaseline : null,
+                    totalCostOptimized: ca.totalCostOptimized != null ? ca.totalCostOptimized : null,
+                    costSaving: ca.costSaving != null ? ca.costSaving : null,
+                    stronglyRecommend: ca.stronglyRecommend,
+                    reviewEngineer: ca.reviewEngineer,
+                    lowPriority: ca.lowPriority,
+                };
+            } else {
+                kpis = data;
+            }
+            
+            // Derive accuracy/precision/recall from confusion matrix if not directly available
+            const cm = data.confusionMatrix;
+            if (cm && cm.tn != null && cm.fp != null && cm.fn != null && cm.tp != null) {
+                const total = cm.tn + cm.fp + cm.fn + cm.tp;
+                if (total > 0) {
+                    if (kpis.accuracy == null) {
+                        kpis.accuracy = (cm.tn + cm.tp) / total;
+                    }
+                    if (kpis.precision == null && (cm.tp + cm.fp) > 0) {
+                        kpis.precision = cm.tp / (cm.tp + cm.fp);
+                    }
+                    if (kpis.recall == null && (cm.tp + cm.fn) > 0) {
+                        kpis.recall = cm.tp / (cm.tp + cm.fn);
+                    }
+                }
+                // Also derive testWells from CM total if not set
+                if (kpis.testWells == null) {
+                    kpis.testWells = total;
+                }
+            }
+            
+            // Normalize heteroIndex — dashboard_data.json uses HETERO_INDEX, prediction uses index
+            let heteroIndex = data.heteroIndex;
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                heteroIndex = heteroIndex.map(h => ({
+                    index: h.index || h.HETERO_INDEX,
+                    count: h.count,
+                    success_rate: h.success_rate,
+                    label: h.label,
+                    well_names: h.well_names || [],
+                }));
+            }
+            
             console.log('KPIs extracted:', kpis);
             
             // Wells
-            if (kpis.totalWells) {
-                console.log('Updating totalWells:', kpis.totalWells);
-                document.getElementById('totalWells').textContent = kpis.totalWells;
-                document.getElementById('badge-wells').textContent = '🏭 Wells: ' + kpis.totalWells;
-            } else {
-                document.getElementById('totalWells').textContent = '300';
-                document.getElementById('badge-wells').textContent = '🏭 Wells: 300';
-            }
-            if (kpis.testWells) {
-                document.getElementById('testWells').textContent = kpis.testWells;
-            } else {
-                document.getElementById('testWells').textContent = '60';
-            }
+            document.getElementById('totalWells').textContent = valOrDash(kpis.totalWells);
+            document.getElementById('badge-wells').textContent = '🏭 Wells: ' + valOrDash(kpis.totalWells);
+            document.getElementById('testWells').textContent = valOrDash(kpis.testWells);
             
             // ROC AUC
-            if (kpis.rocAuc) {
-                const rocVal = (kpis.rocAuc * 100).toFixed(1) + '%';
-                console.log('Updating rocAuc:', rocVal);
-                document.getElementById('rocAuc').textContent = rocVal;
-                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocVal;
-            } else {
-                document.getElementById('rocAuc').textContent = '81.9%';
-                document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: 81.9%';
-            }
+            const rocText = valOrDash(kpis.rocAuc, pct);
+            document.getElementById('rocAuc').textContent = rocText;
+            document.getElementById('badge-roc').textContent = '🎯 ROC-AUC: ' + rocText;
             
             // Metrics
-            if (kpis.accuracy) {
-                document.getElementById('accuracy').textContent = (kpis.accuracy * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('accuracy').textContent = '78.3%';
-            }
-            if (kpis.precision) {
-                document.getElementById('precision').textContent = (kpis.precision * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('precision').textContent = '76.7%';
-            }
-            if (kpis.recall) {
-                document.getElementById('recall').textContent = (kpis.recall * 100).toFixed(1) + '%';
-            } else {
-                document.getElementById('recall').textContent = '76.7%';
-            }
+            document.getElementById('accuracy').textContent = valOrDash(kpis.accuracy, pct);
+            document.getElementById('precision').textContent = valOrDash(kpis.precision, pct);
+            document.getElementById('recall').textContent = valOrDash(kpis.recall, pct);
             
-            if (kpis.precision && kpis.recall) {
+            if (kpis.precision != null && kpis.recall != null) {
                 const f1 = 2 * (kpis.precision * kpis.recall) / (kpis.precision + kpis.recall);
-                document.getElementById('f1Score').textContent = (f1 * 100).toFixed(1) + '%';
+                document.getElementById('f1Score').textContent = pct(f1);
             } else {
-                document.getElementById('f1Score').textContent = '76.7%';
+                document.getElementById('f1Score').textContent = '-';
             }
             
             // Activity chart
-            if (kpis.stronglyRecommend !== undefined) {
+            if (kpis.stronglyRecommend !== undefined && kpis.stronglyRecommend !== null) {
                 console.log('Updating activity chart:', kpis.stronglyRecommend, kpis.reviewEngineer, kpis.lowPriority);
                 activityChart.data.datasets[0].data = [
-                    kpis.stronglyRecommend,
-                    kpis.reviewEngineer,
-                    kpis.lowPriority
+                    kpis.stronglyRecommend || 0,
+                    kpis.reviewEngineer || 0,
+                    kpis.lowPriority || 0
                 ];
                 activityChart.update();
-                // Update custom legend
-                document.getElementById('legendRecommend').textContent = kpis.stronglyRecommend;
-                document.getElementById('legendReview').textContent = kpis.reviewEngineer;
-                document.getElementById('legendLow').textContent = kpis.lowPriority;
-            } else {
-                // Default advisory distribution from test set
-                activityChart.data.datasets[0].data = [45, 10, 5];
-                activityChart.update();
-                document.getElementById('legendRecommend').textContent = '45';
-                document.getElementById('legendReview').textContent = '10';
-                document.getElementById('legendLow').textContent = '5';
+                document.getElementById('legendRecommend').textContent = kpis.stronglyRecommend || 0;
+                document.getElementById('legendReview').textContent = kpis.reviewEngineer || 0;
+                document.getElementById('legendLow').textContent = kpis.lowPriority || 0;
             }
             
             // Confusion matrix
-            if (data.confusionMatrix) {
-                const cm = data.confusionMatrix;
-                console.log('Updating confusion matrix:', cm);
-                confusionChart.data.datasets[0].data = [cm.tn, cm.fp, cm.fn, cm.tp];
+            if (data.confusionMatrix != null) {
+                console.log('Updating confusion matrix:', data.confusionMatrix);
+                confusionChart.data.datasets[0].data = [data.confusionMatrix.tn || 0, data.confusionMatrix.fp || 0, data.confusionMatrix.fn || 0, data.confusionMatrix.tp || 0];
+                const maxCM = Math.max(...confusionChart.data.datasets[0].data, 1);
+                confusionChart.options.scales.x.max = Math.ceil(maxCM * 1.2);
                 confusionChart.update();
             } else {
-                // Use actual test set values: TN:24, FP:6, FN:7, TP:23
-                confusionChart.data.datasets[0].data = [24, 6, 7, 23];
+                // No confusion matrix data — clear chart to zeros
+                console.log('No confusionMatrix in response, clearing chart');
+                confusionChart.data.datasets[0].data = [0, 0, 0, 0];
+                confusionChart.options.scales.x.max = 1;
                 confusionChart.update();
             }
             
             // Cost
-            if (kpis.totalCostBaseline) {
-                document.getElementById('costBaseline').textContent = '$' + (kpis.totalCostBaseline / 1000000).toFixed(1) + 'M';
-            } else {
-                document.getElementById('costBaseline').textContent = '$26.0M';
-            }
-            if (kpis.totalCostOptimized) {
-                document.getElementById('costOptimized').textContent = '$' + (kpis.totalCostOptimized / 1000000).toFixed(1) + 'M';
-            } else {
-                document.getElementById('costOptimized').textContent = '$15.4M';
-            }
-            if (kpis.costSaving && kpis.totalCostBaseline) {
+            document.getElementById('costBaseline').textContent = valOrDash(kpis.totalCostBaseline, money);
+            document.getElementById('costOptimized').textContent = valOrDash(kpis.totalCostOptimized, money);
+            if (kpis.costSaving != null && kpis.totalCostBaseline != null && kpis.totalCostBaseline > 0) {
                 const savingPct = ((kpis.costSaving / kpis.totalCostBaseline) * 100).toFixed(1);
-                document.getElementById('costSaving').textContent = '$' + (kpis.costSaving / 1000000).toFixed(1) + 'M';
+                document.getElementById('costSaving').textContent = money(kpis.costSaving);
                 document.getElementById('savingLabel').textContent = '💵 Savings (' + savingPct + '%)';
             } else {
-                document.getElementById('costSaving').textContent = '$10.6M';
-                document.getElementById('savingLabel').textContent = '💵 Savings (40.9%)';
+                document.getElementById('costSaving').textContent = valOrDash(kpis.costSaving, money);
+                document.getElementById('savingLabel').textContent = '💵 Savings (-)';
             }
             
             // Heterogeneity
-            if (data.heteroIndex) {
-                console.log('Updating heteroIndex:', data.heteroIndex);
-                data.heteroIndex.forEach(h => {
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                console.log('Updating heteroIndex:', heteroIndex);
+                heteroIndex.forEach(h => {
                     const qId = 'q' + h.index;
                     const wellsEl = document.getElementById(qId + 'Wells');
                     const successEl = document.getElementById(qId + 'Success');
-                    console.log(`  Q${h.index}: ${h.count} wells, ${(h.success_rate * 100).toFixed(1)}% success`);
                     if (wellsEl) wellsEl.textContent = h.count + ' wells';
-                    if (successEl) successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
+                    if (successEl) {
+                        if (h.success_rate != null) {
+                            successEl.textContent = (h.success_rate * 100).toFixed(1) + '% Success';
+                        } else {
+                            successEl.textContent = '- Success';
+                        }
+                    }
                 });
             } else {
-                // Use actual distribution: Q1:37, Q2:113, Q3:113, Q4:37 (12.3%, 37.7%, 37.7%, 12.3%)
-                document.getElementById('q1Wells').textContent = '37 wells';
-                document.getElementById('q2Wells').textContent = '113 wells';
-                document.getElementById('q3Wells').textContent = '113 wells';
-                document.getElementById('q4Wells').textContent = '37 wells';
-                document.getElementById('q1Success').textContent = '81% Success';
-                document.getElementById('q2Success').textContent = '79% Success';
-                document.getElementById('q3Success').textContent = '77% Success';
-                document.getElementById('q4Success').textContent = '73% Success';
+                // No hetero data in response — clear to default empty state
+                console.log('No heteroIndex in response, clearing values');
+                for (const q of [1, 2, 3, 4]) {
+                    const wellsEl = document.getElementById('q' + q + 'Wells');
+                    const successEl = document.getElementById('q' + q + 'Success');
+                    if (wellsEl) wellsEl.textContent = '0 wells';
+                    if (successEl) successEl.textContent = '- Success';
+                }
             }
             
-            // Production
-            if (data.productionData) {
+            // Production — only update if data actually provides productionData
+            if (data.productionData != null) {
                 console.log('Updating productionData');
                 const pd = data.productionData;
                 const before = pd.beforeIntervention || [];
@@ -1895,33 +2241,236 @@
                     productionChart.data.datasets[0].data = fullData;
                     productionChart.update();
                     
-                    const avgBefore = before[before.length - 1] || 420;
-                    const avgAfter = after[after.length - 1] || 882;
-                    const uplift = ((avgAfter - avgBefore) / avgBefore * 100).toFixed(0);
+                    // Use average of before/after curves for summary stats
+                    const avgBefore = before.length > 0 ? Math.round(before.reduce((a,b)=>a+b,0) / before.length) : null;
+                    const avgAfter = after.length > 0 ? Math.round(after.reduce((a,b)=>a+b,0) / after.length) : null;
                     
-                    document.getElementById('prodBefore').textContent = avgBefore;
-                    document.getElementById('prodAfter').textContent = avgAfter;
-                    document.getElementById('prodUplift').textContent = '+' + uplift + '%';
+                    document.getElementById('prodBefore').textContent = valOrDash(avgBefore);
+                    document.getElementById('prodAfter').textContent = valOrDash(avgAfter);
+                    if (avgBefore != null && avgAfter != null && avgBefore > 0) {
+                        document.getElementById('prodUplift').textContent = '+' + ((avgAfter - avgBefore) / avgBefore * 100).toFixed(0) + '%';
+                    } else {
+                        document.getElementById('prodUplift').textContent = '-';
+                    }
+                } else {
+                    // Empty production data
+                    productionChart.data.datasets[0].data = [];
+                    productionChart.update();
+                    document.getElementById('prodBefore').textContent = '-';
+                    document.getElementById('prodAfter').textContent = '-';
+                    document.getElementById('prodUplift').textContent = '-';
+                }
+                
+                // ML-based badge and metadata
+                const mlBadge = document.getElementById('mlBadge');
+                if (pd.mlBased) {
+                    mlBadge.style.display = 'inline';
+                    if (pd.predictedImprovement != null) {
+                        document.getElementById('npvImprovement').textContent = '+' + pd.predictedImprovement + '%';
+                    }
+                } else {
+                    mlBadge.style.display = 'none';
                 }
             } else {
-                // Default production uplift
-                document.getElementById('prodBefore').textContent = '2850';
-                document.getElementById('prodAfter').textContent = '3450';
-                document.getElementById('prodUplift').textContent = '+21%';
+                // No production data in response — keep existing chart defaults
+                console.log('No productionData in response, keeping current chart data');
+            }
+            
+            // NPV Analysis
+            const npvRow = document.getElementById('npvStatsRow');
+            if (data.npvAnalysis) {
+                npvRow.style.display = 'flex';
+                const na = data.npvAnalysis;
+                document.getElementById('npvTotal').textContent = '$' + (na.totalNPV / 1e6).toFixed(1) + 'M';
+                document.getElementById('npvPositive').textContent = na.positiveNPVCount + ' wells';
+            } else {
+                npvRow.style.display = 'none';
             }
             
             console.log('=== DASHBOARD UPDATE COMPLETE ===');
             
             // Update tooltip data from loaded JSON
             updateTooltipData(data);
+            
+            // Store well names per quadrant for the popup
+            storeWellNamesPerQuadrant(data, heteroIndex);
         }
         
+        // ========== WELL LIST MODAL ==========
+        let quadrantWellNames = { 1: [], 2: [], 3: [], 4: [] };
+        
+        const quadrantLabels = {
+            1: 'Low Oil & High Water',
+            2: 'Low Oil & Low Water',
+            3: 'High Oil & High Water',
+            4: 'High Oil & Low Water'
+        };
+        
+        // Map HETERO_LABEL from JSON/CSV to quadrant index used in the dashboard
+        const heteroLabelToQuadrant = {
+            'Low Oil - High Water': 1,
+            'Low Oil - Low Water': 2,
+            'High Oil - High Water': 3,
+            'High Oil - Low Water': 4
+        };
+        
+        function storeWellNamesPerQuadrant(data, heteroIndex) {
+            // Reset
+            quadrantWellNames = { 1: [], 2: [], 3: [], 4: [] };
+            
+            // Source 1: heteroIndex array with well_names (from API prediction)
+            if (heteroIndex && Array.isArray(heteroIndex)) {
+                heteroIndex.forEach(h => {
+                    const qIdx = h.index || h.HETERO_INDEX;
+                    if (qIdx && h.well_names && Array.isArray(h.well_names)) {
+                        quadrantWellNames[qIdx] = h.well_names.slice().sort();
+                    }
+                });
+            }
+            
+            // Source 2: topWells array (from dashboard_data.json)
+            if (data.topWells && Array.isArray(data.topWells)) {
+                // Only use topWells if we don't already have well_names from heteroIndex
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.topWells.forEach(w => {
+                        const label = w.HETERO_LABEL || w.hetero_label;
+                        const qIdx = heteroLabelToQuadrant[label];
+                        if (qIdx) {
+                            if (!quadrantWellNames[qIdx].includes(w.WELL_NAME || w.well_name)) {
+                                quadrantWellNames[qIdx].push(w.WELL_NAME || w.well_name);
+                            }
+                        }
+                    });
+                    // Sort each
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            // Source 3: predictions array (from API prediction response stored in raw data)
+            if (data.predictions && Array.isArray(data.predictions)) {
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.predictions.forEach(p => {
+                        const qIdx = p.hetero_index;
+                        if (qIdx && quadrantWellNames[qIdx]) {
+                            const name = p.well_name || p.WELL_NAME;
+                            if (name && !quadrantWellNames[qIdx].includes(name)) {
+                                quadrantWellNames[qIdx].push(name);
+                            }
+                        }
+                    });
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            // Source 4: wellScatter array (from dashboard_data.json with full well list)
+            if (data.wellScatter && Array.isArray(data.wellScatter)) {
+                const hasWellNames = Object.values(quadrantWellNames).some(arr => arr.length > 0);
+                if (!hasWellNames) {
+                    data.wellScatter.forEach(w => {
+                        const qIdx = w.HETERO_INDEX || w.hetero_index;
+                        if (qIdx && quadrantWellNames[qIdx]) {
+                            const name = w.WELL_NAME || w.well_name;
+                            if (name && !quadrantWellNames[qIdx].includes(name)) {
+                                quadrantWellNames[qIdx].push(name);
+                            }
+                        }
+                    });
+                    for (const q of [1, 2, 3, 4]) {
+                        quadrantWellNames[q].sort();
+                    }
+                }
+            }
+            
+            console.log('Well names per quadrant stored:', quadrantWellNames);
+        }
+        
+        let currentModalQuadrant = null;
+        
+        function showWellListModal(quadrantId) {
+            currentModalQuadrant = quadrantId;
+            const wells = quadrantWellNames[quadrantId] || [];
+            const label = quadrantLabels[quadrantId] || 'Unknown';
+            
+            // Badge
+            const badge = document.getElementById('wellModalBadge');
+            badge.textContent = quadrantId;
+            badge.className = 'q-badge q' + quadrantId;
+            
+            // Title
+            document.getElementById('wellModalTitle').textContent = label;
+            
+            // Stats
+            document.getElementById('wellModalCount').textContent = wells.length;
+            const successEl = document.getElementById('q' + quadrantId + 'Success');
+            document.getElementById('wellModalSuccess').textContent = successEl ? successEl.textContent : '-';
+            
+            // Clear search
+            document.getElementById('wellModalSearchInput').value = '';
+            
+            // Render list
+            renderWellList(wells);
+            
+            // Show modal
+            document.getElementById('wellModalOverlay').classList.add('show');
+            
+            // Hide tooltip
+            hideTooltip();
+        }
+        
+        function renderWellList(wells) {
+            const listEl = document.getElementById('wellModalList');
+            const emptyEl = document.getElementById('wellModalEmpty');
+            
+            if (wells.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = 'No well data available for this quadrant';
+                return;
+            }
+            
+            emptyEl.style.display = 'none';
+            listEl.innerHTML = wells.map((name, i) => 
+                `<div class="well-modal-item"><span class="well-num">${i + 1}.</span> ${name}</div>`
+            ).join('');
+        }
+        
+        function filterWellList() {
+            const query = document.getElementById('wellModalSearchInput').value.toLowerCase().trim();
+            const wells = quadrantWellNames[currentModalQuadrant] || [];
+            const filtered = query ? wells.filter(w => w.toLowerCase().includes(query)) : wells;
+            
+            const listEl = document.getElementById('wellModalList');
+            const emptyEl = document.getElementById('wellModalEmpty');
+            
+            if (filtered.length === 0) {
+                listEl.innerHTML = '';
+                emptyEl.style.display = 'block';
+                emptyEl.textContent = query ? 'No matching wells found' : 'No well data available';
+            } else {
+                emptyEl.style.display = 'none';
+                listEl.innerHTML = filtered.map((name, i) => 
+                    `<div class="well-modal-item"><span class="well-num">${i + 1}.</span> ${name}</div>`
+                ).join('');
+            }
+        }
+        
+        function closeWellModal() {
+            document.getElementById('wellModalOverlay').classList.remove('show');
+            currentModalQuadrant = null;
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeWellModal();
+        });
+        
         // ========== TOOLTIP FUNCTIONS (Power BI Style) ==========
-        // Quadrant numbering matches reference image:
-        // Q1 = Low Oil & High Water (top-left, RISK)
-        // Q2 = Low Oil & Low Water (bottom-left, Stimulate)
-        // Q3 = High Oil & High Water (top-right, Monitor)
-        // Q4 = High Oil & Low Water (bottom-right, BEST)
         let tooltipData = {
             quadrants: {
                 1: { label: 'High Oil - Low Water', avgEUR: '3.2M BBL', avgCost: '$86.7K', success: '81%', recommendation: 'Best candidates for workover' },
@@ -2137,6 +2686,8 @@
             const before = document.getElementById('prodBefore').textContent;
             const after = document.getElementById('prodAfter').textContent;
             const uplift = document.getElementById('prodUplift').textContent;
+            const isMLBased = document.getElementById('mlBadge').style.display !== 'none';
+            const methodLabel = isMLBased ? 'ML-predicted production curve' : 'Historical average production';
             
             if (type === 'before') {
                 titleEl.textContent = '📉 Pre-Workover Production';
@@ -2144,7 +2695,7 @@
                     <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value negative">${before} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months before WO</span></div>
                     <div class="tooltip-row"><span class="label">Trend:</span><span class="value negative">Declining</span></div>
-                    <div class="tooltip-row"><span class="label">Issue:</span><span class="value" style="font-size:0.6rem">Declining production triggers workover</span></div>
+                    <div class="tooltip-row"><span class="label">Method:</span><span class="value" style="font-size:0.6rem">${methodLabel}</span></div>
                 `;
             } else if (type === 'after') {
                 titleEl.textContent = '📈 Post-Workover Production';
@@ -2152,7 +2703,7 @@
                     <div class="tooltip-row"><span class="label">Avg Rate:</span><span class="value positive">${after} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Period:</span><span class="value">12 months after WO</span></div>
                     <div class="tooltip-row"><span class="label">Trend:</span><span class="value positive">Stabilized</span></div>
-                    <div class="tooltip-row"><span class="label">Result:</span><span class="value" style="font-size:0.6rem">Production restored after intervention</span></div>
+                    <div class="tooltip-row"><span class="label">Method:</span><span class="value" style="font-size:0.6rem">${methodLabel}</span></div>
                 `;
             } else {
                 titleEl.textContent = '🚀 Production Uplift';
@@ -2161,6 +2712,7 @@
                     <div class="tooltip-row"><span class="label">Before:</span><span class="value negative">${before} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">After:</span><span class="value positive">${after} BOPD</span></div>
                     <div class="tooltip-row"><span class="label">Gain:</span><span class="value positive">+${parseInt(after) - parseInt(before)} BOPD</span></div>
+                    ${isMLBased ? '<div class="tooltip-row" style="margin-top:4px;border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;"><span class="label">💡</span><span class="value" style="font-size:0.55rem;font-weight:normal">Uplift estimated from ML success probability × well production data</span></div>' : ''}
                 `;
             }
             
