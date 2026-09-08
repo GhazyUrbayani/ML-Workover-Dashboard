@@ -1,0 +1,12 @@
+# Lean dependencies for Vercel serverless function
+# No flask/gunicorn needed (uses BaseHTTPRequestHandler)
+# No jupyter/matplotlib/seaborn (not needed for API)
+
+# Data Processing
+pandas>=2.0.0,<2.2.0
+numpy>=1.24.0,<2.0.0
+
+# Machine Learning
+lightgbm>=4.0.0
+scikit-learn>=1.3.0,<1.6.0
+joblib>=1.3.0

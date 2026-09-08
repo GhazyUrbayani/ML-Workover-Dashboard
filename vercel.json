@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "api/index.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
     },
     {
       "src": "index.html",
@@ -11,10 +14,6 @@
     },
     {
       "src": "dashboard_data.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "workover_model_pipeline.joblib",
       "use": "@vercel/static"
     }
   ],
@@ -35,7 +34,8 @@
   "functions": {
     "api/index.py": {
       "memory": 1024,
-      "maxDuration": 30
+      "maxDuration": 30,
+      "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json"
     }
   }
 }
