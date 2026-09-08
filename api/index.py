@@ -81,6 +81,7 @@ def _resolve_path(filename):
         f'../{filename}',
         f'/var/task/{filename}',
         os.path.join(os.path.dirname(__file__), '..', filename),
+        os.path.join(os.path.dirname(__file__), filename),
     ]
     for p in candidates:
         if os.path.exists(p):
@@ -88,9 +89,29 @@ def _resolve_path(filename):
     return None
 
 
+def _load_openmp():
+    """Pre-load libgomp.so.1 with RTLD_GLOBAL for LightGBM on serverless Linux."""
+    import ctypes
+    for candidate in ['lib/libgomp.so.1', 'libgomp.so.1']:
+        p = _resolve_path(candidate)
+        if p:
+            try:
+                lib_dir = os.path.dirname(os.path.abspath(p))
+                os.environ['LD_LIBRARY_PATH'] = f"{lib_dir}:{os.environ.get('LD_LIBRARY_PATH', '')}"
+                ctypes.CDLL(os.path.abspath(p), mode=ctypes.RTLD_GLOBAL)
+                print(f"✅ Pre-loaded OpenMP runtime from: {p}")
+                return True
+            except Exception as e:
+                print(f"⚠️ Failed loading OpenMP from {p}: {e}")
+    return False
+
+
 def load_resources():
     """Load model, preprocessor, and dashboard data."""
     global model, preprocessor, dashboard_data
+
+    # Pre-load OpenMP for LightGBM before deserializing pipeline
+    _load_openmp()
 
     # Load model
     if MODEL_LOADED:
