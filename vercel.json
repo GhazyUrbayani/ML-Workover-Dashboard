@@ -1,22 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "dashboard_data.json",
-      "use": "@vercel/static"
+  "functions": {
+    "api/index.py": {
+      "runtime": "@vercel/python",
+      "memory": 1024,
+      "maxDuration": 30,
+      "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
@@ -30,12 +21,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "api/index.py": {
-      "memory": 1024,
-      "maxDuration": 30,
-      "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json"
-    }
-  }
+  ]
 }
