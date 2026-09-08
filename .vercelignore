@@ -1,0 +1,7 @@
+# Exclude files not needed for Vercel serverless deployment
+main.py
+requirements-full.txt
+render.yaml
+*.ipynb
+__pycache__
+.git
