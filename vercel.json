@@ -2,7 +2,6 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "runtime": "@vercel/python",
       "memory": 1024,
       "maxDuration": 30,
       "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json"
