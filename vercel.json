@@ -2,15 +2,14 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "memory": 1024,
       "maxDuration": 30,
-      "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json,lib/libgomp.so.1"
+      "includeFiles": "workover_model_pipeline.joblib,preprocessor.joblib,dashboard_data.json,lib/**,api/lib/**"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index.py?path=/api/$1"
     }
   ]
 }

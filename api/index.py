@@ -72,6 +72,8 @@ INTERVENTION_COSTS = {
 model = None
 preprocessor = None
 dashboard_data = None
+model_error = None
+openmp_status = None
 
 
 def _resolve_path(filename):
@@ -91,24 +93,36 @@ def _resolve_path(filename):
 
 def _load_openmp():
     """Pre-load libgomp.so.1 with RTLD_GLOBAL for LightGBM on serverless Linux."""
+    global openmp_status
     import ctypes
-    for candidate in ['lib/libgomp.so.1', 'libgomp.so.1']:
-        p = _resolve_path(candidate)
-        if p:
+    candidates = [
+        os.path.join(os.path.dirname(__file__), 'lib', 'libgomp.so.1'),
+        'api/lib/libgomp.so.1',
+        'lib/libgomp.so.1',
+        'libgomp.so.1',
+        os.path.join(os.path.dirname(__file__), '..', 'lib', 'libgomp.so.1'),
+    ]
+    for candidate in candidates:
+        p = candidate if os.path.exists(candidate) else _resolve_path(candidate)
+        if p and os.path.exists(p):
             try:
                 lib_dir = os.path.dirname(os.path.abspath(p))
                 os.environ['LD_LIBRARY_PATH'] = f"{lib_dir}:{os.environ.get('LD_LIBRARY_PATH', '')}"
                 ctypes.CDLL(os.path.abspath(p), mode=ctypes.RTLD_GLOBAL)
+                openmp_status = f"Loaded from {p}"
                 print(f"✅ Pre-loaded OpenMP runtime from: {p}")
                 return True
             except Exception as e:
+                openmp_status = f"Failed loading OpenMP from {p}: {e}"
                 print(f"⚠️ Failed loading OpenMP from {p}: {e}")
+    if not openmp_status:
+        openmp_status = "OpenMP libgomp.so.1 not found"
     return False
 
 
 def load_resources():
     """Load model, preprocessor, and dashboard data."""
-    global model, preprocessor, dashboard_data
+    global model, preprocessor, dashboard_data, model_error
 
     # Pre-load OpenMP for LightGBM before deserializing pipeline
     _load_openmp()
@@ -121,7 +135,12 @@ def load_resources():
                 model = joblib.load(path)
                 print(f"Model loaded from: {path}")
             except Exception as e:
-                print(f"Error loading model from {path}: {e}")
+                model_error = f"Error loading model from {path}: {str(e)}"
+                print(model_error)
+        else:
+            model_error = "Model file workover_model_pipeline.joblib not found"
+    else:
+        model_error = "joblib module could not be imported"
 
     # Load preprocessor
     if MODEL_LOADED:
@@ -508,10 +527,22 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         self.end_headers()
 
+    def _get_request_path(self):
+        import urllib.parse
+        parsed = urllib.parse.urlparse(self.path)
+        qs = urllib.parse.parse_qs(parsed.query)
+        if 'path' in qs and qs['path'][0]:
+            return qs['path'][0]
+        for h in ['x-matched-path', 'x-forwarded-uri', 'x-invoke-path']:
+            val = self.headers.get(h)
+            if val:
+                return val.split('?')[0]
+        return parsed.path
+
     # ── GET ──────────────────────────────────────────────────────
 
     def do_GET(self):
-        path = self.path.split('?')[0]
+        path = self._get_request_path()
 
         if path in ('/api', '/api/'):
             self.send_json_response({
@@ -520,6 +551,7 @@ class handler(BaseHTTPRequestHandler):
                 "endpoints": {
                     "GET /api": "This help message",
                     "GET /api/health": "Health check",
+                    "GET /api/debug": "Debug system & model status",
                     "GET /api/dashboard-data": "Get dashboard data",
                     "POST /api/predict": "Predict from JSON well data",
                 },
@@ -528,9 +560,25 @@ class handler(BaseHTTPRequestHandler):
             self.send_json_response({
                 "status": "ok",
                 "model_loaded": model is not None,
+                "model_error": model_error,
+                "openmp_status": openmp_status,
                 "preprocessor_loaded": preprocessor is not None,
                 "dashboard_data_loaded": dashboard_data is not None,
                 "python_version": sys.version,
+            })
+        elif path == '/api/debug':
+            self.send_json_response({
+                "status": "ok",
+                "resolved_path": path,
+                "raw_path": self.path,
+                "model_loaded": model is not None,
+                "model_error": model_error,
+                "openmp_status": openmp_status,
+                "preprocessor_loaded": preprocessor is not None,
+                "dashboard_data_loaded": dashboard_data is not None,
+                "curdir": os.path.abspath('.'),
+                "curdir_files": os.listdir('.') if os.path.exists('.') else [],
+                "api_dir_files": os.listdir(os.path.dirname(__file__)) if os.path.exists(os.path.dirname(__file__)) else [],
             })
         elif path == '/api/dashboard-data':
             if dashboard_data:
@@ -538,19 +586,17 @@ class handler(BaseHTTPRequestHandler):
             else:
                 self.send_json_response(self._get_sample_dashboard_data())
         else:
-            self.send_json_response({"error": "Not found"}, status=404)
+            self.send_json_response({"error": "Not found", "path": path, "raw": self.path}, status=404)
 
     # ── POST ─────────────────────────────────────────────────────
 
     def do_POST(self):
-        path = self.path.split('?')[0]
+        path = self._get_request_path()
 
-        if path == '/api/predict':
+        if path in ('/api/predict', '/api/predict-single'):
             self._handle_predict()
-        elif path == '/api/predict-single':
-            self._handle_predict()  # same logic
         else:
-            self.send_json_response({"error": "Not found"}, status=404)
+            self.send_json_response({"error": "Not found", "path": path}, status=404)
 
     def _handle_predict(self):
         """Full prediction pipeline matching main.py."""
