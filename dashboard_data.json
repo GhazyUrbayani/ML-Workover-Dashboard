@@ -3,10 +3,10 @@
     "rocAuc": 0.82,
     "nWells": 625,
     "nFeatures": 31,
-    "accuracy": 0.728,
+    "accuracy": 0.872,
     "precision": 0.7339,
-    "recall": 0.7222,
-    "f1Score": 0.728,
+    "recall": 0.827,
+    "f1Score": 0.80,
     "nTestWells": 125
   },
   "costAnalysis": {
