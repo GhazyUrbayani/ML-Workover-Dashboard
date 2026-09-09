@@ -863,7 +863,7 @@ class handler(BaseHTTPRequestHandler):
             "confusionMatrix": {"tn": 83, "fp": 37, "fn": 15, "tp": 165},
             "rocCurve": {
                 "fpr": [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.31, 0.4, 0.5, 0.7, 1.0],
-                "tpr": [0.0, 0.45, 0.62, 0.72, 0.78, 0.83, 0.87, 0.92, 0.96, 0.99, 1.0],
+                "tpr": [0.0, 0.45, 0.62, 0.72, 0.82, 0.83, 0.87, 0.92, 0.96, 0.99, 1.0],
             },
             "heteroIndex": [
                 {"index": 1, "label": "High Oil - Low Water", "count": 156, "success_rate": 0.72},

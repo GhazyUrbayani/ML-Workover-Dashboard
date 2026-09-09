@@ -13,7 +13,7 @@
       "improvement_range": [1.2, 1.6]
     },
     "STIMULATION": {
-      "success_rate": 0.78,
+      "success_rate": 0.82,
       "cost_range": [100000, 300000],
       "duration_days": [3, 6],
       "improvement_range": [1.4, 2.2]
