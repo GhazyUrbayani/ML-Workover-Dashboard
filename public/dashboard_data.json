@@ -1,6 +1,6 @@
 {
   "modelInfo": {
-    "rocAuc": 0.78,
+    "rocAuc": 0.82,
     "nWells": 625,
     "nFeatures": 31,
     "accuracy": 0.728,
